@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project Void - Proxy</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proxy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <nav>
+        <div class="nav-logo">
+            <img src="images/favicon.png" alt="Project Void Logo" class="nav-logo-img">
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="proxy.html" class="active">Proxy</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="proxy-container">
+            <h1>WEB PROXY</h1>
+            <p class="tagline">Access any website anonymously</p>
+            
+            <form id="proxyForm" class="proxy-form">
+                <div class="search-container">
+                    <input type="url" id="urlInput" placeholder="Enter URL (e.g., https://example.com)" required>
+                    <button type="submit" class="submit-btn">GO</button>
+                </div>
+            </form>
+
+            <div id="proxyFrame" class="proxy-frame hidden">
+                <iframe id="resultFrame" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script>
+        particlesJS('particles-js', particlesConfig);
+    </script>
+    <script src="js/proxy.js"></script>
+</body>
+</html> 
