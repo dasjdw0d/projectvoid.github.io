@@ -25,27 +25,28 @@
 
     <main>
         <div class="proxy-container">
-            <h1>WEB PROXY</h1>
-            <p class="tagline">Access any website anonymously</p>
-            
-            <form id="proxyForm" class="proxy-form">
-                <div class="search-container">
-                    <input type="url" id="urlInput" placeholder="Enter URL (e.g., https://example.com)" required>
-                    <button type="submit" class="submit-btn">GO</button>
-                </div>
-            </form>
-
-            <div id="proxyFrame" class="proxy-frame hidden">
-                <iframe id="resultFrame" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+            <div class="search-bar">
+                <form id="proxyForm">
+                    <div class="url-container">
+                        <div class="protocol-select">
+                            <select id="protocol">
+                                <option value="https://">https://</option>
+                                <option value="http://">http://</option>
+                            </select>
+                        </div>
+                        <input type="text" id="urlInput" placeholder="Enter URL (e.g., google.com)" required>
+                        <button type="submit" class="go-btn">GO</button>
+                    </div>
+                </form>
+            </div>
+            <div id="browserFrame" class="browser-frame">
+                <iframe id="proxyFrame" name="proxyFrame" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
             </div>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js"></script>
-    <script>
-        particlesJS('particles-js', particlesConfig);
-    </script>
     <script src="js/proxy.js"></script>
 </body>
 </html> 
