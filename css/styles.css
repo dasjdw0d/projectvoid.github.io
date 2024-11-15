@@ -1,0 +1,309 @@
+/* Variables */
+:root {
+    --neon-green: #39ff14;
+    --dark-bg: #000000;
+    --card-bg: #111111;
+    --nav-bg: rgba(0, 0, 0, 0.95);
+    --hover-bg: rgba(57, 255, 20, 0.1);
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    min-height: 100vh;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-bg);
+    border: 1px solid var(--neon-green);
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--neon-green);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(57, 255, 20, 0.1);
+}
+
+/* Particles Background */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: transparent;
+}
+
+/* Navigation Styles */
+nav {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--neon-green);
+    padding: 1.2rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        0 0 15px rgba(57, 255, 20, 0.2);
+    animation: navFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Nav fade in animation */
+@keyframes navFadeIn {
+    0% {
+        transform: translateY(-120%);
+        opacity: 0;
+    }
+    40% {
+        transform: translateY(5%);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-img {
+    height: 32px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.nav-logo-img:hover {
+    transform: rotate(360deg);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.6rem 1.8rem;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Underline animation */
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    transition: width 0.3s ease;
+}
+
+/* Hover glow effect */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--neon-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    filter: blur(15px);
+}
+
+.nav-links a:hover::before,
+.nav-links a.active::before {
+    width: 80%;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    opacity: 0.1;
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    background: rgba(57, 255, 20, 0.05);
+}
+
+/* Pulse animation for active link */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Floating animation for nav */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.nav-links a.active {
+    animation: pulse 2s infinite;
+}
+
+/* Click effect */
+.nav-links a:active {
+    transform: scale(0.95);
+}
+
+/* Shimmer effect for active link */
+@keyframes shimmer {
+    0% { background-position: -100% 0; }
+    100% { background-position: 100% 0; }
+}
+
+.nav-links a.active {
+    background: linear-gradient(
+        90deg,
+        rgba(57, 255, 20, 0.05) 0%,
+        rgba(57, 255, 20, 0.1) 50%,
+        rgba(57, 255, 20, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+}
+
+/* Main Content Styles */
+main {
+    padding-top: 80px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: white;
+}
+
+/* Featured Games Section */
+.featured-games {
+    padding: 2rem;
+}
+
+.featured-games h2 {
+    color: var(--neon-green);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+/* Game Grid and Cards */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--neon-green);
+    cursor: pointer;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-font-smoothing: subpixel-antialiased;
+    will-change: transform;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
+.game-thumbnail {
+    width: 100%;
+    height: 150px;
+    background: #222;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.game-card h3 {
+    color: var(--neon-green);
+    text-align: center;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
