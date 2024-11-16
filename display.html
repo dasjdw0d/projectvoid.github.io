@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project Void - Playing Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/display.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-bar">
+        <div class="game-bar-left">
+            <a href="games.html" class="back-button">
+                <span class="back-arrow">‹</span>
+                Back to Games
+            </a>
+            <div class="game-info">
+                <span class="game-title" id="gameTitle">Loading...</span>
+                <span class="play-time" id="playTime">Time: 00:00</span>
+            </div>
+        </div>
+        <div class="game-bar-right">
+            <button class="control-button" id="fullscreenBtn">
+                <span class="fullscreen-icon">⛶</span>
+                Fullscreen
+            </button>
+            <div class="watermark">Project Void</div>
+        </div>
+    </div>
+    <div class="game-container">
+        <iframe id="gameFrame" 
+                src="about:blank" 
+                frameborder="0" 
+                allowfullscreen>
+        </iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gamePath = urlParams.get('game');
+            const gameTitle = urlParams.get('title');
+            let startTime = Date.now();
+            let timerInterval;
+
+            if (gamePath) {
+                document.getElementById('gameFrame').src = gamePath;
+                document.getElementById('gameTitle').textContent = gameTitle || 'Game';
+                document.title = `Project Void - ${gameTitle || 'Playing Game'}`;
+                startTimer();
+                
+                window.history.replaceState({}, document.title, '/display.html');
+            } else {
+                window.location.href = 'games.html';
+            }
+
+            // Fullscreen functionality
+            document.getElementById('fullscreenBtn').addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // Update fullscreen button text when fullscreen state changes
+            document.addEventListener('fullscreenchange', function() {
+                const fullscreenBtn = document.getElementById('fullscreenBtn');
+                if (document.fullscreenElement) {
+                    fullscreenBtn.innerHTML = '<span class="fullscreen-icon">⮌</span> Exit Fullscreen';
+                } else {
+                    fullscreenBtn.innerHTML = '<span class="fullscreen-icon">⛶</span> Fullscreen';
+                }
+            });
+
+            // Timer functionality
+            function startTimer() {
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+
+            function updateTimer() {
+                const currentTime = Date.now();
+                const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+                const minutes = Math.floor(elapsedTime / 60);
+                const seconds = elapsedTime % 60;
+                document.getElementById('playTime').textContent = 
+                    `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // Add event listener for when page is closed or changed
+            window.addEventListener('beforeunload', function() {
+                const endTime = Date.now();
+                const sessionTime = Math.floor((endTime - startTime) / 1000);
+                
+                // Get current stats
+                let stats = JSON.parse(localStorage.getItem('siteStats')) || {};
+                stats.totalPlayTime = (stats.totalPlayTime || 0) + sessionTime;
+                localStorage.setItem('siteStats', JSON.stringify(stats));
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Home</title>
+    <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/classroom/favicon.png" />
+    <link rel="stylesheet" href="/assets/styles/main.css" />
+    <script src="/baremux/index.js"></script>
+    <script src="/epoxy/index.js"></script>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
+    <link rel="prefetch" href="/scram/scramjet.worker.js" />
+    <link rel="prefetch" href="/scram/scramjet.shared.js" />
+    <script src="/assets/js/main.js"></script>
+    <script src="/sw.js"></script>
+    <script src="https://unpkg.com/@rubynetwork/rammerhead-browser" defer></script>
+    <style>
+        /* Ensure the loading overlay covers the entire viewport */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            z-index: 9999; /* High z-index to overlay other elements */
+        }
+        .loading-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Hide the main iframe initially */
+        #frame {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+    <script type="text/javascript" src="/assets/particles/particles.js"></script>
+    <script type="text/javascript" src="/assets/particles/app.js"></script>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <iframe src="loading.html"></iframe>
+    </div>
+    
+    <!-- Main Content Iframe -->
+    <iframe src="" frameborder="0" id="frame"></iframe>
+
+    <script>
+        // Function to hide the loading overlay and show the main content
+        function hideLoading() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const mainFrame = document.getElementById('frame');
+            
+            loadingOverlay.style.display = 'none'; // Hide loading screen
+            mainFrame.style.display = 'block'; // Show main content
+        }
+
+        // Get the URL from localStorage
+        const url = localStorage.getItem("url");
+
+        // Set up the iframe load event listener before setting the src
+        const frame = document.getElementById("frame");
+        frame.addEventListener('load', hideLoading);
+
+        // Set the iframe src to start loading
+        frame.src = url;
+    </script>
+</body>
+
+</html>

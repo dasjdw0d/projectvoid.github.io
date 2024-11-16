@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project Void - Home</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <nav>
+        <div class="nav-logo">
+            <img src="images/favicon.png" alt="Project Void Logo" class="nav-logo-img">
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="games.html">Games</a>
+            <a href="proxy.html">Proxy</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="top-section">
+            <div class="user-section">
+                <div class="user-header">
+                    <div class="user-info">
+                        <img id="profileImage" src="images/favicon.png" alt="Profile Picture" title="Click to change profile picture">
+                        <div class="user-details">
+                            <h3>Welcome, <span id="usernameDisplay">Loading...</span></h3>
+                            <p>Member since <span id="dateCreated">Loading...</span></p>
+                        </div>
+                    </div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">👥</span>
+                            <span id="visitCount">Loading...</span>
+                            <span class="stat-label">Home Visits</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎮</span>
+                            <span id="lastGameDisplay">Loading...</span>
+                            <span class="stat-label">Last Played Game</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">⏱️</span>
+                            <span id="totalPlayTime">Loading...</span>
+                            <span class="stat-label">Game Play Time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <div class="primary-actions">
+                        <button class="action-btn" id="setUsernameBtn">Change Username</button>
+                    </div>
+                    <button class="action-btn danger" id="clearDataBtn">Clear Data</button>
+                    <div class="secondary-actions">
+                        <button class="action-btn" id="exportDataBtn">Export Data</button>
+                        <button class="action-btn" id="importDataBtn">Import Data</button>
+                    </div>
+                </div>
+                <p class="privacy-notice">All data is stored locally in your browser</p>
+            </div>
+            <div class="hero">
+                <h1>PROJECT VOID</h1>
+                <p class="tagline">The Best Unblocked Games Website</p>
+                <div class="hero-buttons">
+                    <a href="games.html" class="cta-button">Play Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="announcements">
+                <div class="announcements-title">
+                    <h2>Announcements</h2>
+                </div>
+                <div class="announcements-container">
+                    <div class="announcement-card new">
+                        <div class="announcement-date">NOV 16</div>
+                        <h3>Website In Development</h3>
+                        <p>Welcome to Project Void. Our website is currently under development and is being worked on.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/stats.js"></script>
+    <script>
+        particlesJS('particles-js', particlesConfig);
+    </script>
+</body>
+</html> 
