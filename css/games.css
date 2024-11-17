@@ -56,40 +56,14 @@
     background: var(--hover-bg);
 }
 
-/* Categories */
-.categories {
-    padding: 0 2rem 1rem 2rem;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-.category {
-    padding: 0.5rem 0.75rem;
-    background: var(--card-bg);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
-    border-radius: 20px;
-    cursor: pointer;
-    text-shadow: 0 0 5px var(--neon-green);
-    transition: transform var(--transition-speed) ease,
-                background var(--transition-speed) ease;
-}
-
-.category:hover, 
-.category.active {
-    transform: scale(0.97);
-    background: var(--hover-bg);
-}
-
 /* Games Grid */
 .games-grid {
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
     gap: 1.5rem;
     margin-bottom: 2rem;
+    justify-content: center;
 }
 
 .game-card {
@@ -136,6 +110,8 @@
         rgba(0,0,0,0.2) 0%, 
         rgba(0,0,0,0.9) 100%
     );
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(0.5px);
     z-index: 2;
 }
 
@@ -154,17 +130,6 @@
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-}
-
-.category-tag {
-    display: inline-block;
-    padding: 0.2rem 0.8rem;
-    background: rgba(57, 255, 20, 0.1);
-    border: 1px solid rgba(57, 255, 20, 0.3);
-    color: var(--neon-green);
-    border-radius: 12px;
-    font-size: 0.9rem;
-    backdrop-filter: blur(2px);
 }
 
 /* Pagination */
@@ -210,18 +175,16 @@
     }
 
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
         padding: 0 1rem;
-    }
-
-    .categories {
-        padding: 0 1rem 1rem 1rem;
+        justify-content: center;
     }
 }
 
 @media (max-width: 480px) {
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 150px));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 130px));
+        justify-content: center;
     }
 
     .pagination {
