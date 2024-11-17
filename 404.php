@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>404 - Page Not Found</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         .error-container {
@@ -78,17 +78,18 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <script src="js/site-settings.js"></script>
 
     <nav>
         <div class="nav-logo">
             <img src="images/favicon.png" alt="Project Void Logo" class="nav-logo-img">
         </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="games.html">Games</a>
-            <a href="proxy.html">Proxy</a>
-            <a href="forms.html">Forms</a>
-            <a href="settings.html">Settings</a>
+            <a href="index.php">Home</a>
+            <a href="games.php">Games</a>
+            <a href="proxy.php">Proxy</a>
+            <a href="forms.php">Forms</a>
+            <a href="settings.php">Settings</a>
         </div>
     </nav>
 
@@ -96,7 +97,7 @@
         <div class="error-code">404</div>
         <h1 class="error-message">Page Not Found</h1>
         <p class="error-description">The page you are looking for could not be found.</p>
-        <a href="index.html" class="home-button">Return Home</a>
+        <a href="index.php" class="home-button">Return Home</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>

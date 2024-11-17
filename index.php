@@ -14,9 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>Project Void - Home</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/styles.css?v=<?php echo time();">
+    <link rel="stylesheet" href="css/home.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -27,11 +26,11 @@
             <img src="images/favicon.png" alt="Project Void Logo" class="nav-logo-img">
         </div>
         <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="games.html">Games</a>
-            <a href="proxy.html">Proxy</a>
-            <a href="forms.html">Forms</a>
-            <a href="settings.html">Settings</a>
+            <a href="index.php" class="active">Home</a>
+            <a href="games.php">Games</a>
+            <a href="proxy.php">Proxy</a>
+            <a href="forms.php">Forms</a>
+            <a href="settings.php">Settings</a>
         </div>
     </nav>
 
