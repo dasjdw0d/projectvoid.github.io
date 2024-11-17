@@ -1,0 +1,111 @@
+.forms-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.forms-container h1 {
+    color: var(--neon-green);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 0 20px var(--neon-green);
+}
+
+.forms-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 800px));
+    justify-content: center;
+}
+
+.form-card {
+    background: rgba(17, 17, 17, 0.8);
+    border: 1px solid var(--neon-green);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    transition: all var(--transition-speed) var(--transition-curve);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) var(--transition-curve);
+}
+
+.form-header:hover {
+    color: var(--neon-green);
+}
+
+.form-title {
+    flex: 1;
+}
+
+.form-header h2 {
+    color: var(--neon-green);
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px var(--neon-green);
+    margin-bottom: 0.5rem;
+}
+
+.form-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-icon {
+    font-size: 1.8rem;
+}
+
+.expand-icon {
+    font-size: 1rem;
+    transition: transform var(--transition-speed) var(--transition-curve);
+    color: var(--neon-green);
+}
+
+.form-description {
+    color: #aaa;
+    line-height: 1.4;
+    margin-right: 2rem;
+}
+
+.form-embed {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    position: relative;
+    max-height: 775px;
+    overflow: hidden;
+    transition: all var(--transition-speed) var(--transition-curve);
+}
+
+.form-embed.collapsed {
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+}
+
+.form-embed iframe {
+    border-radius: 6px;
+    background: white;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .forms-container {
+        padding: 1rem;
+    }
+
+    .form-card {
+        padding: 1rem;
+    }
+
+    .form-embed iframe {
+        height: 550px;
+    }
+} 

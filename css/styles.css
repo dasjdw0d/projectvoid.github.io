@@ -226,3 +226,62 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
         justify-content: center;
     }
 }
+
+/* Custom Context Menu */
+.custom-context-menu {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1.5px solid var(--neon-green);
+    border-radius: 12px;
+    min-width: 153px;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    animation: menuFadeIn 0.2s var(--transition-curve);
+    padding: 5px;
+}
+
+.menu-background {
+    background: rgba(17, 17, 17, 0.7);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.custom-context-menu .menu-item {
+    padding: 8px 12px;
+    margin: 3px 0;
+    cursor: pointer;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all var(--transition-speed) var(--transition-curve);
+    background: rgba(25, 25, 25, 0.8);
+    border: none;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 6px;
+}
+
+.custom-context-menu .menu-item:hover {
+    background: rgba(57, 255, 20, 0.4);
+    color: var(--neon-green);
+}
+
+.custom-context-menu .menu-item .icon {
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
