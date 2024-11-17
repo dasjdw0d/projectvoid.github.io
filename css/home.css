@@ -33,43 +33,16 @@
 }
 
 .hero .tagline {
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
     color: white;
-    margin-bottom: 2rem;
+    margin: 0;
+    padding: 0;
     user-select: text;
     pointer-events: auto;
-}
-
-/* Hero Buttons Container */
-.hero-buttons {
-    pointer-events: auto;
-}
-
-/* CTA Button */
-.cta-button {
-    display: inline-block;
-    padding: 1rem 3rem;
-    background: var(--dark-bg);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
-    text-decoration: none;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 0 15px var(--neon-green);
-    text-shadow: 0 0 5px var(--neon-green);
-    transition: transform var(--transition-speed) ease,
-                box-shadow var(--transition-speed) ease,
-                background-color var(--transition-speed) ease;
-    pointer-events: auto;
-}
-
-.cta-button:hover {
-    transform: scale(0.95);
-    box-shadow: 0 0 20px var(--neon-green);
-    background: var(--hover-bg);
+    line-height: 1;
+    font-weight: 900;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 4px;
 }
 
 /* User Section */

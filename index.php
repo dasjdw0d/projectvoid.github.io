@@ -16,6 +16,7 @@
     <title>Project Void - Home</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/styles.css?v=<?php echo time();">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -77,9 +78,11 @@
             </div>
             <div class="hero">
                 <h1>PROJECT VOID</h1>
-                <p class="tagline">The Best Unblocked Games Website</p>
-                <div class="hero-buttons">
-                    <a href="games.html" class="cta-button">Play Now</a>
+                <div class="subtitle-group">
+                    <p class="tagline">Global Home Visits</p>
+                    <a href="https://www.hitwebcounter.com" target="_blank">
+                        <img src="https://hitwebcounter.com/counter/counter.php?page=17411431&style=0025&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" />
+                    </a>
                 </div>
             </div>
         </div>
