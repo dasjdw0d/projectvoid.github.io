@@ -48,25 +48,10 @@
     </main>
 
     <script>
-    function searchGames() {
-        const searchInput = document.getElementById('searchInput');
-        const searchTerm = searchInput.value.toLowerCase();
-        const gameCards = document.querySelectorAll('.game-card');
-        
-        gameCards.forEach(card => {
-            const title = card.getAttribute('data-title').toLowerCase();
-            if (title.includes(searchTerm)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Add real-time search
-    document.getElementById('searchInput').addEventListener('input', searchGames);
-
-    // Array of all games
+    const GAMES_PER_PAGE = 40; // Changed from 24 to 32 games per page
+    let currentPage = 1;
+    
+    // Your existing games array
     const games = [
         {
             title: "Slope",
@@ -77,6 +62,21 @@
             title: "Snow Rider 3D",
             path: "games/snowrider3d/index.html",
             thumbnail: "games/snowrider3d/icon.png"
+        },
+        {
+            title: "Retro Bowl",
+            path: "games/retro-bowl/index.html",
+            thumbnail: "games/retro-bowl/icon.png"
+        },
+        {
+            title: "Retro Bowl College",
+            path: "games/retrobowlcollege/index.html",
+            thumbnail: "games/retrobowlcollege/unnamed.png"
+        },
+        {
+            title: "Tunnel Rush",
+            path: "games/tunnel-rush/index.html",
+            thumbnail: "games/tunnel-rush/tunnel-rush.png"
         },
         {
             title: "Drift Hunters",
@@ -204,6 +204,68 @@
             thumbnail: "games/ducklife5/ducklife5.png"
         },
         {
+            title: "Death Run 3D",
+            path: "games/death-run-3d/index.html",
+            thumbnail: "games/death-run-3d/logo.png"
+        },
+        {
+            title: "Ahievement Unlocked",
+            path: "games/achieveunlocked/index.html",
+            thumbnail: "games/achieveunlocked/icon.png"
+        },
+        {
+            title: "Ahievement Unlocked 2",
+            path: "games/achieveunlocked2/index.html",
+            thumbnail: "games/achieveunlocked2/icon.png"
+        },
+        {
+            title: "Bit Life",
+            path: "games/bitlife/index.html",
+            thumbnail: "games/bitlife/logo.png"
+        },
+        {
+            title: "Basket Random",
+            path: "games/basketrandom/index.html",
+            thumbnail: "games/basketrandom/test.png"
+        },
+        {
+            title: "Cube Field",
+            path: "games/cubefield/index.html",
+            thumbnail: "games/cubefield/logo.png"
+        },
+        {
+            title: "CSGO Clicker",
+            path: "games/csgoclicker/index.html",
+            thumbnail: "games/csgoclicker/logo.png"
+        },
+        {
+            title: "Cut The Rope",
+            path: "games/cuttherope/index.html",
+            thumbnail: "games/cuttherope/icon.png"
+        },
+        {
+            title: "Cut The Rope Holiday",
+            path: "games/cuttherope-holiday/index.html",
+            thumbnail: "games/cuttherope-holiday/icon.png"
+        },
+        {
+            title: "Crossy Road Space",
+            path: "games/crossyroadspace/index.html",
+            thumbnail: "games/crossyroadspace/crossyroad.png"
+        },
+
+
+
+
+
+
+
+        {
+            title: "Flappy Bird",
+            path: "games/flappybird/index.html",
+            thumbnail: "games/flappybird/icon.png"
+        },
+        {
             title: "FNAF 1",
             path: "games/fnaf1/index.html",
             thumbnail: "games/fnaf1/splash.jpg"
@@ -259,39 +321,137 @@
             thumbnail: "games/vex7/icon.jpeg"
         },
         {
-            title: "Ahievement Unlocked",
-            path: "games/achieveunlocked/index.html",
-            thumbnail: "games/achieveunlocked/icon.png"
+            title: "Among Us",
+            path: "games/amongus/index.html",
+            thumbnail: "games/amongus/logo.png"
         },
         {
-            title: "Ahievement Unlocked 2",
-            path: "games/achieveunlocked2/index.html",
-            thumbnail: "games/achieveunlocked2/icon.png"
+            title: "Jetpack Joyride",
+            path: "games/jetpackjoyride/index.html",
+            thumbnail: "games/jetpackjoyride/logo.jpeg"
         },
+        {
+            title: "Hole.io",
+            path: "games/holeio/index.html",
+            thumbnail: "games/holeio/icon.png"
+        },
+        {
+            title: "Game",
+            path: "games/game/index.html",
+            thumbnail: "games/game/icon.png"
+        },
+        {
+            title: "Game",
+            path: "games/game/index.html",
+            thumbnail: "games/game/icon.png"
+        },
+        {
+            title: "Game",
+            path: "games/game/index.html",
+            thumbnail: "games/game/icon.png"
+        },
+        {
+            title: "Game",
+            path: "games/game/index.html",
+            thumbnail: "games/game/icon.png"
+        },
+        {
+            title: "Game",
+            path: "games/game/index.html",
+            thumbnail: "games/game/icon.png"
+        },
+
     ];
 
-    // Function to create game cards
-    function createGameCards() {
-        const gamesGrid = document.getElementById('gamesGrid');
-        gamesGrid.innerHTML = games.map(game => {
-            return `
-                <a href="display.html?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
-                   class="game-card" 
-                   data-title="${game.title}" 
-                   onclick="updateLastGame('${game.title}')">
-                    <div class="game-thumbnail">
-                        <img src="${game.thumbnail}" alt="${game.title}">
-                    </div>
-                    <div class="game-info">
-                        <h3>${game.title}</h3>
-                    </div>
-                </a>
-            `;
-        }).join('');
+    let filteredGames = [...games]; // Copy of games array for filtering
+
+    function searchGames() {
+        const searchInput = document.getElementById('searchInput');
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        filteredGames = games.filter(game => 
+            game.title.toLowerCase().includes(searchTerm)
+        );
+        
+        currentPage = 1; // Reset to first page when searching
+        updateDisplay();
     }
 
-    // Create game cards
-    createGameCards();
+    // Remove the old debounce listener and add enter key listener
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+            searchGames();
+        }
+    });
+
+    function createGameCards(gamesSubset) {
+        return gamesSubset.map(game => `
+            <a href="display.html?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
+               class="game-card" 
+               data-title="${game.title}" 
+               onclick="updateLastGame('${game.title}')">
+                <div class="game-thumbnail">
+                    <img loading="lazy" src="${game.thumbnail}" alt="${game.title}">
+                </div>
+                <div class="game-info">
+                    <h3>${game.title}</h3>
+                </div>
+            </a>
+        `).join('');
+    }
+
+    function updateDisplay() {
+        const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+        const endIndex = startIndex + GAMES_PER_PAGE;
+        const gamesSubset = filteredGames.slice(startIndex, endIndex);
+        
+        const gamesGrid = document.getElementById('gamesGrid');
+        gamesGrid.innerHTML = createGameCards(gamesSubset);
+        
+        updatePagination();
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+        const pagination = document.querySelector('.pagination');
+        
+        let paginationHTML = `
+            <button onclick="changePage('prev')" ${currentPage === 1 ? 'disabled' : ''}>←</button>
+        `;
+
+        // Show all page numbers without ellipsis
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `
+                <button 
+                    onclick="changePage(${i})" 
+                    class="${currentPage === i ? 'active' : ''}"
+                >${i}</button>
+            `;
+        }
+
+        paginationHTML += `
+            <button onclick="changePage('next')" ${currentPage === totalPages ? 'disabled' : ''}>→</button>
+        `;
+
+        pagination.innerHTML = paginationHTML;
+    }
+
+    function changePage(page) {
+        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+        
+        if (page === 'prev') {
+            currentPage = Math.max(1, currentPage - 1);
+        } else if (page === 'next') {
+            currentPage = Math.min(totalPages, currentPage + 1);
+        } else {
+            currentPage = page;
+        }
+        
+        updateDisplay();
+    }
+
+    // Initial display
+    updateDisplay();
     </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js"></script>

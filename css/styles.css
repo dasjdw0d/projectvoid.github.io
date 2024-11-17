@@ -9,10 +9,10 @@
     --nav-bg: rgba(0, 0, 0, 0.753);
     --hover-bg: rgba(57, 255, 20, 0.1);
     
-    /* Z-index layers - Updated */
-    --z-particles: 1;    /* Background particles */
-    --z-content: 2;      /* All main content (hero, cards) on same layer */
-    --z-nav: 100;        /* Navigation always on top */
+    /* Z-index layers - Reorganized for clarity */
+    --z-particles: 1;    /* Particles in the very back */
+    --z-content: 2;      /* All main content in the middle */
+    --z-nav: 3;          /* Navigation in the very front */
     
     /* Transitions */
     --transition-speed: 0.3s;
@@ -64,6 +64,7 @@ body {
     inset: 0;
     z-index: var(--z-particles);
     background: transparent;
+    pointer-events: none;
 }
 
 /* Navigation Styles */
@@ -164,9 +165,11 @@ nav {
 
 /* Main Content Styles */
 main {
-    padding-top: 80px;
     position: relative;
     z-index: var(--z-content);
+    min-height: 100vh;
+    padding-top: 80px;
+    pointer-events: auto;
 }
 
 /* Animations */
@@ -199,7 +202,7 @@ body.custom-cursor * {
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
-    z-index: 9999;
+    z-index: calc(var(--z-nav) + 2);
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
     transition: transform var(--transition-speed) var(--transition-curve);
 }
@@ -234,7 +237,7 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
     border: 1.5px solid var(--neon-green);
     border-radius: 12px;
     min-width: 153px;
-    z-index: 1000;
+    z-index: calc(var(--z-nav) + 1);
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
     animation: menuFadeIn 0.2s var(--transition-curve);
     padding: 5px;

@@ -75,13 +75,13 @@
 /* User Section */
 .user-section {
     position: absolute;
-    left: 8rem;
+    left: 4rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 400px;
+    width: 330px;
     background: rgb(15, 15, 15);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem;
     z-index: var(--z-content);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     pointer-events: auto;
@@ -99,8 +99,8 @@
 }
 
 .user-info img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 2px solid var(--neon-green);
     cursor: pointer;
@@ -108,7 +108,7 @@
 
 .user-details h3 {
     color: var(--neon-green);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 0.3rem;
 }
 
@@ -121,8 +121,8 @@
 .user-stats {
     display: flex;
     justify-content: flex-start;
-    gap: 2rem;
-    padding: 0.8rem;
+    gap: 1.5rem;
+    padding: 0.6rem;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow-x: auto;
@@ -204,17 +204,17 @@
 /* Announcements */
 .content-wrapper {
     position: absolute;
-    right: 8rem;
+    right: 4rem;
     top: 50%;
     transform: translateY(-50%);
     z-index: var(--z-content);
 }
 
 .announcements {
-    width: 400px;
+    width: 330px;
     background: rgb(0, 0, 0);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem;
     border: 0.5px solid rgba(57, 255, 20, 0.3);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
@@ -227,7 +227,7 @@
 
 .announcements-title h2 {
     color: var(--neon-green);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     text-shadow: 0 0 14px var(--neon-green);
     letter-spacing: 1px;
 }
@@ -241,7 +241,7 @@
 .announcement-card {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1.2rem;
     position: relative;
     border: 0.5px solid rgba(57, 255, 20, 0.3);
 }
@@ -296,14 +296,14 @@
 /* Media Queries */
 @media (max-width: 1400px) {
     .hero {
-        padding: 0 420px;
+        padding: 0 380px;
     }
 }
 
 @media (max-width: 1200px) {
     .user-section {
         left: 2rem;
-        width: 350px;
+        width: 320px;
     }
     
     .content-wrapper {
@@ -311,11 +311,11 @@
     }
     
     .announcements {
-        width: 350px;
+        width: 280px;
     }
     
     .hero {
-        padding: 0 370px;
+        padding: 0 300px;
     }
 }
 
@@ -340,7 +340,7 @@
         left: 0;
         transform: none;
         width: 100%;
-        max-width: 600px;
+        max-width: 500px;
         margin: 1rem auto;
     }
 
@@ -350,11 +350,8 @@
         top: 0;
         transform: none;
         width: 100%;
-        max-width: 600px;
+        max-width: 450px;
         margin: 1rem auto;
     }
 
-    .announcements {
-        width: 100%;
-    }
 }

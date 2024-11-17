@@ -29,13 +29,12 @@
     min-width: 300px;
     font-size: 1rem;
     font-weight: bold;
-    box-shadow: 0 0 10px var(--neon-green);
-    transition: box-shadow var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .search-bar input:focus {
     outline: none;
-    box-shadow: 0 0 15px var(--neon-green);
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .search-bar button {
@@ -56,12 +55,12 @@
     background: var(--hover-bg);
 }
 
-/* Games Grid */
+/* Games Grid - Updated sizes */
 .games-grid {
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
+    gap: 1rem;
     margin-bottom: 2rem;
     justify-content: center;
 }
@@ -73,10 +72,7 @@
     overflow: hidden;
     text-decoration: none;
     background: var(--card-bg);
-    border: 2.25px solid rgba(57, 255, 20, 0.5);
-    box-shadow: 0 4px 15px rgba(9, 255, 0, 0.151),
-                0 0 20px rgba(57, 255, 20, 0.2),
-                inset 0 0 15px rgba(57, 255, 20, 0.1);
+    border: 2px solid rgba(57, 255, 20, 0.5);
     transition: transform var(--transition-speed) ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -120,7 +116,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.8rem;
     text-align: center;
     z-index: 3;
 }
@@ -128,8 +124,7 @@
 .game-info h3 {
     color: var(--neon-green);
     margin-bottom: 0.5rem;
-    font-size: 1.4rem;
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    font-size: 1.1rem;
 }
 
 /* Pagination */
@@ -175,7 +170,7 @@
     }
 
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 130px));
         padding: 0 1rem;
         justify-content: center;
     }
@@ -183,7 +178,7 @@
 
 @media (max-width: 480px) {
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 130px));
+        grid-template-columns: repeat(auto-fill, minmax(110px, 110px));
         justify-content: center;
     }
 
