@@ -1,0 +1,228 @@
+/* Variables with improved organization */
+:root {
+    /* Colors */
+    --neon-green: #39ff14;
+    --dark-bg: #000000;
+    --card-bg: #111111;
+    
+    /* Derived Colors */
+    --nav-bg: rgba(0, 0, 0, 0.466);
+    --hover-bg: rgba(57, 255, 20, 0.1);
+    
+    /* Z-index layers - Updated */
+    --z-particles: 1;    /* Background particles */
+    --z-content: 2;      /* All main content (hero, cards) on same layer */
+    --z-nav: 100;        /* Navigation always on top */
+    
+    /* Transitions */
+    --transition-speed: 0.3s;
+    --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Cursor */
+    --cursor-size: 12px;
+    --cursor-border: 2px;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    min-height: 100vh;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-bg);
+    border: 1px solid var(--neon-green);
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-bg);
+}
+
+/* Particles Background */
+#particles-js {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-particles);
+    background: transparent;
+}
+
+/* Navigation Styles */
+nav {
+    background: var(--nav-bg);
+    border-bottom: 1.5px solid var(--neon-green);
+    padding: 1.2rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-nav);
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        0 0 15px rgba(57, 255, 20, 0.2);
+    animation: navFadeIn 1.2s var(--transition-curve);
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-img {
+    height: 32px;
+    width: auto;
+    transition: transform var(--transition-speed) ease;
+}
+
+.nav-logo-img:hover {
+    transform: rotate(360deg);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.6rem 1.8rem;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: 
+        color var(--transition-speed) var(--transition-curve),
+        background var(--transition-speed) var(--transition-curve);
+}
+
+/* Navigation Animations */
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    transition: width var(--transition-speed) ease;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--neon-green);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+    z-index: -1;
+    filter: blur(15px);
+}
+
+.nav-links a:hover::before,
+.nav-links a.active::before {
+    width: 80%;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    opacity: 0.1;
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    background: var(--hover-bg);
+}
+
+.nav-links a:active {
+    transform: scale(0.97);
+}
+
+/* Main Content Styles */
+main {
+    padding-top: 80px;
+    position: relative;
+    z-index: var(--z-content);
+}
+
+/* Animations */
+@keyframes navFadeIn {
+    0% {
+        transform: translateY(-120%);
+        opacity: 0;
+    }
+    40% {
+        transform: translateY(5%);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Custom Cursor Styles */
+body.custom-cursor,
+body.custom-cursor * {
+    cursor: none !important;
+}
+
+.custom-cursor-dot {
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    background-color: var(--dark-bg);
+    border: var(--cursor-border) solid var(--neon-green);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    transition: transform var(--transition-speed) var(--transition-curve);
+}
+
+/* Slightly larger cursor for clickable elements */
+body.custom-cursor a:hover ~ .custom-cursor-dot,
+body.custom-cursor button:hover ~ .custom-cursor-dot,
+body.custom-cursor input:hover ~ .custom-cursor-dot,
+body.custom-cursor label:hover ~ .custom-cursor-dot {
+    transform: scale(1.5);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

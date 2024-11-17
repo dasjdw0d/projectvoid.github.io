@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project Void - Proxy</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proxy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles-js"></div>
+    <nav>
+        <div class="nav-logo">
+            <img src="images/favicon.png" alt="Project Void Logo" class="nav-logo-img">
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="proxy.html" class="active">Proxy</a>
+            <a href="settings.html">Settings</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="proxy-container">
+            <div class="search-container">
+                <form id="form">
+                    <input type="text" id="input" placeholder="Search the Web Freely...">
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/site-settings.js"></script>
+    <script>
+        particlesJS('particles-js', particlesConfig);
+    </script>
+</body>
+</html>

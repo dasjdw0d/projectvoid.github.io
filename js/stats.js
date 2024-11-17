@@ -1,0 +1,171 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Get stored stats first
+    let stats = JSON.parse(localStorage.getItem('siteStats'));
+    
+    // If no stats exist, create them and save immediately
+    if (!stats) {
+        stats = {
+            VISITS: 1,
+            username: 'Guest',
+            lastGame: null,
+            profilePicture: 'images/favicon.png',
+            dateCreated: new Date().toISOString(),
+            totalPlayTime: 0
+        };
+        localStorage.setItem('siteStats', JSON.stringify(stats));
+    } else {
+        // Only increment visits if we're specifically on index.html
+        const currentPath = window.location.pathname;
+        if (currentPath === '/index.html' || currentPath.endsWith('/projectvoid/index.html')) {
+            stats.VISITS++;
+            localStorage.setItem('siteStats', JSON.stringify(stats));
+        }
+    }
+
+    // Initialize display with "Loading..."
+    document.getElementById('visitCount').textContent = "Loading...";
+    document.getElementById('lastGameDisplay').textContent = "Loading...";
+    
+    // Update display after a short delay to show loading animation
+    setTimeout(() => {
+        document.getElementById('visitCount').textContent = 
+            stats.VISITS > 0 ? stats.VISITS.toLocaleString() : 'N/A';
+            
+        document.getElementById('usernameDisplay').textContent = stats.username;
+        
+        document.getElementById('lastGameDisplay').textContent = 
+            (stats.lastGame === null || stats.lastGame === '') ? 'N/A' : stats.lastGame;
+            
+        document.getElementById('profileImage').src = stats.profilePicture;
+        document.getElementById('dateCreated').textContent = new Date(stats.dateCreated).toLocaleDateString();
+        
+        if (!stats.totalPlayTime && stats.totalPlayTime !== 0) {
+            document.getElementById('totalPlayTime').textContent = 'N/A';
+        } else {
+            const hours = Math.floor(stats.totalPlayTime / 3600);
+            const minutes = Math.floor((stats.totalPlayTime % 3600) / 60);
+            const seconds = stats.totalPlayTime % 60;
+            document.getElementById('totalPlayTime').textContent = 
+                `${hours}h ${minutes}m ${seconds}s`;
+        }
+    }, 500);
+
+    // Clear data button update
+    document.getElementById('clearDataBtn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all your data?')) {
+            localStorage.removeItem('siteStats');
+            stats = {
+                VISITS: 0,
+                username: 'Guest',
+                lastGame: null,
+                profilePicture: 'images/favicon.png',
+                dateCreated: new Date().toISOString(),
+                totalPlayTime: 0
+            };
+            localStorage.setItem('siteStats', JSON.stringify(stats));
+            forceReload();
+        }
+    });
+
+    // Set up event listeners
+    document.getElementById('setUsernameBtn').addEventListener('click', function() {
+        const newUsername = prompt('Enter your username:', stats.username);
+        if (newUsername !== null && newUsername.trim() !== '') {
+            stats.username = newUsername.trim();
+            localStorage.setItem('siteStats', JSON.stringify(stats));
+            forceReload();
+        }
+    });
+
+    // Replace the changePictureBtn event listener with profileImage click handler
+    document.getElementById('profileImage').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    stats.profilePicture = event.target.result;
+                    localStorage.setItem('siteStats', JSON.stringify(stats));
+                    forceReload();
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        
+        input.click();
+    });
+
+    // Add export/import handlers
+    document.getElementById('exportDataBtn').addEventListener('click', function() {
+        const dataStr = JSON.stringify(stats);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportLink = document.createElement('a');
+        exportLink.setAttribute('href', dataUri);
+        exportLink.setAttribute('download', 'projectvoid_data.json');
+        exportLink.click();
+    });
+
+    document.getElementById('importDataBtn').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                try {
+                    const importedStats = JSON.parse(event.target.result);
+                    stats = importedStats;
+                    localStorage.setItem('siteStats', JSON.stringify(stats));
+                    alert('Data imported successfully!');
+                    forceReload();
+                } catch (error) {
+                    alert('Error importing data. Please check the file format.');
+                }
+            };
+            
+            reader.readAsText(file);
+        };
+        
+        input.click();
+    });
+});
+
+// Update the updateLastGame function
+function updateLastGame(gameName) {
+    let stats = JSON.parse(localStorage.getItem('siteStats'));
+    
+    if (!stats) {
+        stats = {
+            VISITS: 1,
+            username: 'Guest',
+            lastGame: gameName,
+            profilePicture: 'images/favicon.png',
+            dateCreated: new Date().toISOString(),
+            totalPlayTime: 0
+        };
+    } else {
+        stats.lastGame = gameName;
+    }
+    
+    localStorage.setItem('siteStats', JSON.stringify(stats));
+    
+    const lastGameDisplay = document.getElementById('lastGameDisplay');
+    if (lastGameDisplay) {
+        lastGameDisplay.textContent = gameName;
+    }
+}
+
+// Add this helper function at the top of your file
+function forceReload() {
+    setTimeout(() => {
+        window.location.reload();
+    }, 100);
+}
