@@ -105,5 +105,14 @@
     <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script src="js/stats.js?v=<?php echo time(); ?>"></script>
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">© 2024 Project Void. All rights reserved.</p>
+            <a class="copyrighted-badge" title="Copyrighted.com Registered &amp; Protected" target="_blank" href="https://app.copyrighted.com/website/yNoVAq8F1q2ddpgE">
+                <img alt="Copyrighted.com Registered &amp; Protected" border="0" width="125" height="25" srcset="https://static.copyrighted.com/badges/125x25/02_1_2x.png 2x" src="https://static.copyrighted.com/badges/125x25/02_1.png">
+            </a>
+            <script src="https://static.copyrighted.com/badges/helper.js"></script>
+        </div>
+    </footer>
 </body>
 </html> 
