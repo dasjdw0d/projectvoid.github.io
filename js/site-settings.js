@@ -8,8 +8,8 @@
 })();
 
 function initializeParticles() {
-    if (document.getElementById('particles-js')) {
-        particlesInstance = particlesJS('particles-js', particlesConfig);
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', particlesConfig);
     }
 }
 

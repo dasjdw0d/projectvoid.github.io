@@ -1,0 +1,324 @@
+.chat-container {
+    display: flex;
+    gap: 1rem;
+    padding: 2rem;
+    height: calc(100vh - 100px);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Sidebar Styles */
+.chat-sidebar {
+    width: 280px;
+    background: rgb(15, 15, 15);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 0.5px solid rgba(57, 255, 20, 0.3);
+}
+
+.user-profile {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.user-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-green);
+    margin-bottom: 1rem;
+}
+
+.user-profile h3 {
+    color: var(--neon-green);
+    margin-bottom: 0.5rem;
+}
+
+.status-badge {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: 12px;
+    background: rgba(57, 255, 20, 0.1);
+    color: var(--neon-green);
+}
+
+.online-users h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.user-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--neon-green);
+}
+
+.user-item span {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+/* Main Chat Area */
+.chat-main {
+    flex: 1;
+    background: rgb(15, 15, 15);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid rgba(57, 255, 20, 0.3);
+}
+
+.chat-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h2 {
+    color: var(--neon-green);
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+#userCount {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.message {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    align-items: flex-start;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--neon-green);
+}
+
+.message-content {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.8rem;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    gap: 1rem;
+}
+
+.message-username {
+    color: var(--neon-green);
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.message-time {
+    color: #666;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+}
+
+.message-text {
+    color: #fff;
+    line-height: 1.4;
+}
+
+.chat-input {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+#messageInput {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    padding: 0.8rem;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+}
+
+#messageInput:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+}
+
+#sendMessage {
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 0 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+#sendMessage:hover {
+    background: rgba(57, 255, 20, 0.2);
+}
+
+.button-icon {
+    font-size: 0.8rem;
+}
+
+/* Media Queries */
+@media (max-width: 968px) {
+    .chat-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .chat-sidebar {
+        width: 100%;
+    }
+}
+
+/* Admin styles */
+.admin-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid red;
+    color: red;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.admin-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+}
+
+.admin-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(15, 15, 15);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--neon-green);
+    width: 300px;
+}
+
+.admin-modal-content h2 {
+    color: var(--neon-green);
+    margin-bottom: 20px;
+}
+
+.admin-modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--neon-green);
+    color: white;
+    border-radius: 5px;
+}
+
+.admin-modal-content button {
+    padding: 10px 20px;
+    margin: 5px;
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.admin-controls {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.admin-controls button {
+    padding: 10px 20px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid red;
+    color: red;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Admin message style */
+.message.admin-message .message-username {
+    color: red;
+}
+
+.message.admin-message .message-username::after {
+    content: ' [ADMIN]';
+    color: red;
+    font-size: 0.8em;
+}
+
+.message.admin-message .message-content {
+    border: 1px solid rgba(255, 0, 0, 0.3);
+} 
