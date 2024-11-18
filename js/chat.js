@@ -16,11 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
     const clearChatBtn = document.getElementById('clearChatBtn');
 
-    // Admin state
+    // State variables
     let isAdmin = localStorage.getItem('isAdmin') === 'true';
-
-    // Track displayed message IDs to prevent duplicates
+    let isAnonymous = isAdmin;
+    let isIdle = false;
+    let lastMessageCount = 0;
     const displayedMessages = new Set();
+    const MAX_MESSAGE_LENGTH = 500; // Adjust this number as needed
+    let userIsScrolling = false;
+
+    // Add this constant at the top with other constants (after DOMContentLoaded)
+    const SERVER_URL = 'https://projectvoid.is-not-a.dev:3000';
 
     // Get user data from siteStats
     function getUserData() {
@@ -30,15 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         return {
-            username: stats.username,
+            username: isAdmin ? 'Anonymous' : stats.username,
             profileImage: stats.profilePicture,
             userId: localStorage.getItem('userId') || generateUserId(),
-            isAdmin: isAdmin // Include admin status in userData
+            isAdmin: isAdmin
         };
     }
 
     let userData = getUserData();
-    let lastMessageCount = 0;
 
     // Update profile display
     function updateUserDisplay() {
@@ -68,6 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const wasAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop === chatMessages.clientHeight;
+
         messages.forEach(message => {
             const existingMessage = document.querySelector(`[data-timestamp="${message.timestamp}"]`);
             if (existingMessage) {
@@ -83,7 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayedMessages.add(message.timestamp);
             }
         });
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Only auto-scroll if user was at bottom or not actively scrolling
+        if ((wasAtBottom || !userIsScrolling) && messages.length > lastMessageCount) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        lastMessageCount = messages.length;
     }
 
     // Add a single message
@@ -111,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const deleteIcon = messageDiv.querySelector('.delete-icon');
             deleteIcon.addEventListener('click', async () => {
                 try {
-                    const response = await fetch('http://localhost:3000/delete-message', {
+                    const response = await fetch(`${SERVER_URL}/delete-message`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -147,28 +160,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send message function
     async function sendMessage() {
-        const message = messageInput.value.trim();
-        if (message) {
-            try {
-                const response = await fetch('http://localhost:3000/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        content: message,
-                        userData: getUserData(), // Get fresh userData in case admin status changed
-                        timestamp: new Date().toISOString()
-                    })
-                });
-
-                if (response.ok) {
-                    messageInput.value = '';
-                }
-            } catch (error) {
-                console.error('Error sending message:', error);
-                addSystemMessage('Error sending message');
+        const content = messageInput.value.trim();
+        if (!content || content.length > MAX_MESSAGE_LENGTH) return;
+        
+        try {
+            const response = await fetch(`${SERVER_URL}/send`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content,
+                    userData
+                })
+            });
+            
+            if (response.ok) {
+                messageInput.value = '';
             }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            addSystemMessage('Error sending message');
         }
     }
 
@@ -177,10 +189,15 @@ document.addEventListener('DOMContentLoaded', () => {
         onlineUsers.innerHTML = '';
         users.forEach(user => {
             const userDiv = document.createElement('div');
-            userDiv.className = 'user-item';
+            userDiv.className = `user-item ${user.isAdmin ? 'admin-user' : ''}`;
             userDiv.innerHTML = `
                 <img src="${user.profileImage}" alt="Avatar">
-                <span>${user.username}</span>
+                <div class="user-info">
+                    <div class="user-name-container">
+                        <span class="user-name">${user.username}${user.isAdmin ? ' [ADMIN]' : ''}</span>
+                        <span class="user-status ${user.isIdle ? 'idle' : 'online'}">${user.isIdle ? '(Idle)' : ''}</span>
+                    </div>
+                </div>
             `;
             onlineUsers.appendChild(userDiv);
         });
@@ -190,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchUpdates() {
         try {
             // Fetch messages
-            const messagesResponse = await fetch('http://localhost:3000/messages');
+            const messagesResponse = await fetch(`${SERVER_URL}/messages`);
             const messages = await messagesResponse.json();
             
             // Check if messages array is empty (chat was cleared)
@@ -205,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateChat(messages);
 
             // Fetch users
-            const usersResponse = await fetch('http://localhost:3000/users');
+            const usersResponse = await fetch(`${SERVER_URL}/users`);
             const users = await usersResponse.json();
             updateOnlineUsers(users);
         } catch (error) {
@@ -255,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('adminPass').value;
         
         try {
-            const response = await fetch('http://localhost:3000/verify-admin', {
+            const response = await fetch(`${SERVER_URL}/verify-admin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -267,10 +284,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data.success) {
                 isAdmin = true;
+                isAnonymous = true;
                 localStorage.setItem('isAdmin', 'true');
                 adminModal.style.display = 'none';
                 updateAdminUI();
                 userData = getUserData();
+                updateUserDisplay();
+                updateUserStatus();
             } else {
                 alert('Invalid credentials');
             }
@@ -281,28 +301,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     adminLogoutBtn.addEventListener('click', () => {
-        isAdmin = false;
-        localStorage.removeItem('isAdmin');
-        updateAdminUI();
-        userData = getUserData(); // Update userData with new admin status
+        if (confirm('Are you sure you want to logout?')) {
+            isAdmin = false;
+            isAnonymous = false;
+            localStorage.removeItem('isAdmin');
+            updateAdminUI();
+            userData = getUserData();
+            updateUserStatus();
+            updateUserDisplay();
+        }
     });
 
     clearChatBtn.addEventListener('click', async () => {
-        if (isAdmin && confirm('Are you sure you want to clear all messages?')) {
+        if (!isAdmin) return;
+        
+        if (confirm('Are you sure you want to clear all messages?')) {
             try {
-                const response = await fetch('http://localhost:3000/clear', {
+                const response = await fetch(`${SERVER_URL}/clear`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
+                
                 if (response.ok) {
-                    // Clear local message tracking
+                    chatMessages.innerHTML = '';
                     displayedMessages.clear();
                     lastMessageCount = 0;
-                    chatMessages.innerHTML = '';
-                    
-                    // Add a system message about the clear
                     addSystemMessage('Chat cleared by admin');
                 }
             } catch (error) {
@@ -354,6 +379,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 color: rgba(255, 0, 0, 0.7);
                 font-style: italic;
             }
+
+            /* Updated admin user styles */
+            .user-item.admin-user {
+                background: rgba(255, 0, 0, 0.1) !important;
+                border: 1px solid rgba(255, 0, 0, 0.3) !important;
+            }
+
+            .user-item.admin-user .user-name {
+                color: red !important;
+            }
+
+            /* Updated user info styles */
+            .user-info {
+                flex: 1;
+            }
+
+            .user-name-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .user-status {
+                font-size: 0.8em;
+                color: orange;
+            }
+
+            .user-status.online {
+                display: none;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -364,13 +419,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add this function to update user status periodically
     async function updateUserStatus() {
         try {
-            const response = await fetch('http://localhost:3000/user', {
+            userData = getUserData(); // Get fresh userData
+            const response = await fetch(`${SERVER_URL}/user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     ...userData,
+                    isIdle,
+                    isAdmin, // Make sure isAdmin is included
                     lastSeen: Date.now()
                 })
             });
@@ -384,4 +442,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call updateUserStatus immediately
     updateUserStatus();
+
+    // Add visibility change detection
+    document.addEventListener('visibilitychange', () => {
+        isIdle = document.hidden;
+        updateUserStatus(); // Update status immediately when changing tabs
+        updateStatusBadge(); // Update the status badge under username
+    });
+
+    // Add status badge update function
+    function updateStatusBadge() {
+        const statusBadge = document.querySelector('.status-badge');
+        if (statusBadge) {
+            statusBadge.textContent = isIdle ? 'Idle' : 'Online';
+            statusBadge.className = `status-badge ${isIdle ? 'idle' : 'online'}`;
+        }
+    }
+
+    // Update the message input handler
+    messageInput.addEventListener('input', () => {
+        if (messageInput.value.length > MAX_MESSAGE_LENGTH) {
+            messageInput.value = messageInput.value.substring(0, MAX_MESSAGE_LENGTH);
+        }
+    });
+
+    // Add scroll detection
+    chatMessages.addEventListener('scroll', () => {
+        userIsScrolling = true;
+        // Reset the flag after user stops scrolling for 2 seconds
+        clearTimeout(window.scrollTimeout);
+        window.scrollTimeout = setTimeout(() => {
+            userIsScrolling = false;
+        }, 2000);
+    });
 });

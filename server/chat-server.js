@@ -1,4 +1,11 @@
 require('dotenv').config();
+
+// Add this line to debug
+console.log('Admin credentials loaded:', {
+    username: process.env.ADMIN_USERNAME,
+    password: process.env.ADMIN_PASSWORD
+});
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -42,6 +49,8 @@ app.post('/user', (req, res) => {
         username: userData.username,
         profileImage: userData.profileImage,
         userId: userData.userId,
+        isIdle: userData.isIdle,
+        isAdmin: userData.isAdmin,
         lastSeen: Date.now()
     });
     res.json({ success: true });
@@ -55,7 +64,9 @@ app.get('/users', (req, res) => {
         .map(user => ({
             username: user.username,
             profileImage: user.profileImage,
-            userId: user.userId
+            userId: user.userId,
+            isIdle: user.isIdle,
+            isAdmin: user.isAdmin
         }));
     res.json(activeUsers);
 });

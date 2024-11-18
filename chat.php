@@ -38,18 +38,13 @@
         <div class="chat-container">
             <div class="chat-sidebar">
                 <div class="user-profile">
-                    <img id="chatProfileImage" src="images/favicon.png" alt="Profile Picture">
-                    <h3 id="chatUsername">Loading...</h3>
-                    <span class="status-badge online">Online</span>
+                    <img id="chatProfileImage" src="images/favicon.png" alt="Profile">
+                    <span id="chatUsername">Guest</span>
                 </div>
-                <div class="online-users">
-                    <h3>Online Users</h3>
-                    <div class="users-list" id="onlineUsers">
-                        <!-- Users will be populated by JavaScript -->
-                    </div>
-                </div>
+                <h3>Online Users</h3>
+                <div id="onlineUsers"></div>
             </div>
-            
+
             <div class="chat-main">
                 <div class="chat-header">
                     <h2>Global Chat</h2>
@@ -65,6 +60,27 @@
                         <span class="button-text">Send</span>
                         <span class="button-icon">➤</span>
                     </button>
+                </div>
+            </div>
+
+            <div class="chat-info-sidebar">
+                <div class="info-section terms">
+                    <h3>Terms of Service</h3>
+                    <p class="warning">By sending a message, you acknowledge and accept the following terms:</p>
+                    <ul>
+                        <li>Project Void is not responsible for any content posted by users</li>
+                        <li>Users are responsible for their own actions and content</li>
+                        <li>Project Void reserves the right to clear the chat and delete messages.</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section profile">
+                    <h3>Profile Information</h3>
+                    <p>Your profile in this chat room is synced with the profile system on the home page:</p>
+                    <ul>
+                        <li>To change your username: Go to the home page and click the "Change Username" button</li>
+                        <li>To change your profile picture: Go to the home page and click on the pfp image.</li>
+                    </ul>
                 </div>
             </div>
         </div>
