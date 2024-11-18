@@ -29,6 +29,7 @@
             <a href="index.php">Home</a>
             <a href="games.php" class="active">Games</a>
             <a href="proxy.php">Proxy</a>
+            <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
         </div>
@@ -400,7 +401,10 @@
                data-title="${game.title}" 
                onclick="updateLastGame('${game.title}')">
                 <div class="game-thumbnail">
-                    <img loading="lazy" src="${game.thumbnail}" alt="${game.title}">
+                    <img loading="lazy" 
+                         src="${currentPage === Math.ceil((games.indexOf(game) + 1) / GAMES_PER_PAGE) ? game.thumbnail : ''}" 
+                         data-src="${game.thumbnail}"
+                         alt="${game.title}">
                 </div>
                 <div class="game-info">
                     <h3>${game.title}</h3>
@@ -457,6 +461,14 @@
         }
         
         updateDisplay();
+        
+        // Load images for the current page
+        const images = document.querySelectorAll('.game-thumbnail img');
+        images.forEach(img => {
+            if (!img.src && img.dataset.src) {
+                img.src = img.dataset.src;
+            }
+        });
     }
 
     // Initial display

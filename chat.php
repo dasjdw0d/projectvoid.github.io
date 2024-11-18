@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <title>Project Void - Chat</title>
+    <title>Project Void - Chatroom</title>
     <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="css/chat.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,8 +28,8 @@
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
             <a href="proxy.php">Proxy</a>
+            <a href="chat.php" class="active">Chatroom</a>
             <a href="forms.php">Forms</a>
-            <a href="chat.php" class="active">Chat</a>
             <a href="settings.php">Settings</a>
         </div>
     </nav>
@@ -47,7 +47,7 @@
 
             <div class="chat-main">
                 <div class="chat-header">
-                    <h2>Global Chat</h2>
+                    <h2>Global Chatroom</h2>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
@@ -64,22 +64,16 @@
             </div>
 
             <div class="chat-info-sidebar">
-                <div class="info-section terms">
-                    <h3>Terms of Service</h3>
-                    <p class="warning">By sending a message, you acknowledge and accept the following terms:</p>
-                    <ul>
-                        <li>Project Void is not responsible for any content posted by users</li>
-                        <li>Users are responsible for their own actions and content</li>
-                        <li>Project Void reserves the right to clear the chat and delete messages.</li>
-                    </ul>
-                </div>
-                
                 <div class="info-section profile">
                     <h3>Profile Information</h3>
                     <p>Your profile in this chat room is synced with the profile system on the home page:</p>
                     <ul>
                         <li>To change your username: Go to the home page and click the "Change Username" button</li>
                         <li>To change your profile picture: Go to the home page and click on the pfp image.</li>
+                    </ul>
+                    <h3>Rules</h3>
+                    <ul>
+                        <li>Don't be annoying and spam/flood the chat. Dont make us make a ban system.</li>
                     </ul>
                 </div>
             </div>
@@ -94,19 +88,30 @@
 
     <div id="adminButton" class="admin-button">Admin</div>
 
-    <div id="adminModal" class="admin-modal">
-        <div class="admin-modal-content">
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span id="adminCloseBtn" class="close">&times;</span>
             <h2>Admin Login</h2>
-            <input type="text" id="adminUser" placeholder="Username">
-            <input type="password" id="adminPass" placeholder="Password">
-            <button id="adminLoginBtn">Login</button>
-            <button id="adminCloseBtn">Close</button>
+            <form id="adminLoginForm" onsubmit="return false;">
+                <input type="text" 
+                       id="adminUser" 
+                       placeholder="Username" 
+                       required 
+                       autocomplete="username">
+                <input type="password" 
+                       id="adminPass" 
+                       placeholder="Password" 
+                       required 
+                       autocomplete="current-password">
+                <button type="submit" id="adminLoginBtn">Login</button>
+            </form>
         </div>
     </div>
 
     <div id="adminControls" class="admin-controls" style="display: none;">
         <button id="adminLogoutBtn">Logout</button>
         <button id="clearChatBtn">Clear Chat</button>
+        <button id="lockChatBtn">Lock Chat</button>
     </div>
     <footer>
         <div class="footer-content">

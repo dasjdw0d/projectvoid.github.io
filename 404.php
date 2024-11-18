@@ -78,7 +78,6 @@
 </head>
 <body>
     <div id="particles-js"></div>
-    <script src="js/site-settings.js"></script>
 
     <nav>
         <div class="nav-logo">
@@ -88,6 +87,7 @@
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
             <a href="proxy.php">Proxy</a>
+            <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
         </div>

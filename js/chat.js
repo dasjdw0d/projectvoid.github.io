@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Connect to WebSocket server through the proxy
+    const socket = io('https://projectvoid.is-not-a.dev', {
+        path: '/socket.io/'
+    });
+
     // Chat elements
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
@@ -15,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminControls = document.getElementById('adminControls');
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
     const clearChatBtn = document.getElementById('clearChatBtn');
+    const lockChatBtn = document.getElementById('lockChatBtn');
 
     // State variables
     let isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -24,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const displayedMessages = new Set();
     const MAX_MESSAGE_LENGTH = 500; // Adjust this number as needed
     let userIsScrolling = false;
+    let isChatLocked = false;
 
     // Add this constant at the top with other constants (after DOMContentLoaded)
     const SERVER_URL = 'https://projectvoid.is-not-a.dev:3000';
@@ -102,133 +109,161 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add a single message
     function addMessage(data) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${data.userData.isAdmin ? 'admin-message' : ''} ${data.deleted ? 'deleted' : ''}`;
+        messageDiv.className = `message ${data.userData?.isAdmin ? 'admin-message' : ''} ${data.deleted ? 'deleted' : ''} ${data.system ? 'system-message' : ''}`;
         messageDiv.dataset.timestamp = data.timestamp;
         
-        const time = new Date(data.timestamp).toLocaleTimeString();
-        
-        messageDiv.innerHTML = `
-            <img class="message-avatar" src="${data.userData.profileImage}" alt="Avatar">
-            <div class="message-content">
-                <div class="message-header">
-                    <span class="message-username">${data.userData.username}</span>
-                    <span class="message-time">${time}</span>
+        if (data.system) {
+            // System message format
+            messageDiv.innerHTML = `
+                <div class="message-content system">
+                    <div class="message-text">${data.content}</div>
                 </div>
-                <div class="message-text">${escapeHtml(data.content)}</div>
-            </div>
-            ${isAdmin && !data.deleted ? '<span class="delete-icon">🗑️</span>' : ''}
-        `;
+            `;
+        } else {
+            // Regular message format
+            const time = new Date(data.timestamp).toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <img class="message-avatar" src="${data.userData.profileImage}" alt="Avatar">
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-username">${data.userData.username}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(data.content)}</div>
+                </div>
+                ${isAdmin && !data.deleted ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
+            `;
 
-        // Add delete handler for admin
-        if (isAdmin && !data.deleted) {
-            const deleteIcon = messageDiv.querySelector('.delete-icon');
-            deleteIcon.addEventListener('click', async () => {
-                try {
-                    const response = await fetch(`${SERVER_URL}/delete-message`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            timestamp: data.timestamp
-                        })
-                    });
-                    if (response.ok) {
-                        // The next fetch will update the message
+            // Add delete handler for admin
+            if (isAdmin && !data.deleted) {
+                const deleteIcon = messageDiv.querySelector('.delete-icon');
+                deleteIcon.addEventListener('click', () => {
+                    if (confirm('Delete this message?')) {
+                        socket.emit('delete_message', data.timestamp);
                     }
-                } catch (error) {
-                    console.error('Error deleting message:', error);
-                }
-            });
+                });
+            }
         }
-        
+
         chatMessages.appendChild(messageDiv);
     }
 
-    // Add system message
-    function addSystemMessage(message) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message system-message';
-        messageDiv.innerHTML = `
-            <div class="message-content system">
-                <div class="message-text">${message}</div>
-            </div>
-        `;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    // Add message cooldown
+    let lastMessageTime = 0;
+    const COOLDOWN_TIME = 2500; // 2.5 seconds in milliseconds
 
-    // Send message function
+    // Update your send message function
     async function sendMessage() {
+        if (isChatLocked && !isAdmin) return;
+        
+        const now = Date.now();
+        if (now - lastMessageTime < COOLDOWN_TIME) {
+            const remainingTime = ((COOLDOWN_TIME - (now - lastMessageTime)) / 1000).toFixed(1);
+            cooldownOverlay.textContent = `Wait ${remainingTime}s`;
+            cooldownOverlay.classList.add('active');
+            setTimeout(() => {
+                cooldownOverlay.classList.remove('active');
+            }, COOLDOWN_TIME - (now - lastMessageTime));
+            return;
+        }
+
         const content = messageInput.value.trim();
         if (!content || content.length > MAX_MESSAGE_LENGTH) return;
         
-        try {
-            const response = await fetch(`${SERVER_URL}/send`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    content,
-                    userData
-                })
-            });
-            
-            if (response.ok) {
-                messageInput.value = '';
-            }
-        } catch (error) {
-            console.error('Error sending message:', error);
-            addSystemMessage('Error sending message');
-        }
+        socket.emit('send_message', {
+            content,
+            userData: getUserData()
+        });
+        
+        messageInput.value = '';
+        lastMessageTime = now;
     }
 
     // Update online users list
     function updateOnlineUsers(users) {
-        onlineUsers.innerHTML = '';
-        users.forEach(user => {
+        const usersList = document.getElementById('onlineUsers');
+        usersList.innerHTML = '';
+        
+        // Sort users: admins first, then alphabetically by username
+        const sortedUsers = users.sort((a, b) => {
+            if (a.isAdmin !== b.isAdmin) {
+                return b.isAdmin ? 1 : -1;
+            }
+            return a.username.localeCompare(b.username);
+        });
+        
+        sortedUsers.forEach(user => {
             const userDiv = document.createElement('div');
             userDiv.className = `user-item ${user.isAdmin ? 'admin-user' : ''}`;
+            
             userDiv.innerHTML = `
                 <img src="${user.profileImage}" alt="Avatar">
                 <div class="user-info">
                     <div class="user-name-container">
                         <span class="user-name">${user.username}${user.isAdmin ? ' [ADMIN]' : ''}</span>
-                        <span class="user-status ${user.isIdle ? 'idle' : 'online'}">${user.isIdle ? '(Idle)' : ''}</span>
                     </div>
                 </div>
             `;
-            onlineUsers.appendChild(userDiv);
+            
+            usersList.appendChild(userDiv);
         });
     }
 
-    // Fetch updates function
-    async function fetchUpdates() {
-        try {
-            // Fetch messages
-            const messagesResponse = await fetch(`${SERVER_URL}/messages`);
-            const messages = await messagesResponse.json();
-            
-            // Check if messages array is empty (chat was cleared)
-            if (messages.length === 0 && chatMessages.children.length > 0) {
-                chatMessages.innerHTML = '';
-                displayedMessages.clear();
-                lastMessageCount = 0;
-                addSystemMessage('Chat cleared by admin');
-                return;
-            }
-            
-            updateChat(messages);
+    // Socket event handlers
+    socket.on('connect', () => {
+        console.log('Connected to chat server');
+        socket.emit('user_update', getUserData());
+    });
 
-            // Fetch users
-            const usersResponse = await fetch(`${SERVER_URL}/users`);
-            const users = await usersResponse.json();
-            updateOnlineUsers(users);
-        } catch (error) {
-            console.error('Error fetching updates:', error);
+    socket.on('load_messages', (messages) => {
+        chatMessages.innerHTML = '';
+        displayedMessages.clear();
+        messages.forEach(message => addMessage(message));
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    socket.on('new_message', (message) => {
+        if (!displayedMessages.has(message.timestamp)) {
+            addMessage(message);
+            displayedMessages.add(message.timestamp);
+            if (!userIsScrolling) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         }
-    }
+    });
+
+    socket.on('users_update', (users) => {
+        if (Array.isArray(users)) {
+            updateOnlineUsers(users.map(user => user.userData));
+        }
+    });
+
+    socket.on('chat_cleared', () => {
+        chatMessages.innerHTML = '';
+        displayedMessages.clear();
+        lastMessageCount = 0;
+    });
+
+    socket.on('message_deleted', (message) => {
+        const messageElement = document.querySelector(`[data-timestamp="${message.timestamp}"]`);
+        if (messageElement) {
+            messageElement.classList.add('deleted');
+            const messageText = messageElement.querySelector('.message-text');
+            if (messageText) {
+                messageText.textContent = "Deleted by admin";
+            }
+            // Remove delete icon if it exists
+            const deleteIcon = messageElement.querySelector('.delete-icon');
+            if (deleteIcon) {
+                deleteIcon.remove();
+            }
+        }
+    });
+
+    socket.on('chat_lock_status', (status) => {
+        isChatLocked = status;
+        updateChatLockUI();
+    });
 
     // Helper function to generate userId
     function generateUserId() {
@@ -258,7 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Admin event listeners
     adminButton.addEventListener('click', () => {
+        console.log('Admin button clicked');
         if (!isAdmin) {
+            console.log('Showing admin modal');
             adminModal.style.display = 'block';
         }
     });
@@ -267,37 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
         adminModal.style.display = 'none';
     });
 
-    adminLoginBtn.addEventListener('click', async () => {
+    adminLoginBtn.addEventListener('click', () => {
         const username = document.getElementById('adminUser').value;
         const password = document.getElementById('adminPass').value;
         
-        try {
-            const response = await fetch(`${SERVER_URL}/verify-admin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                isAdmin = true;
-                isAnonymous = true;
-                localStorage.setItem('isAdmin', 'true');
-                adminModal.style.display = 'none';
-                updateAdminUI();
-                userData = getUserData();
-                updateUserDisplay();
-                updateUserStatus();
-            } else {
-                alert('Invalid credentials');
-            }
-        } catch (error) {
-            console.error('Error verifying admin:', error);
-            alert('Error verifying admin credentials');
-        }
+        console.log('Attempting admin login with username:', username);
+        
+        // Send credentials through socket
+        socket.emit('verify_admin', { username, password });
     });
 
     adminLogoutBtn.addEventListener('click', () => {
@@ -312,35 +326,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    clearChatBtn.addEventListener('click', async () => {
+    clearChatBtn.addEventListener('click', () => {
         if (!isAdmin) return;
-        
         if (confirm('Are you sure you want to clear all messages?')) {
-            try {
-                const response = await fetch(`${SERVER_URL}/clear`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    chatMessages.innerHTML = '';
-                    displayedMessages.clear();
-                    lastMessageCount = 0;
-                    addSystemMessage('Chat cleared by admin');
-                }
-            } catch (error) {
-                console.error('Error clearing chat:', error);
-            }
+            socket.emit('clear_chat');
         }
     });
 
-    // Poll for updates every 500ms
-    setInterval(fetchUpdates, 500);
-
-    // Initial fetch
-    fetchUpdates();
+    lockChatBtn.addEventListener('click', () => {
+        if (!isAdmin) return;
+        socket.emit('toggle_chat_lock', !isChatLocked);
+    });
 
     // Add this to your CSS first:
     function addStyles() {
@@ -356,6 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 cursor: pointer;
                 padding: 5px;
                 opacity: 0.7;
+                z-index: 1;
+                user-select: none;
             }
 
             .message:hover .delete-icon {
@@ -364,12 +362,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             .message .delete-icon:hover {
                 opacity: 1;
+                transform: translateY(-50%) scale(1.1);
             }
 
             .message {
                 position: relative;
             }
 
+            /* Updated deleted message styles */
             .message.deleted .message-content {
                 background: rgba(255, 0, 0, 0.1);
                 border: 1px solid rgba(255, 0, 0, 0.2);
@@ -417,31 +417,13 @@ document.addEventListener('DOMContentLoaded', () => {
     addStyles();
 
     // Add this function to update user status periodically
-    async function updateUserStatus() {
-        try {
-            userData = getUserData(); // Get fresh userData
-            const response = await fetch(`${SERVER_URL}/user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ...userData,
-                    isIdle,
-                    isAdmin, // Make sure isAdmin is included
-                    lastSeen: Date.now()
-                })
-            });
-        } catch (error) {
-            console.error('Error updating user status:', error);
-        }
-    }
-
-    // Add user status update interval
-    setInterval(updateUserStatus, 30000); // Update every 30 seconds
-
-    // Call updateUserStatus immediately
-    updateUserStatus();
+    setInterval(() => {
+        socket.emit('user_update', {
+            ...getUserData(),
+            isIdle,
+            lastSeen: Date.now()
+        });
+    }, 30000);
 
     // Add visibility change detection
     document.addEventListener('visibilitychange', () => {
@@ -474,5 +456,103 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTimeout = setTimeout(() => {
             userIsScrolling = false;
         }, 2000);
+    });
+
+    // Add this function to update the UI
+    function updateChatLockUI() {
+        const canChat = isAdmin || !isChatLocked;
+        messageInput.disabled = !canChat;
+        sendButton.disabled = !canChat;
+        
+        // Update button text
+        if (lockChatBtn) {
+            lockChatBtn.textContent = isChatLocked ? 'Unlock Chat' : 'Lock Chat';
+        }
+        
+        // Update input placeholder
+        messageInput.placeholder = !canChat ? 'Chat is locked by admin' : 'Type your message...';
+    }
+
+    // Add cooldown UI elements to the chat input area
+    function addCooldownUI() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .chat-input {
+                position: relative;
+            }
+            
+            .cooldown-overlay {
+                position: absolute;
+                bottom: 100%;
+                left: 0;
+                background: rgba(255, 0, 0, 0.1);
+                border: 1px solid rgba(255, 0, 0, 0.3);
+                color: rgba(255, 0, 0, 0.8);
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            
+            .cooldown-overlay.active {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+
+        const cooldownOverlay = document.createElement('div');
+        cooldownOverlay.className = 'cooldown-overlay';
+        document.querySelector('.chat-input').appendChild(cooldownOverlay);
+        return cooldownOverlay;
+    }
+
+    // Initialize cooldown UI
+    const cooldownOverlay = addCooldownUI();
+
+    // Add these event listeners to track user activity
+    document.addEventListener('mousemove', updateUserActivity);
+    document.addEventListener('keydown', updateUserActivity);
+    document.addEventListener('click', updateUserActivity);
+
+    function updateUserActivity() {
+        if (socket) {
+            socket.emit('user_active');
+        }
+    }
+
+    // Send periodic updates more frequently
+    setInterval(() => {
+        if (socket) {
+            socket.emit('user_update', getUserData());
+        }
+    }, 1000); // Update every second
+
+    // Add socket listener for system messages
+    socket.on('system_message', (message) => {
+        addSystemMessage(message.content);
+    });
+
+    // Add this function near your other utility functions
+    function updateUserStatus() {
+        socket.emit('user_update', getUserData());
+    }
+
+    // Add socket listener for admin verification response
+    socket.on('admin_verified', (data) => {
+        console.log('Received admin verification response:', data);
+        if (data.success) {
+            isAdmin = true;
+            isAnonymous = true;
+            localStorage.setItem('isAdmin', 'true');
+            adminModal.style.display = 'none';
+            updateAdminUI();
+            userData = getUserData();
+            updateUserDisplay();
+            updateUserStatus();
+        } else {
+            alert('Invalid credentials');
+        }
     });
 });

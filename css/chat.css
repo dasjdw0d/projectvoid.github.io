@@ -1,37 +1,65 @@
 .chat-container {
     display: grid;
-    grid-template-columns: 280px 1fr 280px;
-    gap: 1rem;
-    padding: 2rem;
-    height: calc(100vh - 100px);
-    max-width: 1400px;
+    grid-template-columns: 224px 1fr 224px;
+    gap: 0.8rem;
+    padding: 1.6rem;
+    height: calc(100vh - 120px);
+    max-width: 1120px;
     margin: 0 auto;
 }
 
 .chat-main,
 .chat-sidebar,
 .chat-info-sidebar {
-    width: 280px;
+    width: 224px;
     background: rgb(15, 15, 15);
     border-radius: 10px;
-    padding: 1rem;
+    padding: 0.8rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.2rem;
     border: 0.5px solid rgba(57, 255, 20, 0.3);
-    height: 700px;
+    height: calc(100vh - 160px);
+    min-height: 400px;
+    max-height: 800px;
 }
 
-#chatMessages {
+#chatMessages,
+#onlineUsers,
+.info-section {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
 }
 
-#onlineUsers {
-    flex: 1;
-    overflow-y: auto;
-    margin-top: 1rem;
+/* Override any inherited scrollbar styles */
+#chatMessages::-webkit-scrollbar,
+#onlineUsers::-webkit-scrollbar,
+.info-section::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+#chatMessages::-webkit-scrollbar-track,
+#onlineUsers::-webkit-scrollbar-track,
+.info-section::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+    border-radius: 20px;
+    margin: 4px 0;
+}
+
+#chatMessages::-webkit-scrollbar-thumb,
+#onlineUsers::-webkit-scrollbar-thumb,
+.info-section::-webkit-scrollbar-thumb {
+    background: var(--dark-bg);
+    border: 1.5px solid var(--neon-green);
+    border-radius: 20px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb:hover,
+#onlineUsers::-webkit-scrollbar-thumb:hover,
+.info-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .message-input-container {
@@ -41,25 +69,25 @@
 
 .user-profile {
     text-align: center;
-    padding: 1rem;
+    padding: 0.8rem;
     border-bottom: 1px solid rgba(57, 255, 20, 0.2);
     margin-bottom: 1rem;
 }
 
 .user-profile img {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     border: 2px solid var(--neon-green);
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 #chatUsername {
     color: var(--neon-green);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     text-shadow: 0 0 10px var(--neon-green);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     display: block;
 }
 
@@ -69,8 +97,8 @@
 }
 
 .status-badge {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.8rem;
+    font-size: 0.64rem;
+    padding: 0.16rem 0.64rem;
     border-radius: 12px;
     background: rgba(57, 255, 20, 0.1);
     color: var(--neon-green);
@@ -94,22 +122,22 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    padding: 0.5rem;
+    padding: 0.4rem;
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid transparent;
 }
 
 .user-item img {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1px solid var(--neon-green);
 }
 
 .user-item span {
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .user-item.admin-user {
@@ -169,64 +197,70 @@
 
 .message {
     display: flex;
-    gap: 1rem;
-    padding: 0.5rem;
+    gap: 0.5rem;
+    padding: 0.2rem 0.4rem;
     align-items: flex-start;
+    margin-bottom: 0.2rem;
+    transition: background 0.2s;
+}
+
+.message:hover {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .message-avatar {
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 1px solid var(--neon-green);
 }
 
 .message-content {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.8rem;
-    border-radius: 10px;
-    max-width: 70%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    max-width: 85%;
     width: fit-content;
+    border: 1px solid rgba(57, 255, 20, 0.1);
+    overflow: hidden;
 }
 
 .message-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.4rem;
-    gap: 1rem;
+    gap: 0.4rem;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .message-username {
     color: var(--neon-green);
-    font-weight: bold;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.72rem;
+    max-width: 120px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
 }
 
 .message-time {
     color: #666;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    min-width: 70px;
-    text-align: right;
+    font-size: 0.832rem;
+    opacity: 0.8;
 }
 
 .message-text {
     color: #fff;
-    line-height: 1.4;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    max-width: 100%;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    word-break: break-word;
 }
 
 .chat-input {
-    padding: 1rem;
+    padding: 0.8rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
     border-top: 1px solid rgba(57, 255, 20, 0.2);
 }
 
@@ -234,10 +268,10 @@
     flex: 1;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(57, 255, 20, 0.3);
-    padding: 0.8rem;
+    padding: 0.64rem;
     border-radius: 6px;
     color: white;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 #messageInput:focus {
@@ -252,7 +286,7 @@
     background: rgba(57, 255, 20, 0.1);
     border: 1px solid var(--neon-green);
     color: var(--neon-green);
-    padding: 0 1.5rem;
+    padding: 0 1.2rem;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
@@ -286,13 +320,14 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: rgba(255, 0, 0, 0.2);
     border: 1px solid red;
     color: red;
     cursor: pointer;
     border-radius: 5px;
     z-index: 1000;
+    font-size: 0.9rem;
 }
 
 .admin-modal {
@@ -312,10 +347,10 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgb(15, 15, 15);
-    padding: 20px;
+    padding: 16px;
     border-radius: 10px;
     border: 1px solid var(--neon-green);
-    width: 300px;
+    width: 240px;
 }
 
 .admin-modal-content h2 {
@@ -345,21 +380,33 @@
 
 .admin-controls {
     position: fixed;
-    bottom: 70px;
+    bottom: 20px;
     right: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 1000;
+    z-index: 100;
 }
 
 .admin-controls button {
-    padding: 10px 20px;
-    background: rgba(255, 0, 0, 0.2);
-    border: 1px solid red;
-    color: red;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid rgba(255, 0, 0, 0.8);
+    border-radius: 4px;
     cursor: pointer;
-    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+.admin-controls button:hover {
+    background: rgba(255, 0, 0, 0.8);
+    border-color: rgba(255, 0, 0, 1);
+}
+
+#adminLogoutBtn,
+#clearChatBtn,
+#lockChatBtn {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 /* Admin message style */
@@ -370,11 +417,15 @@
 .message.admin-message .message-username::after {
     content: ' [ADMIN]';
     color: red;
-    font-size: 0.8em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-left: 0.2rem;
+    white-space: nowrap;
 }
 
 .message.admin-message .message-content {
-    border: 1px solid rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 /* Add these styles */
@@ -410,7 +461,7 @@
 
 /* Add these styles */
 .chat-info-sidebar {
-    width: 280px;
+    width: 224px;
     background: rgb(15, 15, 15);
     border-radius: 10px;
     padding: 1rem;
@@ -418,7 +469,6 @@
     flex-direction: column;
     gap: 1.5rem;
     border: 0.5px solid rgba(57, 255, 20, 0.3);
-    height: 700px;
 }
 
 .info-section {
@@ -433,13 +483,13 @@
 .info-section h3 {
     color: var(--neon-green);
     margin-bottom: 1rem;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
 }
 
 .info-section p {
     color: #fff;
     margin-bottom: 0.8rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     line-height: 1.4;
 }
 
@@ -456,7 +506,7 @@
 .info-section ul li {
     color: #fff;
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     padding-left: 1.2rem;
     position: relative;
     line-height: 1.4;
@@ -477,9 +527,286 @@
     flex-direction: column;
     gap: 1.5rem;
     border: 0.5px solid rgba(57, 255, 20, 0.3);
-    height: 700px;
     width: 100%;
-    min-width: 500px;
-    max-width: 800px;
+    min-width: 400px;
+    max-width: 640px;
     margin: 0 auto;
+}
+
+#messageInput:disabled {
+    background: rgba(0, 0, 0, 0.5);
+    cursor: not-allowed;
+}
+
+#sendMessage:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Message container - more compact layout */
+.message {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    align-items: flex-start;
+    margin-bottom: 0.2rem;
+    transition: background 0.2s;
+}
+
+.message:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Avatar adjustments */
+.message-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--neon-green);
+}
+
+/* Message content - sleeker design */
+.message-content {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    max-width: 85%;
+    width: fit-content;
+    border: 1px solid rgba(57, 255, 20, 0.1);
+    overflow: hidden;
+}
+
+/* Header layout */
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Username style */
+.message-username {
+    color: var(--neon-green);
+    font-weight: 600;
+    font-size: 0.72rem;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Timestamp style */
+.message-time {
+    color: #666;
+    font-size: 0.832rem;
+    opacity: 0.8;
+}
+
+/* Message text */
+.message-text {
+    color: #fff;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Admin message specific styles */
+.message.admin-message .message-content {
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.message.admin-message .message-username::after {
+    content: ' [ADMIN]';
+    color: red;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-left: 0.2rem;
+    white-space: nowrap;
+}
+
+/* Deleted message style */
+.message.deleted .message-content {
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+.message.deleted .message-text {
+    color: rgba(255, 0, 0, 0.7);
+    font-style: italic;
+}
+
+/* Messages container spacing */
+.chat-messages {
+    padding: 0.5rem;
+    gap: 0.2rem;
+}
+
+/* Admin Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: rgb(15, 15, 15);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1.5px solid var(--neon-green);
+    border-radius: 10px;
+    width: 300px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+.close {
+    color: var(--neon-green);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+#adminLoginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#adminLoginForm input {
+    padding: 8px;
+    border: 1px solid var(--neon-green);
+    border-radius: 4px;
+    background: rgb(25, 25, 25);
+    color: white;
+}
+
+#adminLoginForm button {
+    padding: 8px;
+    background: var(--dark-bg);
+    border: 1.5px solid var(--neon-green);
+    border-radius: 4px;
+    color: var(--neon-green);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#adminLoginForm button:hover {
+    background: var(--neon-green);
+    color: var(--dark-bg);
+}
+
+.modal-content h2 {
+    color: var(--neon-green);
+    margin-bottom: 10px;
+}
+
+/* Admin Button Styles */
+.admin-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.admin-button:hover {
+    opacity: 0.9;
+}
+
+/* Admin Controls Styles */
+.admin-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+}
+
+.admin-controls button {
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid rgba(255, 0, 0, 0.8);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-controls button:hover {
+    background: rgba(255, 0, 0, 0.8);
+    border-color: rgba(255, 0, 0, 1);
+}
+
+#adminLogoutBtn,
+#clearChatBtn,
+#lockChatBtn {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Update admin user in online list as well */
+.user-item .user-name-container .user-name[data-admin]::after {
+    content: ' [ADMIN]';
+    color: red;
+    font-size: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Add these styles to chat.css */
+#chatMessages,
+#onlineUsers,
+.info-section {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+/* Override any inherited scrollbar styles */
+#chatMessages::-webkit-scrollbar,
+#onlineUsers::-webkit-scrollbar,
+.info-section::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+#chatMessages::-webkit-scrollbar-track,
+#onlineUsers::-webkit-scrollbar-track,
+.info-section::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+    border-radius: 20px;
+    margin: 4px 0;
+}
+
+#chatMessages::-webkit-scrollbar-thumb,
+#onlineUsers::-webkit-scrollbar-thumb,
+.info-section::-webkit-scrollbar-thumb {
+    background: var(--dark-bg);
+    border: 1.5px solid var(--neon-green);
+    border-radius: 20px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb:hover,
+#onlineUsers::-webkit-scrollbar-thumb:hover,
+.info-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.8);
 } 

@@ -29,6 +29,7 @@
             <a href="index.php" class="active">Home</a>
             <a href="games.php">Games</a>
             <a href="proxy.php">Proxy</a>
+            <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
         </div>
@@ -76,6 +77,9 @@
                 <p class="privacy-notice">All data is stored locally in your browser</p>
             </div>
             <div class="hero">
+                <div class="online-counter">
+                    <span id="onlineCount">0</span> Users Online
+                </div>
                 <h1>PROJECT VOID</h1>
                 <div class="subtitle-group">
                     <p class="tagline">Global Home Visits</p>

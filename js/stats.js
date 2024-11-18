@@ -1,3 +1,12 @@
+// Add this validation function at the top
+function validateUsername(username) {
+    const trimmed = username.trim();
+    if (trimmed.length === 0) return false;
+    if (trimmed.length > 20) return false;
+    const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+    return alphanumericRegex.test(trimmed);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Get stored stats first
     let stats = JSON.parse(localStorage.getItem('siteStats'));
@@ -69,11 +78,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Set up event listeners
     document.getElementById('setUsernameBtn').addEventListener('click', function() {
-        const newUsername = prompt('Enter your username:', stats.username);
-        if (newUsername !== null && newUsername.trim() !== '') {
-            stats.username = newUsername.trim();
-            localStorage.setItem('siteStats', JSON.stringify(stats));
-            forceReload();
+        const newUsername = prompt('Enter your username (max 20 characters, letters and numbers only):', stats.username);
+        if (newUsername !== null) {
+            if (validateUsername(newUsername)) {
+                stats.username = newUsername.trim();
+                localStorage.setItem('siteStats', JSON.stringify(stats));
+                forceReload();
+            } else {
+                alert('Username must be between 1 and 20 characters and contain only letters and numbers.');
+            }
         }
     });
 
@@ -122,6 +135,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.onload = function(event) {
                 try {
                     const importedStats = JSON.parse(event.target.result);
+                    
+                    // Validate username before importing
+                    if (!validateUsername(importedStats.username)) {
+                        alert('Invalid username in import file. Username must be between 1 and 20 characters and contain only letters and numbers.');
+                        return;
+                    }
+                    
                     stats = importedStats;
                     localStorage.setItem('siteStats', JSON.stringify(stats));
                     alert('Data imported successfully!');

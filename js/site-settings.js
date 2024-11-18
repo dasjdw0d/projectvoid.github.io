@@ -47,10 +47,27 @@ function initializeCloakingFeatures() {
     }
 }
 
-// Modify the DOMContentLoaded event listener
+// Add these at the top of the file
+let heartbeatInterval;
+const SESSION_KEY = 'userSessionId';
+
+// Generate a unique session ID if one doesn't exist
+function getSessionId() {
+    let sessionId = localStorage.getItem(SESSION_KEY);
+    if (!sessionId) {
+        sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem(SESSION_KEY, sessionId);
+    }
+    return sessionId;
+}
+
+// Modify your DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize cloaking features for all pages
     initializeCloakingFeatures();
+
+    // Initialize online tracking
+    initializeOnlineTracking();
 
     // Initialize particles and cursor settings
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
@@ -321,4 +338,75 @@ function isGlobalCloakEnabled() {
 function getCurrentCloakConfig() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     return CLOAK_CONFIGS[settings.globalCloakType || 'google'];
+}
+
+function initializeOnlineTracking() {
+    const sessionId = getSessionId();
+    let lastUserCount = 0;
+    let failedHeartbeats = 0;
+    
+    function sendHeartbeat() {
+        fetch('/api/heartbeat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sessionId: sessionId,
+                timestamp: Date.now()
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            failedHeartbeats = 0; // Reset failed counter on success
+            lastUserCount = data.onlineUsers;
+            updateOnlineCount(lastUserCount);
+        })
+        .catch(error => {
+            failedHeartbeats++;
+            console.error('Heartbeat failed:', error);
+            // Only stop heartbeat if we've failed multiple times
+            if (failedHeartbeats > 5) {
+                clearInterval(heartbeatInterval);
+                console.log('Heartbeat stopped due to multiple failures');
+            }
+        });
+    }
+
+    function updateOnlineCount(count) {
+        const onlineCount = document.getElementById('onlineCount');
+        if (onlineCount) {
+            onlineCount.textContent = count;
+        }
+    }
+
+    // Send initial heartbeat
+    sendHeartbeat();
+
+    // Clear any existing interval
+    if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+    }
+
+    // Heartbeat every 1 second
+    heartbeatInterval = setInterval(sendHeartbeat, 1000);
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+        }
+        
+        // Send offline status with keepalive to ensure it gets sent
+        fetch('/api/offline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sessionId: sessionId
+            }),
+            keepalive: true
+        }).catch(console.error);
+    });
 }

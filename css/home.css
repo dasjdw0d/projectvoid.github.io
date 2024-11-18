@@ -328,3 +328,16 @@
     }
 
 }
+
+.online-counter {
+    color: #888;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.online-counter #onlineCount {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+}

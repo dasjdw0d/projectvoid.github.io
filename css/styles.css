@@ -44,24 +44,29 @@ main {
 }
 
 /* Scrollbar Styles */
-::-webkit-scrollbar {
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
     width: 8px;
+    background: transparent;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
     background: var(--dark-bg);
-    border-radius: 8px;
+    border-radius: 20px;
+    margin: 4px 0;
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
     background: var(--dark-bg);
-    border: 1px solid var(--neon-green);
-    border-radius: 8px;
-    box-shadow: 0 0 10px var(--neon-green);
+    border: 1.5px solid var(--neon-green);
+    border-radius: 20px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--hover-bg);
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 /* Particles Background */
