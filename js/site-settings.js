@@ -7,88 +7,34 @@
     }
 })();
 
-function createContextMenu() {
-    let menu = document.querySelector('.custom-context-menu');
-    if (!menu) {
-        menu = document.createElement('div');
-        menu.className = 'custom-context-menu';
-        
-        // Create background container
-        const menuBackground = document.createElement('div');
-        menuBackground.className = 'menu-background';
-        
-        // Add Fullscreen button
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'menu-item';
-        
-        // Add icon span
-        const icon = document.createElement('span');
-        icon.className = 'icon';
-        icon.textContent = '⤢';
-        
-        // Add text span
-        const text = document.createElement('span');
-        text.textContent = 'Fullscreen';
-        
-        fullscreenBtn.appendChild(icon);
-        fullscreenBtn.appendChild(text);
-        
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-            menu.style.display = 'none';
-        });
-        
-        // Add Settings button
-        const settingsBtn = document.createElement('button');
-        settingsBtn.className = 'menu-item';
-        
-        // Add settings icon
-        const settingsIcon = document.createElement('span');
-        settingsIcon.className = 'icon';
-        settingsIcon.textContent = '⚙️';
-        
-        // Add settings text
-        const settingsText = document.createElement('span');
-        settingsText.textContent = 'Settings';
-        
-        settingsBtn.appendChild(settingsIcon);
-        settingsBtn.appendChild(settingsText);
-        
-        settingsBtn.addEventListener('click', () => {
-            window.location.href = 'settings.html';
-            menu.style.display = 'none';
-        });
-        
-        menuBackground.appendChild(fullscreenBtn);
-        menuBackground.appendChild(settingsBtn);
-        menu.appendChild(menuBackground);
-        document.body.appendChild(menu);
+function initializeParticles() {
+    if (document.getElementById('particles-js')) {
+        particlesInstance = particlesJS('particles-js', particlesConfig);
     }
-    
-    // Initialize menu as hidden
-    menu.style.display = 'none';
-    return menu;
 }
 
-// Create menu and set up event listeners once when the DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Load saved settings
+function destroyParticles() {
+    if (window.pJSDom && window.pJSDom[0]) {
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window.pJSDom = [];
+    }
+}
+
+// Add these variables at the top of the file
+let originalTitle = '';
+let originalFavicon = '';
+
+// Separate the initialization of cloaking features from the settings page initialization
+function initializeCloakingFeatures() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     
-    // Apply particle setting
-    const particlesSetting = settings.particleToggle !== false;
-    const particles = document.getElementById('particles-js');
-    if (particles) {
-        particles.style.display = particlesSetting ? 'block' : 'none';
-    }
-
-    // Store original title and favicon
-    const originalTitle = document.title;
-    const originalFavicon = document.querySelector('link[rel="icon"]').href;
+    // Get the current page name from the URL
+    const pathParts = window.location.pathname.split('/');
+    const pageName = pathParts[pathParts.length - 1].split('.')[0] || 'index';
+    
+    // Store the original values for this page
+    originalTitle = `Project Void - ${pageName.charAt(0).toUpperCase() + pageName.slice(1)}`;
+    originalFavicon = 'images/favicon.png';
 
     // Apply cloaking if enabled
     if (settings.cloakingToggle) {
@@ -99,37 +45,39 @@ document.addEventListener('DOMContentLoaded', function() {
     if (settings.globalCloakToggle) {
         applyGlobalCloak(settings.globalCloakType || 'google');
     }
+}
 
-    // Create context menu
-    const menu = createContextMenu();
+// Modify the DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize cloaking features for all pages
+    initializeCloakingFeatures();
+
+    // Initialize particles and cursor settings
+    const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
+        particleToggle: true
+    };
     
-    // Handle right click
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        menu.style.display = 'block';
-        
-        // Position the menu
-        const x = e.clientX;
-        const y = e.clientY;
-        const winWidth = window.innerWidth;
-        const winHeight = window.innerHeight;
-        const menuWidth = menu.offsetWidth;
-        const menuHeight = menu.offsetHeight;
-        
-        // Adjust menu position if it would go outside viewport
-        const xPos = x + menuWidth > winWidth ? winWidth - menuWidth : x;
-        const yPos = y + menuHeight > winHeight ? winHeight - menuHeight : y;
-        
-        menu.style.left = `${xPos}px`;
-        menu.style.top = `${yPos}px`;
-    });
-    
-    // Hide menu on click outside
-    document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target)) {
-            menu.style.display = 'none';
+    // Apply particle setting
+    const particlesSetting = settings.particleToggle !== false;
+    const particles = document.getElementById('particles-js');
+    if (particles) {
+        particles.style.display = particlesSetting ? 'block' : 'none';
+        if (particlesSetting) {
+            initializeParticles();
+        } else {
+            destroyParticles();
         }
-    });
+    }
+
+    // Apply cursor setting
+    if (settings.cursorToggle === true) {
+        enableCustomCursor();
+    }
+
+    // Only initialize settings page if we're on settings.php
+    if (window.location.pathname.includes('settings.php')) {
+        initializeSettingsPage();
+    }
 });
 
 function enableCustomCursor() {
@@ -185,7 +133,8 @@ const CLOAK_CONFIGS = {
 // Add this variable at the top of the file to store the event listener
 let visibilityChangeHandler = null;
 
-function handleCloaking(originalTitle, originalFavicon) {
+// Modify the handleCloaking function
+function handleCloaking(pageTitle, pageFavicon) {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     
     // Remove any existing visibility change listener
@@ -196,7 +145,7 @@ function handleCloaking(originalTitle, originalFavicon) {
     // Create new visibility change handler
     visibilityChangeHandler = function() {
         const currentSettings = JSON.parse(localStorage.getItem('siteSettings')) || {};
-        if (!currentSettings.cloakingToggle) return; // Don't cloak if setting is off
+        if (!currentSettings.cloakingToggle) return;
         
         const selectedCloak = currentSettings.clickoffCloakType || 'google';
         const cloak = CLOAK_CONFIGS[selectedCloak];
@@ -205,10 +154,11 @@ function handleCloaking(originalTitle, originalFavicon) {
         
         if (document.hidden) {
             document.title = cloak.title;
-            favicon.href = cloak.favicon;
+            if (favicon) favicon.href = cloak.favicon;
         } else {
-            document.title = originalTitle;
-            favicon.href = originalFavicon;
+            // Use the stored original values
+            document.title = pageTitle;
+            if (favicon) favicon.href = pageFavicon;
         }
     };
     
@@ -216,10 +166,16 @@ function handleCloaking(originalTitle, originalFavicon) {
     document.addEventListener('visibilitychange', visibilityChangeHandler);
 }
 
+// Modify the removeCloak function
 function removeCloak() {
     if (visibilityChangeHandler) {
         document.removeEventListener('visibilitychange', visibilityChangeHandler);
         visibilityChangeHandler = null;
+        
+        // Reset to original values
+        document.title = originalTitle;
+        const favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) favicon.href = originalFavicon;
     }
 }
 
@@ -244,9 +200,11 @@ function resetGlobalCloak() {
     }
 }
 
-// Only run settings page code if we're on settings.html
-if (window.location.pathname.endsWith('settings.html')) {
-    const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
+// Move settings page code into a separate function
+function initializeSettingsPage() {
+    const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
+        particleToggle: true  // Set default to true
+    };
 
     // Initialize toggles
     const particleToggle = document.getElementById('particleToggle');
@@ -256,80 +214,74 @@ if (window.location.pathname.endsWith('settings.html')) {
     const globalCloakSelect = document.getElementById('globalCloakSelect');
     const clickoffCloakSelect = document.getElementById('clickoffCloakSelect');
 
-    // Set initial states
-    if (particleToggle) {
-        particleToggle.checked = settings.particleToggle !== false;
-    }
-    if (cursorToggle) {
-        cursorToggle.checked = settings.cursorToggle === true;
-    }
-    if (cloakingToggle) {
-        const clickoffSettingsCard = cloakingToggle.closest('.settings-card');
-        cloakingToggle.checked = settings.cloakingToggle === true;
-        clickoffSettingsCard.dataset.active = settings.cloakingToggle === true;
-        
-        if (clickoffCloakSelect) {
-            clickoffCloakSelect.value = settings.clickoffCloakType || 'google';
-        }
-    }
-    if (globalCloakToggle) {
-        const globalSettingsCard = globalCloakToggle.closest('.settings-card');
-        globalCloakToggle.checked = settings.globalCloakToggle === true;
-        globalSettingsCard.dataset.active = settings.globalCloakToggle === true;
-        
-        if (globalCloakSelect) {
-            globalCloakSelect.value = settings.globalCloakType || 'google';
-        }
+    if (!particleToggle || !cursorToggle || !cloakingToggle || !globalCloakToggle) {
+        return; // Not on settings page, exit early
     }
 
-    // Handle clickoff cloaking toggle
-    cloakingToggle.addEventListener('change', function() {
-        const clickoffSettingsCard = this.closest('.settings-card');
+    // Set initial states
+    particleToggle.checked = settings.particleToggle !== false; // This ensures true by default
+    cursorToggle.checked = settings.cursorToggle === true;
+    cloakingToggle.checked = settings.cloakingToggle === true;
+    globalCloakToggle.checked = settings.globalCloakToggle === true;
+    
+    // Set initial select values
+    if (settings.globalCloakType) {
+        globalCloakSelect.value = settings.globalCloakType;
+    }
+    if (settings.clickoffCloakType) {
+        clickoffCloakSelect.value = settings.clickoffCloakType;
+    }
+
+    // Add event listeners
+    particleToggle.addEventListener('change', function() {
+        settings.particleToggle = this.checked;
+        localStorage.setItem('siteSettings', JSON.stringify(settings));
         
-        if (this.checked) {
-            // If clickoff cloaking is enabled, disable global cloaking
-            globalCloakToggle.checked = false;
-            const globalSettingsCard = globalCloakToggle.closest('.settings-card');
-            globalSettingsCard.dataset.active = false;
-            settings.globalCloakToggle = false;
-            resetGlobalCloak();
-            
-            const originalTitle = document.title;
-            const originalFavicon = document.querySelector('link[rel="icon"]').href;
-            handleCloaking(originalTitle, originalFavicon);
-        } else {
-            // Remove the visibility change listener and reset title/favicon
-            removeCloak();
-            const pathParts = window.location.pathname.split('/');
-            const pageName = pathParts[pathParts.length - 1].split('.')[0];
-            document.title = `Project Void - ${pageName.charAt(0).toUpperCase() + pageName.slice(1)}`;
-            const favicon = document.querySelector('link[rel="icon"]');
-            if (favicon) {
-                favicon.href = 'images/favicon.png';
+        const particles = document.getElementById('particles-js');
+        if (particles) {
+            if (this.checked) {
+                // Save the setting and refresh the page
+                location.reload();
+            } else {
+                particles.style.display = 'none';
+                destroyParticles();
             }
         }
-        
-        settings.cloakingToggle = this.checked;
-        clickoffSettingsCard.dataset.active = this.checked;
+    });
+
+    cursorToggle.addEventListener('change', function() {
+        settings.cursorToggle = this.checked;
+        if (this.checked) {
+            enableCustomCursor();
+        } else {
+            disableCustomCursor();
+        }
         localStorage.setItem('siteSettings', JSON.stringify(settings));
     });
 
-    // Handle global cloak toggle
-    globalCloakToggle.addEventListener('change', function() {
-        const globalSettingsCard = this.closest('.settings-card');
-        
-        if (this.checked) {
-            // If global cloaking is enabled, disable clickoff cloaking
-            cloakingToggle.checked = false;
-            const clickoffSettingsCard = cloakingToggle.closest('.settings-card');
-            clickoffSettingsCard.dataset.active = false;
-            settings.cloakingToggle = false;
+    cloakingToggle.addEventListener('change', function() {
+        if (this.checked && globalCloakToggle.checked) {
+            globalCloakToggle.checked = false;
+            settings.globalCloakToggle = false;
+            resetGlobalCloak();
         }
-        
-        settings.globalCloakToggle = this.checked;
-        globalSettingsCard.dataset.active = this.checked;
+        settings.cloakingToggle = this.checked;
         localStorage.setItem('siteSettings', JSON.stringify(settings));
-        
+        if (this.checked) {
+            handleCloaking(document.title, document.querySelector('link[rel="icon"]')?.href);
+        } else {
+            removeCloak();
+        }
+    });
+
+    globalCloakToggle.addEventListener('change', function() {
+        if (this.checked && cloakingToggle.checked) {
+            cloakingToggle.checked = false;
+            settings.cloakingToggle = false;
+            removeCloak();
+        }
+        settings.globalCloakToggle = this.checked;
+        localStorage.setItem('siteSettings', JSON.stringify(settings));
         if (this.checked) {
             applyGlobalCloak(settings.globalCloakType || 'google');
         } else {
@@ -337,46 +289,36 @@ if (window.location.pathname.endsWith('settings.html')) {
         }
     });
 
-    // Handle cloak type selection
-    if (globalCloakSelect) {
-        globalCloakSelect.addEventListener('change', function() {
-            settings.globalCloakType = this.value;
-            localStorage.setItem('siteSettings', JSON.stringify(settings));
-            
-            if (settings.globalCloakToggle) {
-                applyGlobalCloak(this.value);
-            }
-        });
-    }
-
-    // Handle clickoff cloak selection
-    if (clickoffCloakSelect) {
-        clickoffCloakSelect.addEventListener('change', function() {
-            settings.clickoffCloakType = this.value;
-            localStorage.setItem('siteSettings', JSON.stringify(settings));
-        });
-    }
-
-    // Particle toggle
-    particleToggle.addEventListener('change', function() {
-        settings.particleToggle = this.checked;
+    globalCloakSelect.addEventListener('change', function() {
+        settings.globalCloakType = this.value;
         localStorage.setItem('siteSettings', JSON.stringify(settings));
-        
-        const particles = document.getElementById('particles-js');
-        if (particles) {
-            particles.style.display = this.checked ? 'block' : 'none';
+        if (settings.globalCloakToggle) {
+            applyGlobalCloak(this.value);
         }
     });
 
-    // Cursor toggle
-    cursorToggle.addEventListener('change', function() {
-        settings.cursorToggle = this.checked;
+    clickoffCloakSelect.addEventListener('change', function() {
+        settings.clickoffCloakType = this.value;
         localStorage.setItem('siteSettings', JSON.stringify(settings));
-        
-        if (this.checked) {
-            enableCustomCursor();
-        } else {
-            disableCustomCursor();
-        }
     });
+}
+
+// Run settings initialization when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on settings page (change .html to .php)
+    if (window.location.pathname.includes('settings.php')) {
+        initializeSettingsPage();
+    }
+});
+
+// Add this helper function to check if global cloaking is enabled
+function isGlobalCloakEnabled() {
+    const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
+    return settings.globalCloakToggle === true;
+}
+
+// Add this function to get the current cloak config
+function getCurrentCloakConfig() {
+    const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
+    return CLOAK_CONFIGS[settings.globalCloakType || 'google'];
 }

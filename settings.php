@@ -68,7 +68,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <p class="setting-description">Disguise the tab to a website of your choice when you switch browser tabs.</p>
+                    <p class="setting-description">Disguise the tab to a website of your choice when you switch browser tabs. Cannot be used with Global Tab Cloaking.</p>
                     <div class="cloak-options" id="clickoffCloakOptions">
                         <select id="clickoffCloakSelect" class="cloak-select">
                             <option value="google">Google Search</option>
@@ -89,7 +89,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <p class="setting-description">Disguises the tab as another website of your choice.</p>
+                    <p class="setting-description">Disguises the tab as another website of your choice. Cannot be used with Clickoff Cloaking.</p>
                     <div class="cloak-options" id="globalCloakOptions">
                         <select id="globalCloakSelect" class="cloak-select">
                             <option value="google">Google Search</option>
@@ -106,10 +106,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/site-settings.js"></script>
-    <script>
-        particlesJS('particles-js', particlesConfig);
-    </script>
+    <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
+    <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
 </body>
 </html> 

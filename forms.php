@@ -82,11 +82,9 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/site-settings.js"></script>
+    <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
+    <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script>
-        particlesJS('particles-js', particlesConfig);
-
         function toggleForm(header) {
             const formEmbed = header.nextElementSibling;
             formEmbed.classList.toggle('collapsed');

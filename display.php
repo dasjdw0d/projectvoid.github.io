@@ -21,7 +21,7 @@
 <body>
     <div class="game-bar">
         <div class="game-bar-left">
-            <a href="games.html" class="back-button">
+            <a href="games.php" class="back-button">
                 <span class="back-arrow">‹</span>
                 Back to Games
             </a>
@@ -45,8 +45,7 @@
                 allowfullscreen>
         </iframe>
     </div>
-
-    <script src="js/site-settings.js"></script>
+    <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -60,13 +59,26 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.src = gamePath;
                 document.getElementById('gameTitle').textContent = gameTitle || 'Game';
-                document.title = 'Project Void - Playing Game';
+                
+                // Only set the title if global cloaking is disabled
+                if (!isGlobalCloakEnabled()) {
+                    document.title = 'Project Void - Playing Game';
+                } else {
+                    // Apply the global cloak
+                    const cloak = getCurrentCloakConfig();
+                    document.title = cloak.title;
+                    const favicon = document.querySelector('link[rel="icon"]');
+                    if (favicon) {
+                        favicon.href = cloak.favicon;
+                    }
+                }
+                
                 startTimer();
                 setTimeout(() => {
-                    window.history.replaceState({}, '', '/display.html');
+                    window.history.replaceState({}, '', '/display.php');
                 }, 100);
             } else {
-                window.location.href = 'games.html';
+                window.location.href = 'games.php';
             }
 
             // Fullscreen functionality

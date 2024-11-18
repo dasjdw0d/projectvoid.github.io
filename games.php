@@ -395,7 +395,7 @@
 
     function createGameCards(gamesSubset) {
         return gamesSubset.map(game => `
-            <a href="display.html?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
+            <a href="display.php?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
                class="game-card" 
                data-title="${game.title}" 
                onclick="updateLastGame('${game.title}')">
@@ -463,11 +463,8 @@
     updateDisplay();
     </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/site-settings.js"></script>
-    <script src="js/stats.js"></script>
-    <script>
-        particlesJS('particles-js', particlesConfig);
-    </script>
+    <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
+    <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
+    <script src="js/stats.js?v=<?php echo time(); ?>"></script>
 </body>
 </html> 
