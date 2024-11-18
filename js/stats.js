@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         // Only increment visits if we're specifically on index.html
         const currentPath = window.location.pathname;
-        if (currentPath === '/index.html' || currentPath.endsWith('/projectvoid/index.html')) {
+        if (currentPath === '/index.php' || currentPath.endsWith('/projectvoid/index.php')) {
             stats.VISITS++;
             localStorage.setItem('siteStats', JSON.stringify(stats));
         }
