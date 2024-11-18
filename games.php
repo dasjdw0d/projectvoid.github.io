@@ -395,7 +395,7 @@
 
     function createGameCards(gamesSubset) {
         return gamesSubset.map(game => `
-            <a href="display.html?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
+            <a href="display.php?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
                class="game-card" 
                data-title="${game.title}" 
                onclick="updateLastGame('${game.title}')">

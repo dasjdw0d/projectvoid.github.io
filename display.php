@@ -21,7 +21,7 @@
 <body>
     <div class="game-bar">
         <div class="game-bar-left">
-            <a href="games.html" class="back-button">
+            <a href="games.php" class="back-button">
                 <span class="back-arrow">‹</span>
                 Back to Games
             </a>
@@ -63,10 +63,10 @@
                 document.title = 'Project Void - Playing Game';
                 startTimer();
                 setTimeout(() => {
-                    window.history.replaceState({}, '', '/display.html');
+                    window.history.replaceState({}, '', '/display.php');
                 }, 100);
             } else {
-                window.location.href = 'games.html';
+                window.location.href = 'games.php';
             }
 
             // Fullscreen functionality
