@@ -8,9 +8,22 @@
 })();
 
 function initializeParticles() {
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', particlesConfig);
-    }
+    // Add a small delay to ensure the config file is loaded
+    setTimeout(() => {
+        if (typeof particlesJS !== 'undefined' && typeof particlesConfig !== 'undefined') {
+            particlesJS('particles-js', particlesConfig);
+        } else {
+            console.warn('Particles config not loaded. Retrying...');
+            // Try one more time after a longer delay
+            setTimeout(() => {
+                if (typeof particlesJS !== 'undefined' && typeof particlesConfig !== 'undefined') {
+                    particlesJS('particles-js', particlesConfig);
+                } else {
+                    console.error('Failed to load particles config after retry');
+                }
+            }, 1000);
+        }
+    }, 100);
 }
 
 function destroyParticles() {
