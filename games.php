@@ -499,10 +499,9 @@
                data-title="${game.title}" 
                onclick="updateLastGame('${game.title}')">
                 <div class="game-thumbnail">
-                    <img loading="lazy" 
-                         src="${currentPage === Math.ceil((games.indexOf(game) + 1) / GAMES_PER_PAGE) ? game.thumbnail : ''}" 
-                         data-src="${game.thumbnail}"
-                         alt="${game.title}">
+                    <img src="${game.thumbnail}" 
+                         alt="${game.title}"
+                         loading="lazy">
                 </div>
                 <div class="game-info">
                     <h3>${game.title}</h3>
@@ -517,6 +516,11 @@
         const gamesSubset = filteredGames.slice(startIndex, endIndex);
         
         const gamesGrid = document.getElementById('gamesGrid');
+        
+        // Clear existing games
+        gamesGrid.innerHTML = '';
+        
+        // Add new games for current page
         gamesGrid.innerHTML = createGameCards(gamesSubset);
         
         updatePagination();
@@ -558,15 +562,11 @@
             currentPage = page;
         }
         
-        updateDisplay();
+        // Scroll to top of games grid
+        document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
         
-        // Load images for the current page
-        const images = document.querySelectorAll('.game-thumbnail img');
-        images.forEach(img => {
-            if (!img.src && img.dataset.src) {
-                img.src = img.dataset.src;
-            }
-        });
+        // Update display with new page
+        updateDisplay();
     }
 
     // Initial display

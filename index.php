@@ -83,10 +83,10 @@
                 <h1>PROJECT VOID</h1>
                 <div class="subtitle-group">
                     <p class="tagline">Global Home Visits</p>
-                    <a href="https://www.hitwebcounter.com" target="_blank">
                         <img src="https://hitwebcounter.com/counter/counter.php?page=17411431&style=0025&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" />
                     </a>
                 </div>
+                <button class="about-blank-btn" onclick="openInAboutBlank()">Open in about:blank</button>
             </div>
         </div>
 
@@ -105,6 +105,35 @@
             </div>
         </div>
     </main>
+    <script>
+    function openInAboutBlank() {
+        (function () {
+            var url = "https://projectvoid.is-not-a.dev";
+
+            // Open a new about:blank window
+            var win = window.open();
+
+            // Create an iframe
+            var iframe = win.document.createElement('iframe');
+
+            // Set styles for the iframe
+            iframe.style = "position:fixed;width:100vw;height:100vh;top:0px;left:0px;right:0px;bottom:0px;z-index:2147483647;background-color:white;border:none;";
+
+            // Check and assign the URL to the iframe
+            if (url.includes('https://') || url.includes("http://")) {
+                iframe.src = url;
+            } else {
+                iframe.src = "https://" + url;
+            }
+
+            // Append the iframe to the body of the window
+            win.document.body.appendChild(iframe);
+        })();
+
+        // Redirect to google
+        window.location.href = "https://google.com";
+    }
+    </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
