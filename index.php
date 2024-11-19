@@ -78,7 +78,7 @@
             </div>
             <div class="hero">
                 <div class="online-counter">
-                    <span id="onlineCount">0</span> Users Online
+                    <span id="onlineCount">Loading...</span> Global Users Online
                 </div>
                 <h1>PROJECT VOID</h1>
                 <div class="subtitle-group">

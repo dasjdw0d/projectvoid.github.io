@@ -267,9 +267,6 @@
 
 
 
-
-
-
         {
             title: "Flappy Bird",
             path: "games/flappybird/index.html",
@@ -346,9 +343,114 @@
             thumbnail: "games/holeio/icon.png"
         },
         {
-            title: "Game",
-            path: "games/game/index.html",
-            thumbnail: "games/game/icon.png"
+            title: "2D Rocket League",
+            path: "games/2drocketleague/index.html",
+            thumbnail: "games/2drocketleague/unnamed.png"
+        },
+        {
+            title: "Avalanche",
+            path: "games/avalanche/index.html",
+            thumbnail: "games/avalanche/icon.png"
+        },
+        {
+            title: "Bad Ice Cream",
+            path: "games/badicecream/index.html",
+            thumbnail: "games/badicecream/bad-ice-cream.png"
+        },
+        {
+            title: "Bad Ice Cream 2",
+            path: "games/badicecream2/index.html",
+            thumbnail: "games/badicecream2/bad-ice-cream-2.png"
+        },
+        {
+            title: "Bad Ice Cream 3",
+            path: "games/badicecream3/index.html",
+            thumbnail: "games/badicecream3/bad-ice-cream-3.png"
+        },
+        {
+            title: "Bad Times Simulator",
+            path: "games/badtimesimulator/index.html",
+            thumbnail: "games/badtimesimulator/icon.png"
+        },
+        {
+            title: "Happy Wheels",
+            path: "games/happywheels/index.html",
+            thumbnail: "games/happywheels/Untitled.jpeg"
+        },
+        {
+            title: "Red Ball 3",
+            path: "games/redball3/index.html",
+            thumbnail: "games/redball3/redball3.png"
+        },
+        {
+            title: "Red Ball 4",
+            path: "games/redball4/index.html",
+            thumbnail: "games/redball4/redball4.webp"
+        },
+        {
+            title: "Roof Top Snipers",
+            path: "games/rooftopsnipers/index.html",
+            thumbnail: "games/rooftopsnipers/logo.png"
+        },
+        {
+            title: "Roof Top Snipers 2",
+            path: "games/rooftopsnipers2/index.html",
+            thumbnail: "games/rooftopsnipers2/icon.png"
+        },
+        {
+            title: "Super Hot",
+            path: "games/superhot/index.html",
+            thumbnail: "games/superhot/icon.png"
+        },
+        {
+            title: "Tetris",
+            path: "games/tetris/index.html",
+            thumbnail: "games/tetris/icon.png"
+        },
+        {
+            title: "Temple Run 2",
+            path: "games/templerun2/index.html",
+            thumbnail: "games/templerun2/img/cover.png"
+        },
+        {
+            title: "TABS",
+            path: "games/tabs/index.html",
+            thumbnail: "games/tabs/unnamed.png"
+        },
+        {
+            title: "The Impossible Game",
+            path: "games/theimpossiblegame/index.html",
+            thumbnail: "games/theimpossiblegame/image.jpg"
+        },
+        {
+            title: "The Impossible Quiz",
+            path: "games/theimpossiblequiz/index.html",
+            thumbnail: "games/theimpossiblequiz/tiq.avif"
+        },
+        {
+            title: "Solitaire",
+            path: "games/solitaire/index.html",
+            thumbnail: "games/solitaire/cover.svg"
+        },
+        {
+            title: "Soccer Random",
+            path: "games/soccerrandom/index.html",
+            thumbnail: "games/soccerrandom/test.png"
+        },
+        {
+            title: "Stickman Hook",
+            path: "games/stickman-hook/index.html",
+            thumbnail: "games/stickman-hook/icon.jpg"
+        },
+        {
+            title: "Worlds Hardest Game",
+            path: "games/worldshardestgame/index.html",
+            thumbnail: "games/worldshardestgame/icon.png"
+        },
+        {
+            title: "Worlds Hardest Game 2",
+            path: "games/worldhardestgame2/index.html",
+            thumbnail: "games/worldhardestgame2/icon.jpg"
         },
         {
             title: "Game",
@@ -365,11 +467,7 @@
             path: "games/game/index.html",
             thumbnail: "games/game/icon.png"
         },
-        {
-            title: "Game",
-            path: "games/game/index.html",
-            thumbnail: "games/game/icon.png"
-        },
+
 
     ];
 
