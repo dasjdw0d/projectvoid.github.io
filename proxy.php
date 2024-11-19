@@ -36,6 +36,10 @@
 
     <main>
         <div class="proxy-container">
+            <div class="proxy-title">
+                <h1>Coming soon...</h1>
+                <p class="tagline">This will be able to unblock any site you want.</p>
+            </div>
             <div class="search-container">
                 <form id="form">
                     <input type="text" id="input" placeholder="Search the Web Freely...">

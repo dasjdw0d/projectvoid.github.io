@@ -69,10 +69,6 @@
                         <button class="action-btn" id="setUsernameBtn">Change Username</button>
                     </div>
                     <button class="action-btn danger" id="clearDataBtn">Clear Data</button>
-                    <div class="secondary-actions">
-                        <button class="action-btn" id="exportDataBtn">Export Data</button>
-                        <button class="action-btn" id="importDataBtn">Import Data</button>
-                    </div>
                 </div>
                 <p class="privacy-notice">All data is stored locally in your browser</p>
             </div>
@@ -97,9 +93,9 @@
                 </div>
                 <div class="announcements-container">
                     <div class="announcement-card new">
-                        <div class="announcement-date">NOV 16</div>
-                        <h3>Website In Development</h3>
-                        <p>Welcome to Project Void. Our website is currently under development and is being worked on.</p>
+                        <div class="announcement-date">NOV 19</div>
+                        <h3>Website Release</h3>
+                        <p>Welcome to Project Void. We try to provide you the best games and features, the best way we can do that is by you submitting forms in the Forms page. Game Leaderboard is coming in the next few days.</p>
                     </div>
                 </div>
             </div>

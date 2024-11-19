@@ -49,9 +49,36 @@
     font-weight: 600;
 }
 
+.proxy-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    margin-top: 4rem;
+}
+
+.proxy-title h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    color: var(--neon-green);
+    text-shadow: 0 0 30px var(--neon-green);
+    margin-bottom: clamp(0.5rem, 2vw, 1rem);
+    letter-spacing: 4px;
+    user-select: text;
+}
+
+.proxy-title .tagline {
+    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+    color: white;
+    margin: 0;
+    padding: 0;
+    user-select: text;
+    line-height: 1;
+    font-weight: 900;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 4px;
+}
+
 .search-container {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 3rem;
     z-index: 2;
     position: relative;
     width: 100%;

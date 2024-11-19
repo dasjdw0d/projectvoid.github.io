@@ -111,51 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         input.click();
     });
-
-    // Add export/import handlers
-    document.getElementById('exportDataBtn').addEventListener('click', function() {
-        const dataStr = JSON.stringify(stats);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportLink = document.createElement('a');
-        exportLink.setAttribute('href', dataUri);
-        exportLink.setAttribute('download', 'projectvoid_data.json');
-        exportLink.click();
-    });
-
-    document.getElementById('importDataBtn').addEventListener('click', function() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                try {
-                    const importedStats = JSON.parse(event.target.result);
-                    
-                    // Validate username before importing
-                    if (!validateUsername(importedStats.username)) {
-                        alert('Invalid username in import file. Username must be between 1 and 20 characters and contain only letters and numbers.');
-                        return;
-                    }
-                    
-                    stats = importedStats;
-                    localStorage.setItem('siteStats', JSON.stringify(stats));
-                    alert('Data imported successfully!');
-                    forceReload();
-                } catch (error) {
-                    alert('Error importing data. Please check the file format.');
-                }
-            };
-            
-            reader.readAsText(file);
-        };
-        
-        input.click();
-    });
 });
 
 // Update the updateLastGame function

@@ -78,6 +78,26 @@
                         </iframe>
                     </div>
                 </div>
+
+                <div class="form-card">
+                    <div class="form-header" onclick="toggleForm(this)">
+                        <div class="form-title">
+                            <h2>Website Bug Form</h2>
+                            <p class="form-description">Report any bugs or issues you find on Project Void.</p>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="form-embed collapsed">
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScWNHAgzC7WQ76zG7YF2cxIDrxrwqF6Xu14BHWnO4YPJc7LTQ/viewform?embedded=true" 
+                                width="100%" 
+                                height="725" 
+                                frameborder="0" 
+                                marginheight="0" 
+                                marginwidth="0">
+                            Loading…
+                        </iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
