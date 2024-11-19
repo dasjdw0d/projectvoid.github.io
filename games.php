@@ -84,6 +84,11 @@
             thumbnail: "games/retrobowlcollege/unnamed.png"
         },
         {
+            title: "Burrito Bison",
+            path: "games/burritobison/index.html",
+            thumbnail: "games/burritobison/logo.png"
+        },
+        {
             title: "Tunnel Rush",
             path: "games/tunnel-rush/index.html",
             thumbnail: "games/tunnel-rush/tunnel-rush.png"
@@ -258,15 +263,15 @@
             path: "games/cuttherope-holiday/index.html",
             thumbnail: "games/cuttherope-holiday/icon.png"
         },
+
+
+
+
         {
             title: "Crossy Road Space",
             path: "games/crossyroadspace/index.html",
             thumbnail: "games/crossyroadspace/crossyroad.png"
         },
-
-
-
-
         {
             title: "Flappy Bird",
             path: "games/flappybird/index.html",
@@ -453,19 +458,168 @@
             thumbnail: "games/worldhardestgame2/icon.jpg"
         },
         {
-            title: "Game",
-            path: "games/game/index.html",
-            thumbnail: "games/game/icon.png"
+            title: "Worlde",
+            path: "games/wordle/index.html",
+            thumbnail: "games/wordle/icon.png"
         },
         {
-            title: "Game",
-            path: "games/game/index.html",
-            thumbnail: "games/game/icon.png"
+            title: "Tiny Fishing",
+            path: "games/tinyfishing/index.html",
+            thumbnail: "games/tinyfishing/thumb.png"
         },
         {
-            title: "Game",
-            path: "games/game/index.html",
-            thumbnail: "games/game/icon.png"
+            title: "Subway Surfers NY",
+            path: "games/subway-surfers-ny/index.html",
+            thumbnail: "games/subway-surfers-ny/NewYorkIcon.png"
+        },
+
+
+
+
+
+
+
+
+
+        {
+            title: "Time Shooter 1",
+            path: "games/timeshooter1/index.html",
+            thumbnail: "games/timeshooter1/logo.png"
+        },
+        {
+            title: "Time Shooter 2",
+            path: "games/timeshooter2/index.html",
+            thumbnail: "games/timeshooter2/logo.jpg"
+        },
+        {
+            title: "Time Shooter 3",
+            path: "games/timeshooter3/index.html",
+            thumbnail: "games/timeshooter3/logo.png"
+        },
+        {
+            title: "Papas Burgeria",
+            path: "games/papasburgeria/index.html",
+            thumbnail: "games/papasburgeria/icon.png"
+        },
+        {
+            title: "Papas Freezeria",
+            path: "games/papasfreezeria/index.html",
+            thumbnail: "games/papasfreezeria/image.png"
+        },
+        {
+            title: "BTD 1",
+            path: "games/btd/index.html",
+            thumbnail: "games/btd/logo.webp"
+        },
+        {
+            title: "BTD 2",
+            path: "games/btd2/index.html",
+            thumbnail: "games/btd2/logo.webp"
+        },
+        {
+            title: "BTD 3",
+            path: "games/btd3/index.html",
+            thumbnail: "games/btd3/icon.png"
+        },
+        {
+            title: "BTD 4",
+            path: "games/btd4/index.html",
+            thumbnail: "games/btd4/logo.jpg"
+        },
+        {
+            title: "BTD 5",
+            path: "games/btd5/index.html",
+            thumbnail: "games/btd5/wogo.png"
+        },
+        {
+            title: "BTD 6",
+            path: "games/btd6/index.html",
+            thumbnail: "games/btd6/uwu.png"
+        },
+        {
+            title: "Circloo",
+            path: "games/circloo/index.html",
+            thumbnail: "games/circloo/icon.png"
+        },
+        {
+            title: "Cluster Rush",
+            path: "games/cluster-rush/index.html",
+            thumbnail: "games/cluster-rush/splash.png"
+        },
+        {
+            title: "Friday Night Funkin",
+            path: "games/fridaynightfunkin/index.html",
+            thumbnail: "games/fridaynightfunkin/fnf-icon.jpg"
+        },
+        {
+            title: "Fruit Ninja",
+            path: "games/fruitninja/index.html",
+            thumbnail: "games/fruitninja/FruitNinjaTeaser.jpg"
+        },
+        {
+            title: "Osu",
+            path: "games/osu/index.html",
+            thumbnail: "games/osu/icon.png"
+        },
+        {
+            title: "Pizza Tower",
+            path: "games/pizzatower/index.html",
+            thumbnail: "games/pizzatower/logo.png"
+        },
+        {
+            title: "Pacman",
+            path: "games/pacman/index.html",
+            thumbnail: "games/pacman/icon.png"
+        },
+        {
+            title: "Paper.io",
+            path: "games/paperio/index.html",
+            thumbnail: "games/paperio/icon.png"
+        },
+        {
+            title: "Sand Game",
+            path: "games/sandgame/index.html",
+            thumbnail: "games/sandgame/icon.png"
+        },
+        {
+            title: "Skibidi Toilet",
+            path: "games/skibiditoilet/index.html",
+            thumbnail: "games/skibiditoilet/logo.png"
+        },
+        {
+            title: "Skibidi Toilet Attack",
+            path: "games/skibiditoiletattack/index.html",
+            thumbnail: "games/skibiditoiletattack/logo.png"
+        },
+        {
+            title: "Riddle School 1",
+            path: "games/riddleschool/index.html",
+            thumbnail: "games/riddleschool/RiddleSchool2.png"
+        },
+        {
+            title: "Riddle School 2",
+            path: "games/riddleschool2/index.html",
+            thumbnail: "games/riddleschool2/icon.png"
+        },
+        {
+            title: "Riddle School 3",
+            path: "games/riddleschool3/index.html",
+            thumbnail: "games/riddleschool3/riddle-school-3.webp"
+        },
+        {
+            title: "Riddle School 4",
+            path: "games/riddleschool4/index.html",
+            thumbnail: "games/riddleschool4/Untitled.jpeg"
+        },
+        {
+            title: "Riddle School 5",
+            path: "games/riddleschool5/index.html",
+            thumbnail: "games/riddleschool5/Untitled.jpeg"
+        },
+        {
+            title: "Helix Jump",
+            path: "games/helixjump/index.html",
+            thumbnail: "games/helixjump/gameIcon.png"
         },
 
 
