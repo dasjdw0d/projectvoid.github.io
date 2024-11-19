@@ -62,15 +62,6 @@
                         <span class="button-icon">➤</span>
                     </button>
                 </div>
-                <div class="emoji-picker">
-                    <button class="emoji-btn">💀</button>
-                    <button class="emoji-btn">😂</button>
-                    <button class="emoji-btn">🔥</button>
-                    <button class="emoji-btn">🤡</button>
-                    <button class="emoji-btn">🥵</button>
-                    <button class="emoji-btn">🤓</button>
-                    <button class="emoji-btn">😭</button>
-                </div>
             </div>
 
             <div class="chat-info-sidebar">

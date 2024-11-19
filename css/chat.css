@@ -1,27 +1,26 @@
 .chat-container {
     display: grid;
-    grid-template-columns: 224px 1fr 224px;
-    gap: 0.8rem;
+    grid-template-columns: 300px 1fr 320px;
+    gap: 1.2rem;
     padding: 1.6rem;
     height: calc(100vh - 120px);
-    max-width: 1120px;
+    max-width: 1900px;
     margin: 0 auto;
 }
 
 .chat-main,
 .chat-sidebar,
 .chat-info-sidebar {
-    width: 224px;
-    background: rgb(15, 15, 15);
-    border-radius: 10px;
-    padding: 0.8rem;
+    width: 100%;
+    background: rgba(15, 15, 15, 0.95);
+    border-radius: 12px;
+    padding: 1.2rem;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-    border: 0.5px solid rgba(57, 255, 20, 0.3);
-    height: calc(100vh - 160px);
-    min-height: 400px;
-    max-height: 800px;
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    height: 100%;
+    backdrop-filter: blur(10px);
 }
 
 #chatMessages,
@@ -68,18 +67,19 @@
 }
 
 .user-profile {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 1.2rem;
     text-align: center;
-    padding: 0.8rem;
-    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
-    margin-bottom: 1rem;
+    border: 1px solid rgba(57, 255, 20, 0.2);
 }
 
 .user-profile img {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 2px solid var(--neon-green);
-    margin-bottom: 0.8rem;
+    padding: 3px;
 }
 
 #chatUsername {
@@ -113,7 +113,8 @@
 .users-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    padding: 0.6rem;
     max-height: 300px;
     overflow-y: auto;
 }
@@ -122,8 +123,8 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    padding: 0.4rem;
-    border-radius: 6px;
+    padding: 0.8rem;
+    border-radius: 8px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid transparent;
 }
@@ -132,7 +133,7 @@
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    border: 1px solid var(--neon-green);
+    border: none;
 }
 
 .user-item span {
@@ -145,28 +146,16 @@
     border: 1px solid rgba(255, 0, 0, 0.3);
 }
 
-.user-name-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.user-status {
-    font-size: 0.8em;
-    color: orange;
-}
-
-.user-status.online {
-    display: none;
-}
-
 .admin-user .user-name {
     color: red;
 }
 
 .chat-header {
-    padding: 1rem;
+    padding: 0.8rem 1.2rem;
+    min-height: 50px;
     border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px 12px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -186,22 +175,22 @@
     font-size: 0.9rem;
 }
 
-.chat-messages {
+#chatMessages {
     flex: 1;
-    padding: 1rem;
     overflow-y: auto;
+    padding: 0.8rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.4rem;
+    min-height: 0 !important;
 }
 
 .message {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.2rem 0.4rem;
-    align-items: flex-start;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
     margin-bottom: 0.2rem;
-    transition: background 0.2s;
+    display: flex;
+    align-items: center;
 }
 
 .message:hover {
@@ -209,60 +198,29 @@
 }
 
 .message-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 1px solid var(--neon-green);
-}
-
-.message-content {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 0.4rem 0.6rem;
-    border-radius: 4px;
-    max-width: 85%;
-    width: fit-content;
-    border: 1px solid rgba(57, 255, 20, 0.1);
-    overflow: hidden;
-}
-
-.message-header {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.2rem;
-    white-space: nowrap;
-    overflow: hidden;
+    display: none;
 }
 
 .message-username {
-    color: var(--neon-green);
+    color: #00ff00;
     font-weight: 600;
-    font-size: 0.72rem;
-    max-width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.message-time {
-    color: #666;
-    font-size: 0.832rem;
-    opacity: 0.8;
+    font-size: 0.85rem;
 }
 
 .message-text {
     color: #fff;
-    font-size: 0.72rem;
-    line-height: 1.2;
-    word-break: break-word;
+    font-size: 0.85rem;
+    margin-left: 0.4rem;
 }
 
 .chat-input {
-    padding: 0.8rem 0.8rem 0.4rem 0.8rem;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(57, 255, 20, 0.2);
+    margin-top: 0 !important;
     display: flex;
     gap: 0.8rem;
-    border-top: 1px solid rgba(57, 255, 20, 0.2);
-    margin-bottom: 0;
+    align-items: center;
 }
 
 #messageInput {
@@ -273,6 +231,8 @@
     border-radius: 6px;
     color: white;
     font-size: 0.9rem;
+    width: 100%;
+    height: 45px;
 }
 
 #messageInput:focus {
@@ -284,16 +244,18 @@
 }
 
 #sendMessage {
-    background: rgba(57, 255, 20, 0.1);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
-    padding: 0 1.2rem;
+    padding: 0.9rem 1.2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(57, 255, 20, 0.3);
     border-radius: 6px;
+    color: var(--neon-green);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
+    gap: 0.4rem;
+    transition: all 0.2s;
+    height: 45px;
+    min-width: 100px;
 }
 
 #sendMessage:hover {
@@ -410,25 +372,6 @@
     background: rgba(0, 0, 0, 0.8);
 }
 
-/* Admin message style */
-.message.admin-message .message-username {
-    color: red;
-}
-
-.message.admin-message .message-username::after {
-    content: ' [ADMIN]';
-    color: red;
-    font-size: 0.72rem;
-    font-weight: 600;
-    margin-left: 0.2rem;
-    white-space: nowrap;
-}
-
-.message.admin-message .message-content {
-    background: rgba(255, 0, 0, 0.05);
-    border: 1px solid rgba(255, 0, 0, 0.2);
-}
-
 /* Add these styles */
 .status-badge.idle {
     background: rgba(255, 165, 0, 0.1);
@@ -521,18 +464,11 @@
 }
 
 .chat-main {
-    background: rgb(15, 15, 15);
-    border-radius: 10px;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    border: 0.5px solid rgba(57, 255, 20, 0.3);
-    width: 100%;
-    min-width: 400px;
-    max-width: 640px;
-    margin: 0 auto;
-    padding-bottom: 0;
+    height: 100%;
+    overflow: hidden;
+    padding: 0 !important;
 }
 
 #messageInput:disabled {
@@ -564,7 +500,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 1px solid var(--neon-green);
+    border: none;
 }
 
 /* Message content - sleeker design */
@@ -575,16 +511,6 @@
     max-width: 85%;
     width: fit-content;
     border: 1px solid rgba(57, 255, 20, 0.1);
-    overflow: hidden;
-}
-
-/* Header layout */
-.message-header {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.2rem;
-    white-space: nowrap;
     overflow: hidden;
 }
 
@@ -599,45 +525,12 @@
     text-overflow: ellipsis;
 }
 
-/* Timestamp style */
-.message-time {
-    color: #666;
-    font-size: 0.832rem;
-    opacity: 0.8;
-}
-
 /* Message text */
 .message-text {
     color: #fff;
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     line-height: 1.2;
     word-break: break-word;
-}
-
-/* Admin message specific styles */
-.message.admin-message .message-content {
-    background: rgba(255, 0, 0, 0.05);
-    border: 1px solid rgba(255, 0, 0, 0.2);
-}
-
-.message.admin-message .message-username::after {
-    content: ' [ADMIN]';
-    color: red;
-    font-size: 0.72rem;
-    font-weight: 600;
-    margin-left: 0.2rem;
-    white-space: nowrap;
-}
-
-/* Deleted message style */
-.message.deleted .message-content {
-    background: rgba(255, 0, 0, 0.05);
-    border: 1px solid rgba(255, 0, 0, 0.1);
-}
-
-.message.deleted .message-text {
-    color: rgba(255, 0, 0, 0.7);
-    font-weight: bold;
 }
 
 /* Messages container spacing */
@@ -815,12 +708,12 @@
 
 /* Add these new styles */
 .emoji-picker {
-    padding: 0 0.8rem 0.4rem 0.8rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0;
-    margin-bottom: 0;
+    padding: 0.4rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-top: 0.4rem;
+    border-top: 1px solid rgba(57, 255, 20, 0.2);
+    margin: 0 !important;
 }
 
 .emoji-btn {
@@ -872,4 +765,51 @@
 /* Make admin message timestamp red */
 .message.admin-message .message-time {
     color: rgba(255, 0, 0, 0.8);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+    .chat-container {
+        grid-template-columns: 240px 1fr 240px;
+    }
+}
+
+@media (max-width: 992px) {
+    .chat-container {
+        grid-template-columns: 200px 1fr;
+    }
+    .chat-info-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    .chat-sidebar {
+        display: none;
+    }
+    .chat-main {
+        min-width: unset;
+    }
+}
+
+/* System message adjustments */
+.message.system-message {
+    background: none;
+    border: none;
+    text-align: center;
+}
+
+.message.system-message .message-text {
+    color: #fff;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+/* Admin message styling */
+.message.admin-message .message-username {
+    color: red;
 } 

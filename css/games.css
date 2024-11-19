@@ -130,7 +130,7 @@
     display: flex;
     justify-content: center;
     gap: 0.75rem;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .pagination button {
@@ -150,6 +150,21 @@
 .pagination button.active {
     transform: scale(0.97);
     background: var(--hover-bg);
+}
+
+/* Add this before the .pagination styles */
+.pages-title {
+    text-align: center;
+    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+    color: white;
+    margin: 0;
+    padding: 0;
+    user-select: text;
+    line-height: 1;
+    font-weight: 900;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 4px;
+    margin-bottom: 0.5rem;
 }
 
 /* Media Queries */

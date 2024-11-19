@@ -49,8 +49,14 @@
                         <h3>Update 1</h3>
                         <ul>
                             <li>Fixed the custom cursor not being infront of the Game Bar.</li>
-                            <li>Chat room improvement. Added emojis, and better designed system messages.</li>
+                            <li>Chat room improvement. Better designed system messages and user messages.</li>
                             <li>Fixed the "Invalid Date" on the profile card, all users must click the reset data button to get a valid account creation date.</li>
+                            <li>Added Tetris Sand (From Game Recommendations Form).</li>
+                            <li>Added a "Pages" title above the page selectors on the games page.</li>
+                            <li>placeholder</li>
+                            <li>placeholder</li>
+                            <li>placeholder</li>
+                            <li>placeholder</li>
                         </ul>
                     </div>
                 </div>

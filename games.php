@@ -49,6 +49,7 @@
             <!-- Games will be added here dynamically -->
         </div>
 
+        <div class="pages-title">Pages</div>
         <div class="pagination">
             <button>←</button>
             <button class="active">1</button>
@@ -88,11 +89,6 @@
             title: "Burrito Bison",
             path: "games/burritobison/index.html",
             thumbnail: "games/burritobison/logo.png"
-        },
-        {
-            title: "Tunnel Rush",
-            path: "games/tunnel-rush/index.html",
-            thumbnail: "games/tunnel-rush/tunnel-rush.png"
         },
         {
             title: "Drift Hunters",
@@ -264,6 +260,11 @@
             path: "games/cuttherope-holiday/index.html",
             thumbnail: "games/cuttherope-holiday/icon.png"
         },
+        {
+            title: "Tiny Fishing",
+            path: "games/tinyfishing/index.html",
+            thumbnail: "games/tinyfishing/thumb.png"
+        },
 
 
 
@@ -414,6 +415,11 @@
             thumbnail: "games/tetris/icon.png"
         },
         {
+            title: "Tetris Sand",
+            path: "games/tetris-sand/index.html",
+            thumbnail: "games/tetris-sand/logo.png"
+        },
+        {
             title: "Temple Run 2",
             path: "games/templerun2/index.html",
             thumbnail: "games/templerun2/img/cover.png"
@@ -463,24 +469,17 @@
             path: "games/wordle/index.html",
             thumbnail: "games/wordle/icon.png"
         },
-        {
-            title: "Tiny Fishing",
-            path: "games/tinyfishing/index.html",
-            thumbnail: "games/tinyfishing/thumb.png"
-        },
+
+
+
+
+
+
         {
             title: "Subway Surfers NY",
             path: "games/subway-surfers-ny/index.html",
             thumbnail: "games/subway-surfers-ny/NewYorkIcon.png"
         },
-
-
-
-
-
-
-
-
 
         {
             title: "Time Shooter 1",

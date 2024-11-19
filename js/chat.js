@@ -115,30 +115,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (data.system) {
             messageDiv.innerHTML = `
-                <div class="message-content ${data.isDeleteMessage ? 'delete-message' : ''}">
-                    <div class="message-text">${data.content}</div>
+                <div class="message-content">
+                    <span class="message-text">${data.content}</span>
                 </div>
             `;
         } else {
             const time = new Date(data.timestamp).toLocaleTimeString();
             messageDiv.innerHTML = `
-                <img class="message-avatar" src="${data.userData.profileImage}" alt="Avatar">
                 <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-username">${data.userData.username}</span>
-                        <span class="message-time">${time}</span>
-                    </div>
-                    <div class="message-text">${escapeHtml(data.content)}</div>
+                    <span class="message-username">${data.userData.username}</span>
+                    <span class="message-text">${escapeHtml(data.content)}</span>
+                    <span class="message-time">${time}</span>
                 </div>
                 ${isAdmin && !data.deleted ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
             `;
-
-            if (isAdmin && !data.deleted) {
-                const deleteIcon = messageDiv.querySelector('.delete-icon');
-                deleteIcon.addEventListener('click', () => {
-                    socket.emit('delete_message', data.timestamp);
-                });
-            }
         }
 
         chatMessages.appendChild(messageDiv);
@@ -228,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${user.profileImage}" alt="Avatar">
                 <div class="user-info">
                     <div class="user-name-container">
-                        <span class="user-name">${user.username}${user.isAdmin ? ' [OWNER]' : ''}</span>
+                        <span class="user-name">${user.username}</span>
                     </div>
                 </div>
             `;
@@ -405,13 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 font-style: italic;
             }
 
-            /* Updated admin message styles */
-            .message.admin-message .message-username::after {
-                content: ' [OWNER]';  /* Changed from [ADMIN] to [OWNER] */
-                color: red;
-                font-size: 0.9em;
-            }
-
             /* Updated admin user styles */
             .user-item.admin-user {
                 background: rgba(255, 0, 0, 0.1) !important;
@@ -446,39 +429,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .message-header {
                 display: flex;
                 align-items: center;
-                gap: 8px;  /* Adds spacing between username and time */
+                gap: 12px;  /* Increased from 8px */
+                margin-bottom: 0.4rem;  /* Increased from 0.2rem */
             }
 
             .message-time {
-                color: var(--neon-green);  /* Makes timestamp match your theme color */
-                opacity: 0.8;  /* Optional: makes it slightly less bright */
-            }
-
-            .reply-to {
-                background: rgba(255, 255, 255, 0.1);
-                padding: 5px 10px;
-                margin-bottom: 5px;
-                border-left: 2px solid var(--neon-green);
-                font-size: 0.9em;
-            }
-
-            .reply-username {
                 color: var(--neon-green);
-                margin-right: 5px;
-            }
-
-            .reply-text {
-                opacity: 0.8;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: inline-block;
-                max-width: 200px;
+                opacity: 0.9;
+                margin-left: 8px;  /* Added explicit spacing */
             }
 
             .message-actions {
                 margin-top: 5px;
-                opacity: 0;
+                opacity: 0.9;
                 transition: opacity 0.2s;
             }
 
@@ -486,38 +449,120 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: 1;
             }
 
-            .reply-button {
-                background: none;
-                border: none;
-                color: var(--neon-green);
-                cursor: pointer;
-                padding: 2px 5px;
-                font-size: 0.9em;
-                opacity: 0.8;
+            /* Admin message colors */
+            .message.admin-message .message-content {
+                background: rgba(0, 0, 0, 0.9);
+                border: 2.5px solid #ff0000;
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
             }
 
-            .reply-button:hover {
-                opacity: 1;
+            .message.admin-message .message-username {
+                color: #ff0000;
+                font-weight: 700;
             }
 
-            .reply-indicator {
-                background: rgba(57, 255, 20, 0.1);
-                padding: 5px 10px;
-                margin-bottom: 5px;
-                border-radius: 4px;
-                display: none;
-                align-items: center;
-                justify-content: space-between;
+            .message.admin-message .message-time {
+                color: #ff0000;
+                opacity: 0.9;
             }
 
-            .cancel-reply {
-                background: none;
-                border: none;
-                color: red;
-                cursor: pointer;
-                padding: 0 5px;
-                font-size: 1.2em;
+            /* Message content colors and sizing */
+            .message-username {
+                color: #00ff00;
+                font-weight: 600;
+                font-size: 0.85rem;
             }
+
+            .message-time {
+                color: #00ff00;
+                opacity: 0.9;
+                font-size: 0.85rem;
+                margin-left: 8px;
+            }
+
+            .message.admin-message .message-username {
+                color: #ff0000;
+                font-weight: 700;
+            }
+
+            .message.admin-message .message-time {
+                color: #ff0000;
+                opacity: 0.9;
+            }
+
+.message-content {
+    border: 1.5px solid rgb(0, 255, 0);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    max-width: 85%;
+    width: fit-content;
+    background: rgba(0, 0, 0, 0.3);
+}
+    
+        /* Message deletion styles */
+        .message .delete-icon {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: red;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.7;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .message:hover .delete-icon {
+            display: ${isAdmin ? 'block' : 'none'};
+        }
+
+        /* Cooldown overlay styles */
+        .cooldown-overlay {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: rgba(255, 0, 0, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .cooldown-overlay.active {
+            opacity: 1;
+        }
+
+        /* Reply indicator styles */
+        .reply-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 4px;
+            color: var(--neon-green);
+            font-size: 0.8rem;
+        }
+
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: var(--neon-green);
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .cancel-reply:hover {
+            background: rgba(0, 255, 0, 0.2);
+        }
         `;
         document.head.appendChild(style);
     }
