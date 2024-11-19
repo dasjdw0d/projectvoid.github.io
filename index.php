@@ -32,6 +32,7 @@
             <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
+            <a href="updates.php">Updates</a>
         </div>
     </nav>
 

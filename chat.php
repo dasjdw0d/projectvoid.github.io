@@ -31,6 +31,7 @@
             <a href="chat.php" class="active">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
+            <a href="updates.php">Updates</a>
         </div>
     </nav>
 
@@ -60,6 +61,15 @@
                         <span class="button-text">Send</span>
                         <span class="button-icon">➤</span>
                     </button>
+                </div>
+                <div class="emoji-picker">
+                    <button class="emoji-btn">💀</button>
+                    <button class="emoji-btn">😂</button>
+                    <button class="emoji-btn">🔥</button>
+                    <button class="emoji-btn">🤡</button>
+                    <button class="emoji-btn">🥵</button>
+                    <button class="emoji-btn">🤓</button>
+                    <button class="emoji-btn">😭</button>
                 </div>
             </div>
 

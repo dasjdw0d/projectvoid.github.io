@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_MESSAGE_LENGTH = 500; // Adjust this number as needed
     let userIsScrolling = false;
     let isChatLocked = false;
+    let replyingTo = null;
 
     // Add this constant at the top with other constants (after DOMContentLoaded)
     const SERVER_URL = 'https://projectvoid.is-not-a.dev:3000';
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         return {
-            username: isAdmin ? 'Anonymous' : stats.username,
+            username: isAdmin ? 'Owner' : stats.username,
             profileImage: stats.profilePicture,
             userId: localStorage.getItem('userId') || generateUserId(),
             isAdmin: isAdmin
@@ -113,14 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.dataset.timestamp = data.timestamp;
         
         if (data.system) {
-            // System message format
             messageDiv.innerHTML = `
-                <div class="message-content system">
+                <div class="message-content ${data.isDeleteMessage ? 'delete-message' : ''}">
                     <div class="message-text">${data.content}</div>
                 </div>
             `;
         } else {
-            // Regular message format
             const time = new Date(data.timestamp).toLocaleTimeString();
             messageDiv.innerHTML = `
                 <img class="message-avatar" src="${data.userData.profileImage}" alt="Avatar">
@@ -134,18 +133,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${isAdmin && !data.deleted ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
             `;
 
-            // Add delete handler for admin
             if (isAdmin && !data.deleted) {
                 const deleteIcon = messageDiv.querySelector('.delete-icon');
                 deleteIcon.addEventListener('click', () => {
-                    if (confirm('Delete this message?')) {
-                        socket.emit('delete_message', data.timestamp);
-                    }
+                    socket.emit('delete_message', data.timestamp);
                 });
             }
         }
 
         chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Add new function to handle reply indicator
+    function updateReplyIndicator() {
+        let indicator = document.querySelector('.reply-indicator');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.className = 'reply-indicator';
+            document.querySelector('.chat-input').prepend(indicator);
+        }
+        
+        if (replyingTo) {
+            indicator.innerHTML = `
+                Replying to ${replyingTo.username}
+                <button class="cancel-reply">×</button>
+            `;
+            indicator.style.display = 'flex';
+            
+            // Add cancel handler
+            indicator.querySelector('.cancel-reply').addEventListener('click', () => {
+                replyingTo = null;
+                messageInput.placeholder = 'Type your message...';
+                indicator.style.display = 'none';
+            });
+        } else {
+            indicator.style.display = 'none';
+        }
     }
 
     // Add message cooldown
@@ -172,11 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         socket.emit('send_message', {
             content,
-            userData: getUserData()
+            userData: getUserData(),
+            replyTo: replyingTo
         });
         
         messageInput.value = '';
         lastMessageTime = now;
+        replyingTo = null;
+        updateReplyIndicator();
+        messageInput.placeholder = 'Type your message...';
     }
 
     // Update online users list
@@ -200,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${user.profileImage}" alt="Avatar">
                 <div class="user-info">
                     <div class="user-name-container">
-                        <span class="user-name">${user.username}${user.isAdmin ? ' [ADMIN]' : ''}</span>
+                        <span class="user-name">${user.username}${user.isAdmin ? ' [OWNER]' : ''}</span>
                     </div>
                 </div>
             `;
@@ -244,19 +272,16 @@ document.addEventListener('DOMContentLoaded', () => {
         lastMessageCount = 0;
     });
 
-    socket.on('message_deleted', (message) => {
-        const messageElement = document.querySelector(`[data-timestamp="${message.timestamp}"]`);
-        if (messageElement) {
-            messageElement.classList.add('deleted');
-            const messageText = messageElement.querySelector('.message-text');
-            if (messageText) {
-                messageText.textContent = "Deleted by admin";
-            }
-            // Remove delete icon if it exists
-            const deleteIcon = messageElement.querySelector('.delete-icon');
-            if (deleteIcon) {
-                deleteIcon.remove();
-            }
+    socket.on('message_deleted', (data) => {
+        const messageDiv = document.querySelector(`[data-timestamp="${data.oldTimestamp}"]`);
+        if (messageDiv) {
+            messageDiv.className = 'message system-message';
+            messageDiv.dataset.timestamp = data.message.timestamp;
+            messageDiv.innerHTML = `
+                <div class="message-content delete-message">
+                    <div class="message-text">${data.message.content}</div>
+                </div>
+            `;
         }
     });
 
@@ -380,6 +405,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 font-style: italic;
             }
 
+            /* Updated admin message styles */
+            .message.admin-message .message-username::after {
+                content: ' [OWNER]';  /* Changed from [ADMIN] to [OWNER] */
+                color: red;
+                font-size: 0.9em;
+            }
+
             /* Updated admin user styles */
             .user-item.admin-user {
                 background: rgba(255, 0, 0, 0.1) !important;
@@ -408,6 +440,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
             .user-status.online {
                 display: none;
+            }
+
+            /* Add these new styles for the message header */
+            .message-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;  /* Adds spacing between username and time */
+            }
+
+            .message-time {
+                color: var(--neon-green);  /* Makes timestamp match your theme color */
+                opacity: 0.8;  /* Optional: makes it slightly less bright */
+            }
+
+            .reply-to {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 5px 10px;
+                margin-bottom: 5px;
+                border-left: 2px solid var(--neon-green);
+                font-size: 0.9em;
+            }
+
+            .reply-username {
+                color: var(--neon-green);
+                margin-right: 5px;
+            }
+
+            .reply-text {
+                opacity: 0.8;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                max-width: 200px;
+            }
+
+            .message-actions {
+                margin-top: 5px;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+
+            .message:hover .message-actions {
+                opacity: 1;
+            }
+
+            .reply-button {
+                background: none;
+                border: none;
+                color: var(--neon-green);
+                cursor: pointer;
+                padding: 2px 5px;
+                font-size: 0.9em;
+                opacity: 0.8;
+            }
+
+            .reply-button:hover {
+                opacity: 1;
+            }
+
+            .reply-indicator {
+                background: rgba(57, 255, 20, 0.1);
+                padding: 5px 10px;
+                margin-bottom: 5px;
+                border-radius: 4px;
+                display: none;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .cancel-reply {
+                background: none;
+                border: none;
+                color: red;
+                cursor: pointer;
+                padding: 0 5px;
+                font-size: 1.2em;
             }
         `;
         document.head.appendChild(style);
@@ -554,5 +663,23 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             alert('Invalid credentials');
         }
+    });
+
+    // Add this after your existing event listeners
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const emoji = btn.textContent;
+            const input = document.getElementById('messageInput');
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            
+            // Insert emoji at cursor position
+            input.value = text.substring(0, start) + emoji + text.substring(end);
+            
+            // Move cursor after emoji
+            input.selectionStart = input.selectionEnd = start + emoji.length;
+            input.focus();
+        });
     });
 });

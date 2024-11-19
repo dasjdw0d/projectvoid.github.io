@@ -213,7 +213,7 @@ body.custom-cursor * {
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
-    z-index: calc(var(--z-nav) + 2);
+    z-index: 1000;
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
     transition: transform var(--transition-speed) var(--transition-curve);
 }

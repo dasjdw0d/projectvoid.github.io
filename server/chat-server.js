@@ -16,7 +16,6 @@ const loginAttempts = new Map(); // IP -> {attempts: number, lastAttempt: timest
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const sanitizeHtml = require('sanitize-html');
-const session = require('express-session');
 
 app.use(cors({
     origin: ['https://projectvoid.is-not-a.dev', 'http://projectvoid.is-not-a.dev'],
@@ -24,16 +23,6 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());  // This is important for parsing JSON requests
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-        secure: true,
-        httpOnly: true,
-        sameSite: 'strict'
-    }
-}));
 
 // Store messages and users (change Map key to username instead of socketId)
 const messages = [];
@@ -46,14 +35,24 @@ const serverStartTime = Date.now();
 // Add these constants at the top with your other constants
 const MAX_MESSAGE_LENGTH = 500;
 
-// Add this function before your socket.io connection handler
-function validateUserData(userData) {
-    return {
-        username: sanitizeHtml(userData.username || 'Guest'),
-        profileImage: userData.profileImage || 'images/favicon.png',
-        userId: userData.userId || 'anonymous',
-        isAdmin: !!userData.isAdmin
-    };
+// Add this helper function at the top level
+function updateGuestNames(users) {
+    const guestUsers = Array.from(users.values()).filter(u => 
+        u.userData.username === 'Guest' || 
+        u.userData.username.startsWith('Guest ')
+    );
+
+    // If only one guest, keep them as "Guest"
+    if (guestUsers.length === 1) {
+        const user = guestUsers[0];
+        user.userData.username = 'Guest';
+        return;
+    }
+
+    // If multiple guests, number them
+    guestUsers.forEach((user, index) => {
+        user.userData.username = `Guest ${index + 1}`;
+    });
 }
 
 // Add the initial system message to the messages array when server starts
@@ -90,6 +89,17 @@ function isRateLimited(ip) {
     return attempt.attempts > 5;
 }
 
+// Add this function near the top with your other helper functions
+function validateUserData(userData) {
+    // Return a sanitized copy of the user data
+    return {
+        username: userData.username ? sanitizeHtml(userData.username) : 'Guest',
+        profileImage: userData.profileImage || 'images/favicon.png',
+        isAdmin: !!userData.isAdmin,  // Convert to boolean
+        userId: userData.userId || ''
+    };
+}
+
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
@@ -114,11 +124,6 @@ io.on('connection', (socket) => {
         };
         messages.push(message);
         
-        // Keep only last 100 messages
-        if (messages.length > 100) {
-            messages.shift();
-        }
-        
         // Broadcast the message to all clients
         io.emit('new_message', message);
     });
@@ -127,19 +132,22 @@ io.on('connection', (socket) => {
     socket.on('user_update', (userData) => {
         if (!userData || !userData.username) return;
 
-        // Remove any existing socket entries for this username
+        // Remove any existing socket entries for this socket ID
         for (const [existingUsername, user] of users.entries()) {
-            if (user.socketId === socket.id || existingUsername === userData.username) {
+            if (user.socketId === socket.id) {
                 users.delete(existingUsername);
             }
         }
 
         // Add new user entry
-        users.set(userData.username, {
+        users.set(socket.id, {
             socketId: socket.id,
             userData: userData,
             lastSeen: Date.now()
         });
+
+        // Update guest names if needed
+        updateGuestNames(users);
 
         io.emit('users_update', Array.from(users.values()));
     });
@@ -165,12 +173,17 @@ io.on('connection', (socket) => {
     socket.on('delete_message', (timestamp) => {
         const messageIndex = messages.findIndex(m => m.timestamp === timestamp);
         if (messageIndex !== -1) {
-            messages[messageIndex] = {
-                ...messages[messageIndex],
-                deleted: true,
-                content: "Deleted by admin"
+            const systemMessage = {
+                content: "Message deleted by admin",
+                timestamp: messages[messageIndex].timestamp,  // Keep original timestamp
+                system: true,
+                isDeleteMessage: true
             };
-            io.emit('message_deleted', messages[messageIndex]);
+            messages[messageIndex] = systemMessage;
+            io.emit('message_deleted', { 
+                oldTimestamp: timestamp,  // Send original timestamp
+                message: systemMessage 
+            });
         }
     });
 

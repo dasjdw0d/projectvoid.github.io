@@ -52,10 +52,10 @@
 /* User Section */
 .user-section {
     position: absolute;
-    left: 4rem;
+    left: 2rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 330px;
+    width: 375px;
     background: rgb(15, 15, 15);
     border-radius: 10px;
     padding: 1rem;
@@ -182,7 +182,7 @@
 .content-wrapper {
     position: absolute;
     right: 4rem;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%);
     z-index: var(--z-content);
 }
@@ -279,8 +279,8 @@
 
 @media (max-width: 1200px) {
     .user-section {
-        left: 2rem;
-        width: 320px;
+        left: 1rem;
+        width: 355px;
     }
     
     .content-wrapper {
@@ -317,7 +317,7 @@
         left: 0;
         transform: none;
         width: 100%;
-        max-width: 500px;
+        max-width: 565px;
         margin: 1rem auto;
     }
 

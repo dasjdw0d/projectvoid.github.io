@@ -13,12 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // If no stats exist, create them and save immediately
     if (!stats) {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];  // Gets current date in YYYY-MM-DD format
+        
         stats = {
             VISITS: 1,
             username: 'Guest',
             lastGame: null,
             profilePicture: 'images/favicon.png',
-            dateCreated: new Date().toISOString(),
+            dateCreated: formattedDate,  // Uses current date
             totalPlayTime: 0
         };
         localStorage.setItem('siteStats', JSON.stringify(stats));
@@ -46,7 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
             (stats.lastGame === null || stats.lastGame === '') ? 'N/A' : stats.lastGame;
             
         document.getElementById('profileImage').src = stats.profilePicture;
-        document.getElementById('dateCreated').textContent = new Date(stats.dateCreated).toLocaleDateString();
+        document.getElementById('dateCreated').textContent = 
+            stats.dateCreated ? 
+            new Date(stats.dateCreated + 'T12:00:00').toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            }) : 
+            'N/A';
         
         if (!stats.totalPlayTime && stats.totalPlayTime !== 0) {
             document.getElementById('totalPlayTime').textContent = 'N/A';
@@ -68,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 username: 'Guest',
                 lastGame: null,
                 profilePicture: 'images/favicon.png',
-                dateCreated: new Date().toISOString(),
+                dateCreated: '2024-11-19',
                 totalPlayTime: 0
             };
             localStorage.setItem('siteStats', JSON.stringify(stats));
@@ -123,7 +133,7 @@ function updateLastGame(gameName) {
             username: 'Guest',
             lastGame: gameName,
             profilePicture: 'images/favicon.png',
-            dateCreated: new Date().toISOString(),
+            dateCreated: '2024-11-19',
             totalPlayTime: 0
         };
     } else {
