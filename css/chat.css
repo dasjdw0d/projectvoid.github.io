@@ -731,40 +731,22 @@
 }
 
 /* Update system message styles */
+.message.system-message {
+    background: none;
+    border: none;
+}
+
 .message.system-message .message-content {
+    width: 20%;
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid white;
     padding: 8px 12px;
-    width: 50%;
-    margin: 0;
-    text-align: left;
+    text-align: center;
 }
 
 .message.system-message .message-text {
-    color: white;
+    color: #fff;
     font-weight: bold;
-}
-
-/* Add delete system message style */
-.message.system-message .message-content.delete-message {
-    border: 2px solid rgba(255, 0, 0, 0.7);
-    background: rgba(255, 0, 0, 0.05);
-}
-
-.message.system-message .message-content.delete-message .message-text {
-    color: red;
-    font-weight: bold;
-}
-
-/* Remove italic styles */
-.message.deleted .message-text {
-    color: rgba(255, 0, 0, 0.7);
-    font-weight: bold;
-}
-
-/* Make admin message timestamp red */
-.message.admin-message .message-time {
-    color: rgba(255, 0, 0, 0.8);
 }
 
 /* Media queries for responsiveness */
@@ -812,4 +794,29 @@
 /* Admin message styling */
 .message.admin-message .message-username {
     color: red;
+}
+
+/* Add or update these styles */
+.message.deleted {
+    background: rgba(255, 0, 0, 0.05);
+}
+
+.message.deleted .message-content {
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.message.deleted .message-text {
+    color: rgba(255, 0, 0, 0.7) !important;
+    font-weight: bold;
+}
+
+/* Update the delete message system styling */
+.message-content.delete-message {
+    border: 1px solid rgba(255, 0, 0, 0.3) !important;
+    background: rgba(255, 0, 0, 0.05) !important;
+}
+
+.message-content.delete-message .message-text {
+    color: rgba(255, 0, 0, 0.7) !important;
+    font-weight: bold;
 } 

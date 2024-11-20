@@ -175,13 +175,13 @@ io.on('connection', (socket) => {
         if (messageIndex !== -1) {
             const systemMessage = {
                 content: "Message deleted by admin",
-                timestamp: messages[messageIndex].timestamp,  // Keep original timestamp
-                system: true,
-                isDeleteMessage: true
+                timestamp: messages[messageIndex].timestamp,
+                system: true
             };
             messages[messageIndex] = systemMessage;
+            // Broadcast to all connected clients
             io.emit('message_deleted', { 
-                oldTimestamp: timestamp,  // Send original timestamp
+                oldTimestamp: timestamp,
                 message: systemMessage 
             });
         }

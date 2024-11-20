@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update chat display without repeating messages
     function updateChat(messages) {
         if (messages.length === 0 && chatMessages.children.length > 0) {
-            // If server has no messages but we have local messages, clear everything
             chatMessages.innerHTML = '';
             displayedMessages.clear();
             lastMessageCount = 0;
@@ -85,21 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         messages.forEach(message => {
             const existingMessage = document.querySelector(`[data-timestamp="${message.timestamp}"]`);
-            if (existingMessage) {
-                // Update existing message if it's been deleted
-                if (message.deleted && !existingMessage.classList.contains('deleted')) {
-                    existingMessage.classList.add('deleted');
-                    existingMessage.querySelector('.message-text').textContent = message.content;
-                    existingMessage.querySelector('.delete-icon')?.remove();
-                }
-            } else if (!displayedMessages.has(message.timestamp)) {
-                // Add new message
+            if (!existingMessage && !displayedMessages.has(message.timestamp)) {
                 addMessage(message);
                 displayedMessages.add(message.timestamp);
+            } else if (existingMessage && message.deleted) {
+                existingMessage.className = 'message deleted';
+                existingMessage.innerHTML = `
+                    <div class="message-content delete-message">
+                        <span class="message-text">${message.content}</span>
+                    </div>
+                `;
             }
         });
 
-        // Only auto-scroll if user was at bottom or not actively scrolling
         if ((wasAtBottom || !userIsScrolling) && messages.length > lastMessageCount) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -110,7 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add a single message
     function addMessage(data) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${data.userData?.isAdmin ? 'admin-message' : ''} ${data.deleted ? 'deleted' : ''} ${data.system ? 'system-message' : ''}`;
+        
+        if (data.deleted) {
+            messageDiv.className = 'message deleted';
+            messageDiv.dataset.timestamp = data.timestamp;
+            messageDiv.innerHTML = `
+                <div class="message-content delete-message">
+                    <span class="message-text">${data.content}</span>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            return;
+        }
+        
+        messageDiv.className = `message ${data.userData?.isAdmin ? 'admin-message' : ''} ${data.system ? 'system-message' : ''}`;
         messageDiv.dataset.timestamp = data.timestamp;
         
         if (data.system) {
@@ -127,8 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="message-text">${escapeHtml(data.content)}</span>
                     <span class="message-time">${time}</span>
                 </div>
-                ${isAdmin && !data.deleted ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
+                ${isAdmin ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
             `;
+
+            if (isAdmin) {
+                const deleteIcon = messageDiv.querySelector('.delete-icon');
+                deleteIcon.addEventListener('click', () => {
+                    socket.emit('delete_message', data.timestamp);
+                });
+            }
         }
 
         chatMessages.appendChild(messageDiv);
@@ -263,16 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('message_deleted', (data) => {
-        const messageDiv = document.querySelector(`[data-timestamp="${data.oldTimestamp}"]`);
-        if (messageDiv) {
-            messageDiv.className = 'message system-message';
-            messageDiv.dataset.timestamp = data.message.timestamp;
-            messageDiv.innerHTML = `
-                <div class="message-content delete-message">
-                    <div class="message-text">${data.message.content}</div>
-                </div>
-            `;
-        }
+        updateDeletedMessage(data.oldTimestamp, data.message.content);
     });
 
     socket.on('chat_lock_status', (status) => {
@@ -727,4 +735,17 @@ document.addEventListener('DOMContentLoaded', () => {
             input.focus();
         });
     });
+
+    // Add this helper function
+    function updateDeletedMessage(timestamp, content) {
+        const messageDiv = document.querySelector(`[data-timestamp="${timestamp}"]`);
+        if (messageDiv) {
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="message-text">${content}</span>
+                </div>
+            `;
+        }
+    }
 });

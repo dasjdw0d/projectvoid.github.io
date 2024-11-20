@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('siteStats', JSON.stringify(stats));
                 forceReload();
             } else {
-                alert('Username must be between 1 and 20 characters and contain only letters and numbers.');
+                alert('Username must be between 1 and 20 characters and contain only letters and numbers. No Spaces.');
             }
         }
     });

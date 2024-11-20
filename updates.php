@@ -12,9 +12,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <title>Project Void - Update Log</title>
+    <title>Project Void - Updates</title>
     <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="css/updatelog.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/updates.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -27,11 +27,11 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="proxy.php">Proxy</a>
+            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
-            <a href="updatelog.php" class="active">Updates</a>
+            <a href="updates.php" class="active">Updates</a>
         </div>
     </nav>
 
@@ -50,13 +50,10 @@
                         <ul>
                             <li>Fixed the custom cursor not being infront of the Game Bar.</li>
                             <li>Chat room improvement. Better designed system messages and user messages.</li>
-                            <li>Fixed the "Invalid Date" on the profile card, all users must click the reset data button to get a valid account creation date.</li>
+                            <li>Fixed the "Invalid Date" on the profile card, all users may have to click the reset data button to get a valid account creation date.</li>
                             <li>Added Tetris Sand (From Game Recommendations Form).</li>
                             <li>Added a "Pages" title above the page selectors on the games page.</li>
-                            <li>placeholder</li>
-                            <li>placeholder</li>
-                            <li>placeholder</li>
-                            <li>placeholder</li>
+                            <li>Added a leaderboard page.</li>
                         </ul>
                     </div>
                 </div>

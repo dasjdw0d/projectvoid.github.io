@@ -28,7 +28,7 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="proxy.php">Proxy</a>
+            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php" class="active">Settings</a>
