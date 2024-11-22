@@ -31,7 +31,7 @@
     min-height: 0;
 }
 
-/* Override any inherited scrollbar styles */
+/* Consolidated scrollbar styles - remove duplicate declarations */
 #chatMessages::-webkit-scrollbar,
 #onlineUsers::-webkit-scrollbar,
 .info-section::-webkit-scrollbar {
@@ -69,25 +69,27 @@
 .user-profile {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
-    padding: 1.2rem;
+    padding: 0.8rem;
     text-align: center;
     border: 1px solid rgba(57, 255, 20, 0.2);
+    flex-shrink: 0;
+    margin-bottom: 0.8rem;
 }
 
 .user-profile img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 2px solid var(--neon-green);
-    padding: 3px;
+    padding: 2px;
 }
 
 #chatUsername {
     color: var(--neon-green);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     text-shadow: 0 0 10px var(--neon-green);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
     display: block;
 }
 
@@ -97,8 +99,8 @@
 }
 
 .status-badge {
-    font-size: 0.64rem;
-    padding: 0.16rem 0.64rem;
+    font-size: 0.6rem;
+    padding: 0.12rem 0.5rem;
     border-radius: 12px;
     background: rgba(57, 255, 20, 0.1);
     color: var(--neon-green);
@@ -127,6 +129,8 @@
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid transparent;
+    min-height: 42px;
+    flex-shrink: 0;
 }
 
 .user-item img {
@@ -186,15 +190,47 @@
 }
 
 .message {
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    margin-bottom: 0.2rem;
     display: flex;
-    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    align-items: flex-start;
+    margin-bottom: 0.2rem;
+    transition: background 0.2s;
+    position: relative;
 }
 
 .message:hover {
     background: rgba(0, 0, 0, 0.2);
+}
+
+.delete-icon {
+    display: none;  /* Hidden by default */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+/* Show delete icon only on message hover and for admin */
+.message:hover .delete-icon {
+    display: block;
+}
+
+.delete-icon:hover {
+    opacity: 1;
+    background: rgba(255, 0, 0, 0.2);
+}
+
+/* Ensure message content has right padding for delete icon */
+.message-content {
+    padding-right: 40px;  /* Make room for delete icon */
 }
 
 .message-avatar {
@@ -266,81 +302,36 @@
     font-size: 0.8rem;
 }
 
-/* Media Queries */
-@media (max-width: 968px) {
+/* Consolidated media queries - remove duplicates */
+@media (max-width: 1200px) {
     .chat-container {
-        flex-direction: column;
+        grid-template-columns: 240px 1fr 240px;
+    }
+}
+
+@media (max-width: 992px) {
+    .chat-container {
+        grid-template-columns: 200px 1fr;
+    }
+    .chat-info-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        grid-template-columns: 1fr;
         padding: 1rem;
     }
-
     .chat-sidebar {
-        width: 100%;
+        display: none;
+    }
+    .chat-main {
+        min-width: unset;
     }
 }
 
-/* Admin styles */
-.admin-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 8px 16px;
-    background: rgba(255, 0, 0, 0.2);
-    border: 1px solid red;
-    color: red;
-    cursor: pointer;
-    border-radius: 5px;
-    z-index: 1000;
-    font-size: 0.9rem;
-}
-
-.admin-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1001;
-}
-
-.admin-modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgb(15, 15, 15);
-    padding: 16px;
-    border-radius: 10px;
-    border: 1px solid var(--neon-green);
-    width: 240px;
-}
-
-.admin-modal-content h2 {
-    color: var(--neon-green);
-    margin-bottom: 20px;
-}
-
-.admin-modal-content input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--neon-green);
-    color: white;
-    border-radius: 5px;
-}
-
-.admin-modal-content button {
-    padding: 10px 20px;
-    margin: 5px;
-    background: rgba(57, 255, 20, 0.1);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
-    cursor: pointer;
-    border-radius: 5px;
-}
-
+/* Consolidated admin styles - remove duplicates */
 .admin-controls {
     position: fixed;
     bottom: 20px;
@@ -351,25 +342,57 @@
     z-index: 100;
 }
 
-.admin-controls button {
+.admin-controls button,
+#adminLogoutBtn,
+#clearChatBtn,
+#lockChatBtn {
     padding: 8px 16px;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     border: 2px solid rgba(255, 0, 0, 0.8);
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
-.admin-controls button:hover {
-    background: rgba(255, 0, 0, 0.8);
-    border-color: rgba(255, 0, 0, 1);
+/* Consolidated message styles - remove duplicates */
+.message {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    align-items: flex-start;
+    margin-bottom: 0.2rem;
+    transition: background 0.2s;
+    position: relative;
 }
 
-#adminLogoutBtn,
-#clearChatBtn,
-#lockChatBtn {
-    background: rgba(0, 0, 0, 0.8);
+/* Consolidated media queries - remove duplicates */
+@media (max-width: 1200px) {
+    .chat-container {
+        grid-template-columns: 240px 1fr 240px;
+    }
+}
+
+@media (max-width: 992px) {
+    .chat-container {
+        grid-template-columns: 200px 1fr;
+    }
+    .chat-info-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    .chat-sidebar {
+        display: none;
+    }
+    .chat-main {
+        min-width: unset;
+    }
 }
 
 /* Add these styles */
@@ -481,20 +504,6 @@
     cursor: not-allowed;
 }
 
-/* Message container - more compact layout */
-.message {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.2rem 0.4rem;
-    align-items: flex-start;
-    margin-bottom: 0.2rem;
-    transition: background 0.2s;
-}
-
-.message:hover {
-    background: rgba(0, 0, 0, 0.2);
-}
-
 /* Avatar adjustments */
 .message-avatar {
     width: 24px;
@@ -507,10 +516,10 @@
 .message-content {
     background: rgba(0, 0, 0, 0.2);
     padding: 0.4rem 0.6rem;
-    border-radius: 4px;
+    border-radius: 8px;
     max-width: 85%;
     width: fit-content;
-    border: 1px solid rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(55, 255, 20, 0.507);
     overflow: hidden;
 }
 
@@ -638,18 +647,13 @@
 }
 
 .admin-controls button {
-    padding: 8px 16px;
+    padding: 8px 12px;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     border: 2px solid rgba(255, 0, 0, 0.8);
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s;
-}
-
-.admin-controls button:hover {
-    background: rgba(255, 0, 0, 0.8);
-    border-color: rgba(255, 0, 0, 1);
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 #adminLogoutBtn,
@@ -734,10 +738,15 @@
 .message.system-message {
     background: none;
     border: none;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.2rem 0.4rem;
 }
 
 .message.system-message .message-content {
-    width: 20%;
+    width: auto;
+    min-width: 150px;
+    max-width: 85%;
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid white;
     padding: 8px 12px;
@@ -747,35 +756,7 @@
 .message.system-message .message-text {
     color: #fff;
     font-weight: bold;
-}
-
-/* Media queries for responsiveness */
-@media (max-width: 1200px) {
-    .chat-container {
-        grid-template-columns: 240px 1fr 240px;
-    }
-}
-
-@media (max-width: 992px) {
-    .chat-container {
-        grid-template-columns: 200px 1fr;
-    }
-    .chat-info-sidebar {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .chat-container {
-        grid-template-columns: 1fr;
-        padding: 1rem;
-    }
-    .chat-sidebar {
-        display: none;
-    }
-    .chat-main {
-        min-width: unset;
-    }
+    text-align: center;
 }
 
 /* System message adjustments */
@@ -819,4 +800,31 @@
 .message-content.delete-message .message-text {
     color: rgba(255, 0, 0, 0.7) !important;
     font-weight: bold;
+}
+
+/* Fix online users scrolling */
+#onlineUsers {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 100px;
+    max-height: calc(100vh - 220px);
+    padding-right: 0.5rem;
+}
+
+.user-item {
+    min-height: 42px;
+    flex-shrink: 0;
+}
+
+/* Update deletion message width */
+.message-content.delete-message {
+    width: auto;
+    min-width: 150px;
+    max-width: 85%;
 } 
+
+/* Admin message styling override */
+.admin-message .message-content {
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.486);
+}

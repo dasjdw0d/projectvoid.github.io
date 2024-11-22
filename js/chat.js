@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
     const clearChatBtn = document.getElementById('clearChatBtn');
     const lockChatBtn = document.getElementById('lockChatBtn');
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
 
     // State variables
     let isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let userIsScrolling = false;
     let isChatLocked = false;
     let replyingTo = null;
+    let isFilterEnabled = true;  // New state variable for AI filter
 
     // Add this constant at the top with other constants (after DOMContentLoaded)
     const SERVER_URL = 'https://projectvoid.is-not-a.dev:3000';
@@ -133,16 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const time = new Date(data.timestamp).toLocaleTimeString();
             messageDiv.innerHTML = `
                 <div class="message-content">
-                    <span class="message-username">${data.userData.username}</span>
+                    <div class="message-header">
+                        <span class="message-username">${data.userData.username}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
                     <span class="message-text">${escapeHtml(data.content)}</span>
-                    <span class="message-time">${time}</span>
                 </div>
-                ${isAdmin ? '<span class="delete-icon" role="button" tabindex="0">🗑️</span>' : ''}
+                ${isAdmin ? '<div class="delete-icon" role="button" tabindex="0">🗑️</div>' : ''}
             `;
 
             if (isAdmin) {
                 const deleteIcon = messageDiv.querySelector('.delete-icon');
-                deleteIcon.addEventListener('click', () => {
+                deleteIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     socket.emit('delete_message', data.timestamp);
                 });
             }
@@ -251,20 +256,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('load_messages', (messages) => {
-        chatMessages.innerHTML = '';
-        displayedMessages.clear();
-        messages.forEach(message => addMessage(message));
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        updateChat(messages);
     });
 
     socket.on('new_message', (message) => {
-        if (!displayedMessages.has(message.timestamp)) {
-            addMessage(message);
-            displayedMessages.add(message.timestamp);
-            if (!userIsScrolling) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        }
+        addMessage(message);
+        displayedMessages.add(message.timestamp);
+        lastMessageCount++;
     });
 
     socket.on('users_update', (users) => {
@@ -279,8 +277,16 @@ document.addEventListener('DOMContentLoaded', () => {
         lastMessageCount = 0;
     });
 
-    socket.on('message_deleted', (data) => {
-        updateDeletedMessage(data.oldTimestamp, data.message.content);
+    socket.on('message_deleted', ({ oldTimestamp, message }) => {
+        const messageDiv = document.querySelector(`[data-timestamp="${oldTimestamp}"]`);
+        if (messageDiv) {
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="message-text">${message.content}</span>
+                </div>
+            `;
+        }
     });
 
     socket.on('chat_lock_status', (status) => {
@@ -361,216 +367,87 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('toggle_chat_lock', !isChatLocked);
     });
 
+    filterToggleBtn.addEventListener('click', () => {
+        if (!isAdmin) return;
+        const newStatus = filterToggleBtn.textContent.includes('Disable') ? false : true;
+        socket.emit('toggle_filter', newStatus);
+    });
+
+    // Add socket listener for filter status
+    socket.on('filter_status', (status) => {
+        isFilterEnabled = status;
+        if (filterToggleBtn) {
+            filterToggleBtn.textContent = status ? 'Disable Filter' : 'Enable Filter';
+        }
+    });
+
     // Add this to your CSS first:
     function addStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            .message .delete-icon {
-                display: none;
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: red;
-                cursor: pointer;
-                padding: 5px;
-                opacity: 0.7;
-                z-index: 1;
-                user-select: none;
+            /* Update chat container and sidebar styles */
+            .chat-sidebar {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                overflow: hidden; /* Add this */
             }
 
-            .message:hover .delete-icon {
-                display: ${isAdmin ? 'block' : 'none'};
+            /* Fix user profile section */
+            .user-profile {
+                flex-shrink: 0;
+                margin-bottom: 1rem;
             }
 
-            .message .delete-icon:hover {
-                opacity: 1;
-                transform: translateY(-50%) scale(1.1);
-            }
-
-            .message {
-                position: relative;
-            }
-
-            /* Updated deleted message styles */
-            .message.deleted .message-content {
-                background: rgba(255, 0, 0, 0.1);
-                border: 1px solid rgba(255, 0, 0, 0.2);
-            }
-
-            .message.deleted .message-text {
-                color: rgba(255, 0, 0, 0.7);
-                font-style: italic;
-            }
-
-            /* Updated admin user styles */
-            .user-item.admin-user {
-                background: rgba(255, 0, 0, 0.1) !important;
-                border: 1px solid rgba(255, 0, 0, 0.3) !important;
-            }
-
-            .user-item.admin-user .user-name {
-                color: red !important;
-            }
-
-            /* Updated user info styles */
-            .user-info {
+            /* Fix online users container */
+            #onlineUsers {
                 flex: 1;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding-right: 0.5rem;
+                min-height: 0; /* Critical for flex overflow */
             }
 
-            .user-name-container {
+            /* Ensure user items don't grow */
+            .user-item {
+                flex-shrink: 0;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 0.8rem;
+                padding: 0.8rem;
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid transparent;
+                min-height: 42px;
             }
 
-            .user-status {
-                font-size: 0.8em;
-                color: orange;
+            /* Message styling */
+            .message-content {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
             }
 
-            .user-status.online {
-                display: none;
-            }
-
-            /* Add these new styles for the message header */
             .message-header {
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
-                gap: 12px;  /* Increased from 8px */
-                margin-bottom: 0.4rem;  /* Increased from 0.2rem */
+                gap: 12px;  /* Space between username and timestamp */
             }
 
             .message-time {
-                color: var(--neon-green);
-                opacity: 0.9;
-                margin-left: 8px;  /* Added explicit spacing */
+                color: #666;
+                font-size: 0.75rem;
+                margin-left: auto;  /* Push timestamp to the right */
             }
 
-            .message-actions {
-                margin-top: 5px;
-                opacity: 0.9;
-                transition: opacity 0.2s;
+            .message-text {
+                margin-top: 2px;  /* Space between header and message text */
             }
 
-            .message:hover .message-actions {
-                opacity: 1;
-            }
-
-            /* Admin message colors */
-            .message.admin-message .message-content {
-                background: rgba(0, 0, 0, 0.9);
-                border: 2.5px solid #ff0000;
-                box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
-            }
-
-            .message.admin-message .message-username {
-                color: #ff0000;
-                font-weight: 700;
-            }
-
-            .message.admin-message .message-time {
-                color: #ff0000;
-                opacity: 0.9;
-            }
-
-            /* Message content colors and sizing */
-            .message-username {
-                color: #00ff00;
-                font-weight: 600;
-                font-size: 0.85rem;
-            }
-
-            .message-time {
-                color: #00ff00;
-                opacity: 0.9;
-                font-size: 0.85rem;
-                margin-left: 8px;
-            }
-
-            .message.admin-message .message-username {
-                color: #ff0000;
-                font-weight: 700;
-            }
-
-            .message.admin-message .message-time {
-                color: #ff0000;
-                opacity: 0.9;
-            }
-
-.message-content {
-    border: 1.5px solid rgb(0, 255, 0);
-    padding: 0.4rem 0.8rem;
-    border-radius: 8px;
-    max-width: 85%;
-    width: fit-content;
-    background: rgba(0, 0, 0, 0.3);
-}
-    
-        /* Message deletion styles */
-        .message .delete-icon {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: red;
-            cursor: pointer;
-            padding: 5px;
-            opacity: 0.7;
-            z-index: 1;
-            user-select: none;
-        }
-
-        .message:hover .delete-icon {
-            display: ${isAdmin ? 'block' : 'none'};
-        }
-
-        /* Cooldown overlay styles */
-        .cooldown-overlay {
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: rgba(255, 0, 0, 0.8);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .cooldown-overlay.active {
-            opacity: 1;
-        }
-
-        /* Reply indicator styles */
-        .reply-indicator {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 8px;
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.2);
-            border-radius: 4px;
-            color: var(--neon-green);
-            font-size: 0.8rem;
-        }
-
-        .cancel-reply {
-            background: none;
-            border: none;
-            color: var(--neon-green);
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .cancel-reply:hover {
-            background: rgba(0, 255, 0, 0.2);
-        }
+            ${style.textContent}
         `;
         document.head.appendChild(style);
     }
@@ -748,4 +625,23 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
     }
+
+    // Add socket listener for deleted messages
+    socket.on('message_deleted', ({ timestamp, content }) => {
+        updateDeletedMessage(timestamp, content);
+    });
+
+    // Add socket listener for chat lock status
+    socket.on('chat_lock_status', (status) => {
+        isChatLocked = status;
+        updateChatLockUI();
+    });
+
+    // Add socket listener for filter status
+    socket.on('filter_status', (status) => {
+        isFilterEnabled = status;
+        if (filterToggleBtn) {
+            filterToggleBtn.textContent = status ? 'Disable Filter' : 'Enable Filter';
+        }
+    });
 });

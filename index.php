@@ -28,8 +28,8 @@
         <div class="nav-links">
             <a href="index.php" class="active">Home</a>
             <a href="games.php">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
@@ -94,9 +94,9 @@
                 </div>
                 <div class="announcements-container">
                     <div class="announcement-card new">
-                        <div class="announcement-date">NOV 19</div>
-                        <h3>Website Release</h3>
-                        <p>Welcome to Project Void. We try to provide you the best games and features, the best way we can do that is by you submitting forms in the Forms page. Game Leaderboard is coming in the next few days.</p>
+                        <div class="announcement-date">NOV 22</div>
+                        <h3>Announcement</h3>
+                        <p>Please go to the Updates page to view the recent updates.</p>
                     </div>
                 </div>
             </div>

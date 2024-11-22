@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="#382C2A">
+	<meta name="viewport"
+		content="height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+	<title>Burrito Bison Revenge</title>
+	<link rel="canonical" href="https://ubg89.github.io/BurritoBisonRevenge/" />
+	<script>
+		window.location= "https://ubg89.github.io/BurritoBisonRevenge/";
+	</script>
+	<script type="text/javascript" src="patch/js/poki-sdk-v2.js"></script>
+	<script type="text/javascript" src="./js/loader.js"></script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		canvas {
+			outline: none
+		}
+
+		html,
+		body,
+		#container {
+			margin: 0;
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+		}
+
+		#splash {
+			position: absolute;
+			visibility: hidden;
+			z-index: 10;
+		}
+
+		#splash__image {
+			position: absolute;
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url("assets/todo.jpg");
+			visibility: visible;
+			transition: all 0.5s;
+			z-index: 10;
+		}
+
+		#progress__root {
+			position: absolute;
+		}
+
+		#progress__line {
+			width: 0;
+			height: 100%;
+			transition: all 0.5s;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="splash__image">
+		<div id="progress__root">
+			<div id="progress__line"></div>
+		</div>
+	</div>
+
+	<script>
+
+		window.addEventListener("load", () => {
+
+
+
+			PokiSDK.init().then(
+				() => {
+					// successfully initialized
+					onPokiInitComplete(false);
+				}
+			).catch(
+				() => {
+					// successfully initialized but the user has adblock
+					onPokiInitComplete(true);
+				}
+			);
+
+			let config;
+
+
+config = {
+    "title": "Burrito Bison Revenge",
+    "filename": "burritobisonrevenge_sdk",
+    "pokiSDK": true,
+    "debugPoki": false,
+    "showFPS": false,
+    "debug": false,
+    "splash": "assets/todo.jpg",
+    "start": null,
+    "width": 720,
+    "height": 480,
+    "x": 0,
+    "y": 0,
+    "w": "100%",
+    "h": "100%",
+    "stageScaleMode": null,
+    "stageAlign": null,
+    "progressParserWeigth": 1,
+    "progress": {
+        "direction": "lr",
+        "back": "#fcce45",
+        "line": "#cf561b",
+        "rect": [
+            0.25,
+            0.65,
+            0.5,
+            0.01
+        ]
+    },
+    "skipFramesOfScene": null,
+    "buttonPokiSDKActions": null,
+    "retryButtonIDS": null,
+    "retryButtonAction": null,
+    "actionOnStop": null,
+    "actionWhenRetryButtonEncountered": null,
+    "filenameNoSdk": "burritobisonrevenge",
+    "binary": [
+        {
+            "name": "fonts.swf",
+            "path": "assets/fonts.swf",
+            "size": 30506
+        },
+        {
+            "name": "burritobisonrevenge_sdk",
+            "path": "assets/burritobisonrevenge_sdk.swf",
+            "size": 9012628,
+            "resourceType": "GAME"
+        }
+    ],
+    "runtime": "js/JuicyBeast.js"
+};
+
+
+			PokiSDK.setDebug(config.debugPoki);
+
+			Loader.init(config);
+
+			let onPokiInitComplete = (adBlocked) => {
+
+				PokiSDK.adBlocked = adBlocked;
+				PokiSDK.gameLoadingStart();
+
+				Loader.runGame((fill) => {
+					PokiSDK.gameLoadingProgress({
+						percentageDone: fill,
+						kbLoaded: 0,
+						kbTotal: 0,
+						fileNameLoaded: "",
+						filesLoaded: 0,
+						filesTotal: 0
+					});
+				}, (instance) => {
+					PokiSDK.gameLoadingFinished();
+				})
+			}
+		})
+
+	</script>
+	<script src="../js/analytics_ubg_v1_4.js"></script>
+</body>
+
+</html>

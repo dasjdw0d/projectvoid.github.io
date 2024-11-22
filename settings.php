@@ -28,8 +28,8 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php" class="active">Settings</a>
             <a href="updates.php">Updates</a>
@@ -70,7 +70,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <p class="setting-description">Disguise the tab to a website of your choice when you switch browser tabs. Cannot be used with Global Tab Cloaking.</p>
+                    <p class="setting-description">Disguise the tab to Google when you switch browser tabs. Cannot be used with Global Tab Cloaking.</p>
                     <div class="cloak-options" id="clickoffCloakOptions">
                         <select id="clickoffCloakSelect" class="cloak-select">
                             <option value="google">Google Search</option>
@@ -91,7 +91,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <p class="setting-description">Disguises the tab as another website of your choice. Cannot be used with Clickoff Cloaking.</p>
+                    <p class="setting-description">Disguises the tab as Google. Cannot be used with Clickoff Cloaking.</p>
                     <div class="cloak-options" id="globalCloakOptions">
                         <select id="globalCloakSelect" class="cloak-select">
                             <option value="google">Google Search</option>

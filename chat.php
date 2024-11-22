@@ -27,8 +27,8 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php" class="active">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
@@ -74,7 +74,7 @@
                     </ul>
                     <h3>Rules</h3>
                     <ul>
-                        <li>Don't be annoying and spam/flood the chat. Dont make us make a ban system.</li>
+                        <li>Don't be annoying.</li>
                     </ul>
                 </div>
             </div>
@@ -113,6 +113,7 @@
         <button id="adminLogoutBtn">Logout</button>
         <button id="clearChatBtn">Clear Chat</button>
         <button id="lockChatBtn">Lock Chat</button>
+        <button id="filterToggleBtn">Disable Filter</button>
     </div>
     <footer>
         <div class="footer-content">

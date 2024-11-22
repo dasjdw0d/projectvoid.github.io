@@ -1,0 +1,5 @@
+# Deny access to Python files
+<Files *.py>
+    Order Deny,Allow
+    Deny from all
+</Files>

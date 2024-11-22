@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '/var/www/.env' });
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
@@ -11,8 +11,6 @@ const io = require('socket.io')(http, {
 });
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const rateLimit = require('express-rate-limit');
-const loginAttempts = new Map(); // IP -> {attempts: number, lastAttempt: timestamp}
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const sanitizeHtml = require('sanitize-html');
@@ -30,29 +28,92 @@ const users = new Map(); // Key: username, Value: {socketId, userData, lastSeen}
 
 // Add at the top with other state variables
 let isChatLocked = false;
-const serverStartTime = Date.now();
+let isFilterEnabled = true;  // New state variable for AI filter
 
 // Add these constants at the top with your other constants
 const MAX_MESSAGE_LENGTH = 500;
 
-// Add this helper function at the top level
-function updateGuestNames(users) {
-    const guestUsers = Array.from(users.values()).filter(u => 
-        u.userData.username === 'Guest' || 
-        u.userData.username.startsWith('Guest ')
-    );
+// Add this function near the top with your other helper functions
+function validateUserData(userData) {
+    // Return a sanitized copy of the user data
+    return {
+        username: userData.username ? sanitizeHtml(userData.username) : 'Guest',
+        profileImage: userData.profileImage || 'images/favicon.png',  // Changed from profilePicture to profileImage
+        isAdmin: !!userData.isAdmin,  // Convert to boolean
+        userId: userData.userId || ''
+    };
+}
 
-    // If only one guest, keep them as "Guest"
-    if (guestUsers.length === 1) {
-        const user = guestUsers[0];
-        user.userData.username = 'Guest';
-        return;
+// Add this helper function to call DeepInfra's API
+async function aiFilterMessage(text) {
+    try {
+        const requestBody = {
+            input: `You are a content filter. You must respond with ONLY one word: either "ALLOW" or "BLOCK". Do not explain, do not add anything else.
+
+I want you to filter anything talking about or containing these words (case insensitive):
+- Joey
+- Joey Lentz
+- Lentz
+- Joseph Lentz
+- Joseph
+- Lentz Joey
+
+
+IMPORTANT: If you see ANY of these words in ANY form, you MUST respond with BLOCK. If you don't see these words, respond with ALLOW.
+
+Message to analyze: "${text}"`,
+            max_new_tokens: 10,
+            temperature: 0.1,
+            stream: false
+        };
+
+        const response = await fetch('https://api.deepinfra.com/v1/inference/mistralai/Mixtral-8x7B-Instruct-v0.1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.DEEPINFRA_API_KEY}`
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.error('AI filter error:', response.status);
+            return true;
+        }
+
+        // Clean up response to ensure we only get ALLOW or BLOCK
+        let aiResponse = data.results[0].generated_text
+            .replace(/^response:\s*/i, '')  // Remove 'RESPONSE:' prefix
+            .replace(/^the answer is\s*/i, '')  // Remove 'The answer is' prefix
+            .trim()
+            .split(/[\s\n]/)[0]  // Take only the first word
+            .toUpperCase();
+            
+        // If response isn't BLOCK, default to ALLOW
+        aiResponse = aiResponse === 'BLOCK' ? 'BLOCK' : 'ALLOW';
+            
+        console.log(`AI Filter: ${text} -> ${aiResponse}`);
+
+        return aiResponse === 'BLOCK';
+
+    } catch (error) {
+        console.error('AI Filter Error:', error.message);
+        return true;
     }
+}
 
-    // If multiple guests, number them
-    guestUsers.forEach((user, index) => {
-        user.userData.username = `Guest ${index + 1}`;
-    });
+// Simplified filterMessage function
+async function filterMessage(text) {
+    // Only apply AI filter if enabled
+    if (isFilterEnabled) {
+        const shouldBlock = await aiFilterMessage(text);
+        if (shouldBlock) {
+            return '*'.repeat(text.length);
+        }
+    }
+    return text;
 }
 
 // Add the initial system message to the messages array when server starts
@@ -62,60 +123,26 @@ messages.push({
     system: true
 });
 
-// Add rate limiting middleware
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // 5 attempts per window
-    message: 'Too many login attempts, please try again later'
-});
-
-app.use('/verify-admin', loginLimiter);
-
-// Add this function near the top of your file
-function isRateLimited(ip) {
-    const now = Date.now();
-    const attempt = loginAttempts.get(ip) || { attempts: 0, lastAttempt: 0 };
-    
-    // Reset attempts if window has passed
-    if (now - attempt.lastAttempt > 15 * 60 * 1000) {
-        attempt.attempts = 0;
-    }
-    
-    // Update attempt count
-    attempt.attempts++;
-    attempt.lastAttempt = now;
-    loginAttempts.set(ip, attempt);
-    
-    return attempt.attempts > 5;
-}
-
-// Add this function near the top with your other helper functions
-function validateUserData(userData) {
-    // Return a sanitized copy of the user data
-    return {
-        username: userData.username ? sanitizeHtml(userData.username) : 'Guest',
-        profileImage: userData.profileImage || 'images/favicon.png',
-        isAdmin: !!userData.isAdmin,  // Convert to boolean
-        userId: userData.userId || ''
-    };
-}
-
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
     // Send existing messages and initial state to new user
     socket.emit('load_messages', messages);
     socket.emit('chat_lock_status', isChatLocked);
+    socket.emit('filter_status', isFilterEnabled);
     
     // Handle new messages
-    socket.on('send_message', (data) => {
+    socket.on('send_message', async (data) => {
         // Validate message length
         if (!data.content || data.content.length > MAX_MESSAGE_LENGTH) {
             return;
         }
         
-        // Sanitize content
-        const sanitizedContent = sanitizeHtml(data.content);
+        // Apply filters to the content
+        const filteredContent = await filterMessage(data.content);
+        
+        // Sanitize the filtered content
+        const sanitizedContent = sanitizeHtml(filteredContent);
         
         const message = {
             content: sanitizedContent,
@@ -142,12 +169,9 @@ io.on('connection', (socket) => {
         // Add new user entry
         users.set(socket.id, {
             socketId: socket.id,
-            userData: userData,
+            userData: validateUserData(userData),
             lastSeen: Date.now()
         });
-
-        // Update guest names if needed
-        updateGuestNames(users);
 
         io.emit('users_update', Array.from(users.values()));
     });
@@ -209,12 +233,7 @@ io.on('connection', (socket) => {
     // Handle disconnection
     socket.on('disconnect', () => {
         // Remove user by socket ID
-        for (const [username, user] of users.entries()) {
-            if (user.socketId === socket.id) {
-                users.delete(username);
-                break;
-            }
-        }
+        users.delete(socket.id);
         io.emit('users_update', Array.from(users.values()));
         console.log('User disconnected:', socket.id);
     });
@@ -247,6 +266,25 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('Admin verification error:', error);
             socket.emit('admin_verified', { success: false });
+        }
+    });
+
+    // Inside io.on('connection') handler
+    socket.on('toggle_filter', (status) => {
+        if (isFilterEnabled !== status) {  // Only update if status changed
+            isFilterEnabled = status;
+            
+            // Create system message
+            const systemMessage = {
+                content: status ? 'Chat filter has been enabled by admin' : 'Chat filter has been disabled by admin',
+                timestamp: new Date().toISOString(),
+                system: true
+            };
+            
+            // Add to messages array and broadcast
+            messages.push(systemMessage);
+            io.emit('new_message', systemMessage);
+            io.emit('filter_status', isFilterEnabled);
         }
     });
 });

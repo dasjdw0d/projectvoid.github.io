@@ -28,8 +28,8 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php" class="active">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
@@ -84,11 +84,6 @@
             title: "Retro Bowl College",
             path: "games/retrobowlcollege/index.html",
             thumbnail: "games/retrobowlcollege/unnamed.png"
-        },
-        {
-            title: "Burrito Bison",
-            path: "games/burritobison/index.html",
-            thumbnail: "games/burritobison/logo.png"
         },
         {
             title: "Drift Hunters",
@@ -412,7 +407,7 @@
         {
             title: "Tetris",
             path: "games/tetris/index.html",
-            thumbnail: "games/tetris/icon.png"
+            thumbnail: "games/tetris/logo.png"
         },
         {
             title: "Tetris Sand",
@@ -505,6 +500,11 @@
             title: "Papas Freezeria",
             path: "games/papasfreezeria/index.html",
             thumbnail: "games/papasfreezeria/image.png"
+        },
+        {
+            title: "Papas Cupcakeria",
+            path: "games/papas-cupcakeria/index.html",
+            thumbnail: "games/papas-cupcakeria/icon.png"
         },
         {
             title: "BTD 1",
@@ -620,6 +620,31 @@
             title: "Helix Jump",
             path: "games/helixjump/index.html",
             thumbnail: "games/helixjump/gameIcon.png"
+        },
+        {
+            title: "Block Blast Puzzle",
+            path: "games/block-blast-puzzle/index.html",
+            thumbnail: "games/block-blast-puzzle/logo.png"
+        },
+        {
+            title: "Idle Dice",
+            path: "games/idle-dice/index.html",
+            thumbnail: "games/idle-dice/icon.png"
+        },
+        {
+            title: "Doge Miner",
+            path: "games/doge-miner/index.html",
+            thumbnail: "games/doge-miner/logo.png"
+        },
+        {
+            title: "Draw The Hill",
+            path: "games/draw-the-hill/index.html",
+            thumbnail: "games/draw-the-hill/icon.png"
+        },
+        {
+            title: "Stack",
+            path: "games/stack/index.html",
+            thumbnail: "games/stack/logo.png"
         },
 
 

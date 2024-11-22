@@ -27,8 +27,8 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php" class="active">Updates</a>
@@ -40,36 +40,82 @@
             <h1 class="update-title">Update Log</h1>
             
             <div class="update-list">
-                <div class="update-entry">
-                    <div class="update-header">
-                        <span class="update-date">November 20, 2024</span>
-                        <span class="update-version">v1.1</span>
-                    </div>
-                    <div class="update-content">
-                        <h3>Update 1</h3>
-                        <ul>
-                            <li>Fixed the custom cursor not being infront of the Game Bar.</li>
-                            <li>Chat room improvement. Better designed system messages and user messages.</li>
-                            <li>Fixed the "Invalid Date" on the profile card, all users may have to click the reset data button to get a valid account creation date.</li>
-                            <li>Added Tetris Sand (From Game Recommendations Form).</li>
-                            <li>Added a "Pages" title above the page selectors on the games page.</li>
-                            <li>Added a leaderboard page.</li>
-                        </ul>
-                    </div>
-                </div>
+                <?php
+                // Updates array - newest updates at the top
+                $updates = [
+                    [
+                        'date' => 'November 22, 2024',
+                        'version' => 'v1.2',
+                        'title' => 'Update',
+                        'changes' => [
+                            'Removed Burrito Bison. (Couldnt find a working version).',
+                            'Added Doge Miner',
+                            'Added Draw The Hill',
+                            'Added Stack',
+                            'Added Idle Dice from game recommendations.',
+                            'Added Papas Cupcakeria from game reccomendation, (Couldnt find Papas Scooperia).',
+                            'Added an AI filter to the chatroom to filter certain words (profanity is still allowed). The AI can scan up to 200 messages at once. Also Made the chat filter toggelable by the admin panel',
+                            'Added a 404 page not found page if you try to go to a nonexistent page',
+                            
+                        ]
+                    ],
+                    [
+                        'date' => 'November 21, 2024',
+                        'version' => 'v1.1.5',
+                        'title' => 'Small Update',
+                        'changes' => [
+                            'Added Block Blast Puzzle (From Game Recommendations Form)',
+                            'Fixed the border scaling issue in the chat room when to much people join.',
+                            'Fixed spelling/grammar around the site.',
+                            'Changed Burrito Bison game version. (Old version crashed when you break through the second wall).',
+                            'Added an AI chat.',
+                            'Removed Leaderboard.'
+                            
+                        ]
+                    ],
+                    [
+                        'date' => 'November 20, 2024',
+                        'version' => 'v1.1.0',
+                        'title' => 'Update',
+                        'changes' => [
+                            'Fixed the custom cursor not being infront of the Game Bar.',
+                            'Chat room improvement. Better designed system messages and user messages.',
+                            'Fixed the "Invalid Date" on the profile card, all users may have to click the reset data button to get a valid account creation date.',
+                            'Added Tetris Sand (From Game Recommendations Form).',
+                            'Added a "Pages" title above the page selectors on the games page.',
+                            'Added a leaderboard page.'
+                        ]
+                    ],
+                    [
+                        'date' => 'November 19, 2024',
+                        'version' => 'v1.0.0',
+                        'title' => 'Website Release',
+                        'changes' => [
+                            'Website Release'
+                        ]
+                    ],
+                ];
 
-                <div class="update-entry">
-                    <div class="update-header">
-                        <span class="update-date">November 19, 2024</span>
-                        <span class="update-version">v1.0.0</span>
-                    </div>
-                    <div class="update-content">
-                        <h3>Website Release</h3>
-                        <ul>
-                            <li>Website Release</li>
-                        </ul>
-                    </div>
-                </div>
+                // Loop through and display updates
+                foreach ($updates as $update) {
+                    echo '<div class="update-entry">
+                        <div class="update-header">
+                            <span class="update-date">' . $update['date'] . '</span>
+                            <span class="update-version">' . $update['version'] . '</span>
+                        </div>
+                        <div class="update-content">
+                            <h3>' . $update['title'] . '</h3>
+                            <ul>';
+                    
+                    foreach ($update['changes'] as $change) {
+                        echo '<li>' . $change . '</li>';
+                    }
+                    
+                    echo '</ul>
+                        </div>
+                    </div>';
+                }
+                ?>
             </div>
         </div>
     </main>

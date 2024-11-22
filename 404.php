@@ -53,7 +53,7 @@
         }
 
         .home-button {
-            display: inline-block;
+            display: inline-flex;
             padding: 1rem 3rem;
             background: var(--dark-bg);
             border: 1px solid var(--neon-green);
@@ -67,12 +67,17 @@
             letter-spacing: 1px;
             box-shadow: 0 0 15px var(--neon-green);
             text-shadow: 0 0 5px var(--neon-green);
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            height: fit-content;
         }
 
         .home-button:hover {
-            transform: scale(0.95);
-            box-shadow: 0 0 20px var(--neon-green);
+            box-shadow: 0 0 25px var(--neon-green);
             background: var(--hover-bg);
+            transform: translateY(-3px);
+            text-shadow: 0 0 8px var(--neon-green);
         }
     </style>
 </head>
@@ -86,8 +91,8 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="leaderboard.php">Leaderboard</a>
             <a href="chat.php">Chatroom</a>
+            <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
@@ -98,7 +103,7 @@
         <div class="error-code">404</div>
         <h1 class="error-message">Page Not Found</h1>
         <p class="error-description">The page you are looking for could not be found.</p>
-        <a href="index.php" class="home-button">Return Home</a>
+        <a href="index.php" class="home-button"><span>Return Home</span></a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>

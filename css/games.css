@@ -72,12 +72,12 @@
     overflow: hidden;
     text-decoration: none;
     background: var(--card-bg);
-    border: 2px solid rgba(57, 255, 20, 0.5);
+    border: 2px solid rgb(55, 255, 20);
     transition: transform var(--transition-speed) ease;
 }
 
 .game-card:hover {
-    transform: scale(0.98);
+    transform: scale(0.96);
 }
 
 .game-thumbnail {
@@ -104,10 +104,11 @@
         rgba(0,0,0,0.2) 0%, 
         rgba(0,0,0,0.9) 100%
     );
-    backdrop-filter: blur(0.5px);
-    -webkit-backdrop-filter: blur(0.5px);
+    backdrop-filter: blur(0.35px);
+    -webkit-backdrop-filter: blur(0.35px);
     z-index: 2;
 }
+
 
 .game-info {
     position: absolute;

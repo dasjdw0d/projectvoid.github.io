@@ -1,0 +1,20 @@
+# Deny access to all files
+Order deny,allow
+Deny from all
+
+# Block access to JavaScript files
+<FilesMatch \.js$>
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Block specific file
+<Files chat-server.js>
+    Order deny,allow
+    Deny from all
+    Require all denied
+</Files>
+
+# Prevent directory listing
+Options -Indexes
+IndexIgnore *
