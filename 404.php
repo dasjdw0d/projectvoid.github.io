@@ -95,6 +95,7 @@
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
+            <a href="misc.php">Misc</a>
         </div>
     </nav>
 

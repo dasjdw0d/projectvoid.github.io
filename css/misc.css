@@ -1,0 +1,107 @@
+.content-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+h1 {
+    color: var(--neon-green);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px var(--neon-green);
+}
+
+.warning-box {
+    background: rgba(255, 165, 0, 0.1);
+    border: 1px solid orange;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.warning-box p {
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.hack-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.hack-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-green);
+    border-radius: 12px;
+    width: 300px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.hack-content {
+    padding: 1rem;
+    text-align: center;
+}
+
+.hack-content .instructions {
+    color: orange;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    padding: 0.5rem;
+    border: 1px solid orange;
+    border-radius: 4px;
+    background: rgba(255, 165, 0, 0.1);
+}
+
+.hack-card h3 {
+    color: var(--neon-green);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.hack-card p {
+    color: #aaa;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+}
+
+.copy-btn {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(57, 255, 20, 0.1);
+    border: none;
+    border-top: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.copy-btn:hover {
+    background: rgba(57, 255, 20, 0.2);
+}
+
+@media (max-width: 768px) {
+    .content-container {
+        padding: 0 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .hack-card {
+        width: 100%;
+        max-width: 300px;
+    }
+} 
