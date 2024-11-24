@@ -1,12 +1,13 @@
 /* Layout */
 .top-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 2rem;
-    width: 100%;
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
     position: relative;
+    max-width: 1800px;
+    margin: 0 auto;
 }
 
 /* Hero Section */
@@ -51,17 +52,18 @@
 
 /* User Section */
 .user-section {
-    position: absolute;
-    left: 2rem;
-    top: 50%;
+    position: fixed;
+    left: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
+    top: 52%;
     transform: translateY(-50%);
     width: 375px;
-    background: rgb(15, 15, 15);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 10px;
     padding: 1rem;
     z-index: var(--z-content);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: 0.5px solid var(--neon-green);
     pointer-events: auto;
+    margin-top: 1rem;
 }
 
 .user-header {
@@ -100,7 +102,8 @@
     justify-content: flex-start;
     gap: 1.5rem;
     padding: 0.6rem;
-    background: rgba(0, 0, 0, 0.2);
+    border: 0.5px solid var(--neon-green);
+    background: rgba(31, 31, 31, 0.384);
     border-radius: 8px;
     overflow-x: auto;
 }
@@ -180,25 +183,25 @@
 
 /* Announcements */
 .content-wrapper {
-    position: absolute;
-    right: 4rem;
-    top: 55%;
+    position: fixed;
+    right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
+    top: 52%;
     transform: translateY(-50%);
     z-index: var(--z-content);
+    margin-top: 1rem;
 }
 
 .announcements {
     width: 330px;
-    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 10px;
-    padding: 1rem;
-    border: 0.5px solid rgba(57, 255, 20, 0.3);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    padding: 1.2rem;
+    border: 0.5px solid var(--neon-green);
 }
 
 .announcements-title {
     margin-bottom: 1.5rem;
-    border-bottom: 0.5px solid rgba(57, 255, 20, 0.3);
+    border-bottom: 0.5px solid rgba(55, 255, 20, 0.712);
     padding-bottom: 1rem;
 }
 
@@ -220,7 +223,7 @@
     border-radius: 8px;
     padding: 1.2rem;
     position: relative;
-    border: 0.5px solid rgba(57, 255, 20, 0.3);
+    border: 0.5px solid rgba(55, 255, 20, 0.699);
 }
 
 .announcement-date {
@@ -242,7 +245,7 @@
 .announcement-card p {
     color: #aaa;
     line-height: 1.5;
-    font-size: 0.95rem;
+    font-size: 0.90rem;
 }
 
 .announcement-card.new::before {
@@ -260,10 +263,9 @@
 }
 
 .privacy-notice {
-    background: rgb(15, 15, 15);
     border-radius: 10px;
-    padding: 1rem;
-    color: #888;
+    padding: 0.5rem;
+    color: #a3a3a3;
     font-size: 0.8rem;
     text-align: center;
     margin-top: 0.5rem;
@@ -273,26 +275,13 @@
 /* Media Queries */
 @media (max-width: 1400px) {
     .hero {
-        padding: 0 380px;
+        padding: 0 400px;
     }
 }
 
 @media (max-width: 1200px) {
-    .user-section {
-        left: 1rem;
-        width: 355px;
-    }
-    
-    .content-wrapper {
-        right: 2rem;
-    }
-    
-    .announcements {
-        width: 280px;
-    }
-    
     .hero {
-        padding: 0 300px;
+        padding: 0 350px;
     }
 }
 
@@ -312,29 +301,20 @@
         margin-top: 2rem;
     }
 
-    .user-section {
+    .user-section,
+    .content-wrapper {
         position: relative;
         left: 0;
+        right: 0;
         transform: none;
         width: 100%;
         max-width: 565px;
         margin: 1rem auto;
     }
-
-    .content-wrapper {
-        position: relative;
-        right: 0;
-        top: 0;
-        transform: none;
-        width: 100%;
-        max-width: 450px;
-        margin: 1rem auto;
-    }
-
 }
 
 .online-counter {
-    color: #888;
+    color: #c7c7c7;
     font-size: 1.2rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -359,12 +339,11 @@
     text-shadow: 0 0 5px var(--neon-green);
     border-radius: 4px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    box-shadow: 0 0 10px rgba(55, 255, 20, 0.993);
     z-index: 10;
     position: relative;
 }
 
 .about-blank-btn:hover {
     transform: scale(0.97);
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
 }

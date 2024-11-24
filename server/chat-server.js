@@ -28,7 +28,6 @@ const users = new Map(); // Key: username, Value: {socketId, userData, lastSeen}
 
 // Add at the top with other state variables
 let isChatLocked = false;
-let isFilterEnabled = true;  // New state variable for AI filter
 
 // Add these constants at the top with your other constants
 const MAX_MESSAGE_LENGTH = 500;
@@ -106,14 +105,7 @@ Message to analyze: "${text}"`,
 
 // Simplified filterMessage function
 async function filterMessage(text) {
-    // Only apply AI filter if enabled
-    if (isFilterEnabled) {
-        const shouldBlock = await aiFilterMessage(text);
-        if (shouldBlock) {
-            return '*'.repeat(text.length);
-        }
-    }
-    return text;
+    return text;  // Now just returns the original text without filtering
 }
 
 // Add the initial system message to the messages array when server starts
@@ -129,7 +121,6 @@ io.on('connection', (socket) => {
     // Send existing messages and initial state to new user
     socket.emit('load_messages', messages);
     socket.emit('chat_lock_status', isChatLocked);
-    socket.emit('filter_status', isFilterEnabled);
     
     // Handle new messages
     socket.on('send_message', async (data) => {
@@ -266,25 +257,6 @@ io.on('connection', (socket) => {
         } catch (error) {
             console.error('Admin verification error:', error);
             socket.emit('admin_verified', { success: false });
-        }
-    });
-
-    // Inside io.on('connection') handler
-    socket.on('toggle_filter', (status) => {
-        if (isFilterEnabled !== status) {  // Only update if status changed
-            isFilterEnabled = status;
-            
-            // Create system message
-            const systemMessage = {
-                content: status ? 'Chat filter has been enabled by admin' : 'Chat filter has been disabled by admin',
-                timestamp: new Date().toISOString(),
-                system: true
-            };
-            
-            // Add to messages array and broadcast
-            messages.push(systemMessage);
-            io.emit('new_message', systemMessage);
-            io.emit('filter_status', isFilterEnabled);
         }
     });
 });

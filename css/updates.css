@@ -37,11 +37,11 @@
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    border-bottom: 1px solid rgba(55, 255, 20, 0.411);
 }
 
 .update-date {
-    color: #888;
+    color: #a5a5a5;
     font-size: 0.9rem;
 }
 

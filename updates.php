@@ -44,6 +44,16 @@
                 // Updates array - newest updates at the top
                 $updates = [
                     [
+                        'date' => 'Planed Release: November 25, 2024',
+                        'version' => 'v1.3',
+                        'title' => 'Update (Still In Development)',
+                        'changes' => [
+                            'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 messages at once.',
+                            'Made the announcements and profile card look better.'
+                            
+                        ]
+                    ],
+                    [
                         'date' => 'November 22, 2024',
                         'version' => 'v1.2',
                         'title' => 'Update',

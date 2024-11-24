@@ -33,10 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let userIsScrolling = false;
     let isChatLocked = false;
     let replyingTo = null;
-    let isFilterEnabled = true;  // New state variable for AI filter
-
-    // Add this constant at the top with other constants (after DOMContentLoaded)
-    const SERVER_URL = 'https://projectvoid.is-not-a.dev:3000';
 
     // Get user data from siteStats
     function getUserData() {
@@ -367,12 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('toggle_chat_lock', !isChatLocked);
     });
 
-    filterToggleBtn.addEventListener('click', () => {
-        if (!isAdmin) return;
-        const newStatus = filterToggleBtn.textContent.includes('Disable') ? false : true;
-        socket.emit('toggle_filter', newStatus);
-    });
-
     // Add socket listener for filter status
     socket.on('filter_status', (status) => {
         isFilterEnabled = status;
@@ -635,13 +625,5 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('chat_lock_status', (status) => {
         isChatLocked = status;
         updateChatLockUI();
-    });
-
-    // Add socket listener for filter status
-    socket.on('filter_status', (status) => {
-        isFilterEnabled = status;
-        if (filterToggleBtn) {
-            filterToggleBtn.textContent = status ? 'Disable Filter' : 'Enable Filter';
-        }
     });
 });

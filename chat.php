@@ -113,7 +113,6 @@
         <button id="adminLogoutBtn">Logout</button>
         <button id="clearChatBtn">Clear Chat</button>
         <button id="lockChatBtn">Lock Chat</button>
-        <button id="filterToggleBtn">Disable Filter</button>
     </div>
     <footer>
         <div class="footer-content">

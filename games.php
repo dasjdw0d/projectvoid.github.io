@@ -652,17 +652,22 @@
 
     let filteredGames = [...games]; // Copy of games array for filtering
 
-    function searchGames() {
-        const searchInput = document.getElementById('searchInput');
-        const searchTerm = searchInput.value.toLowerCase();
-        
+function searchGames() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    if (!searchTerm) {
+        filteredGames = games; // Show all games if search is empty
+    } else {
         filteredGames = games.filter(game => 
             game.title.toLowerCase().includes(searchTerm)
         );
-        
-        currentPage = 1; // Reset to first page when searching
-        updateDisplay();
     }
+
+    currentPage = 1; // Reset to first page when searching
+    updateDisplay();
+}
+
 
     // Remove the old debounce listener and add enter key listener
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
@@ -671,23 +676,29 @@
         }
     });
 
-    function createGameCards(gamesSubset) {
-        return gamesSubset.map(game => `
-            <a href="display.php?game=${encodeURIComponent(game.path)}&title=${encodeURIComponent(game.title)}" 
+function createGameCards(gamesSubset) {
+    return gamesSubset.map(game => {
+        const title = game.title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const path = encodeURIComponent(game.path);
+        const thumbnail = encodeURIComponent(game.thumbnail);
+
+        return `
+            <a href="display.php?game=${path}&title=${encodeURIComponent(title)}" 
                class="game-card" 
-               data-title="${game.title}" 
-               onclick="updateLastGame('${game.title}')">
+               data-title="${title}">
                 <div class="game-thumbnail">
-                    <img src="${game.thumbnail}" 
-                         alt="${game.title}"
+                    <img src="${thumbnail}" 
+                         alt="${title}" 
                          loading="lazy">
                 </div>
                 <div class="game-info">
-                    <h3>${game.title}</h3>
+                    <h3>${title}</h3>
                 </div>
             </a>
-        `).join('');
-    }
+        `;
+    }).join('');
+}
+
 
     function updateDisplay() {
         const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
@@ -705,48 +716,60 @@
         updatePagination();
     }
 
-    function updatePagination() {
-        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
-        const pagination = document.querySelector('.pagination');
-        
-        let paginationHTML = `
-            <button onclick="changePage('prev')" ${currentPage === 1 ? 'disabled' : ''}>←</button>
-        `;
+function updatePagination() {
+    const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+    const pagination = document.querySelector('.pagination');
+    
+    // Clear existing pagination
+    pagination.innerHTML = '';
 
-        // Show all page numbers without ellipsis
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `
-                <button 
-                    onclick="changePage(${i})" 
-                    class="${currentPage === i ? 'active' : ''}"
-                >${i}</button>
-            `;
+    // Create "Previous" button
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '←';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => changePage('prev'));
+    pagination.appendChild(prevButton);
+
+    // Create page number buttons
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        if (currentPage === i) {
+            pageButton.classList.add('active');
         }
-
-        paginationHTML += `
-            <button onclick="changePage('next')" ${currentPage === totalPages ? 'disabled' : ''}>→</button>
-        `;
-
-        pagination.innerHTML = paginationHTML;
+        pageButton.addEventListener('click', () => changePage(i));
+        pagination.appendChild(pageButton);
     }
 
-    function changePage(page) {
-        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
-        
-        if (page === 'prev') {
-            currentPage = Math.max(1, currentPage - 1);
-        } else if (page === 'next') {
-            currentPage = Math.min(totalPages, currentPage + 1);
-        } else {
-            currentPage = page;
-        }
-        
-        // Scroll to top of games grid
-        document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
-        
-        // Update display with new page
-        updateDisplay();
+    // Create "Next" button
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '→';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => changePage('next'));
+    pagination.appendChild(nextButton);
+}
+
+function changePage(page) {
+    const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+    
+    if (page === 'prev') {
+        currentPage = Math.max(1, currentPage - 1);
+    } else if (page === 'next') {
+        currentPage = Math.min(totalPages, currentPage + 1);
+    } else if (typeof page === 'number' && page >= 1 && page <= totalPages) {
+        currentPage = page;
+    } else {
+        console.error('Invalid page number:', page);
+        return;
     }
+    
+    // Scroll to top of games grid
+    document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
+    
+    // Update display with new page
+    updateDisplay();
+}
+
 
     // Initial display
     updateDisplay();

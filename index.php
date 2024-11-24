@@ -93,10 +93,10 @@
                     <h2>Announcements</h2>
                 </div>
                 <div class="announcements-container">
-                    <div class="announcement-card new">
-                        <div class="announcement-date">NOV 22</div>
-                        <h3>Announcement</h3>
-                        <p>Please go to the Updates page to view the recent updates.</p>
+                    <div class="announcement-card _new">
+                        <div class="announcement-date"></div>
+                        <h3>None</h3>
+                        <p></p>
                     </div>
                 </div>
             </div>
