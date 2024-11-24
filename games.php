@@ -44,11 +44,8 @@
                 <button onclick="searchGames()">Search</button>
             </div>
         </div>
-
         <div class="games-grid" id="gamesGrid">
-            <!-- Games will be added here dynamically -->
         </div>
-
         <div class="pages-title">Pages</div>
         <div class="pagination">
             <button>←</button>
@@ -60,7 +57,7 @@
     </main>
 
     <script>
-    const GAMES_PER_PAGE = 40; // Changed from 24 to 32 games per page
+    const GAMES_PER_PAGE = 40;
     let currentPage = 1;
     
     // Your existing games array
