@@ -27,7 +27,6 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
-            <a href="chat.php">Chatroom</a>
             <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
@@ -49,7 +48,16 @@
                         'title' => 'Update (Still In Development)',
                         'changes' => [
                             'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 messages at once.',
-                            'Made the announcements and profile card look better.'
+                            'Made the announcements and profile card look better.',
+                            'Removed the chatroom, it may be added back in the future.',
+                            'Removed Learn To Fly 3, couldnt find a working version.',
+                            'Added Getaway Shootout',
+                            'Added Gunspin',
+                            'Added House of Hazards',
+                            'Added Pandemic 2',
+                            'Added Stack Bump 3D',
+                            'Added Stickman Golf',
+                            'Added Volleyrandom',
                             
                         ]
                     ],

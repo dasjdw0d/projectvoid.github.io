@@ -28,7 +28,6 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php" class="active">Games</a>
-            <a href="chat.php">Chatroom</a>
             <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
@@ -159,11 +158,6 @@
             title: "Learn To Fly 2",
             path: "games/learntofly2/index.html",
             thumbnail: "games/learntofly2/logo.jpg"
-        },
-        {
-            title: "Learn To Fly 3",
-            path: "games/learntofly3/index.html",
-            thumbnail: "games/learntofly3/icon.png"
         },
         {
             title: "Learn To Fly Idle",
@@ -572,9 +566,9 @@
             thumbnail: "games/pacman/icon.png"
         },
         {
-            title: "Paper.io",
-            path: "games/paperio/index.html",
-            thumbnail: "games/paperio/icon.png"
+            title: "Paper.io 2",
+            path: "games/paperio2/index.html",
+            thumbnail: "games/paperio2/logo.png"
         },
         {
             title: "Sand Game",
@@ -645,6 +639,46 @@
             title: "Stack",
             path: "games/stack/index.html",
             thumbnail: "games/stack/logo.png"
+        },
+        {
+            title: "Getaway Shootout",
+            path: "games/getaway-shootout/index.html",
+            thumbnail: "games/getaway-shootout/icon.png"
+        },
+        {
+            title: "Gun Mayhem",
+            path: "games/gun-mayhem/index.html",
+            thumbnail: "games/gun-mayhem/icon.png"
+        },
+        {
+            title: "Gun Spin",
+            path: "games/gunspin/index.html",
+            thumbnail: "games/gunspin/icon.png"
+        },
+        {
+            title: "House of Hazards",
+            path: "games/house-of-hazards/index.html",
+            thumbnail: "games/house-of-hazards/icon.png"
+        },
+        {
+            title: "Pandemic 2",
+            path: "games/pandemic2/index.html",
+            thumbnail: "games/pandemic2/icon.png"
+        },
+        {
+            title: "Stack Bump 3D",
+            path: "games/stackbump/index.html",
+            thumbnail: "games/stackbump/thumbnail.jpg"
+        },
+        {
+            title: "Stickman Golf",
+            path: "games/stickman-golf/index.html",
+            thumbnail: "games/stickman-golf/splash.png"
+        },
+        {
+            title: "Volleyrandom",
+            path: "games/volleyrandom/index.html",
+            thumbnail: "games/volleyrandom/icon.png"
         },
 
 
