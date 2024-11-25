@@ -359,31 +359,48 @@ function initializeOnlineTracking() {
     let failedHeartbeats = 0;
     
     function sendHeartbeat() {
-        fetch('/api/heartbeat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                sessionId: sessionId,
-                timestamp: Date.now()
+        console.log('Attempting heartbeat...');  // Debug log
+        
+        fetch('https://projectvoid.is-not-a.dev/api/test')  // Test endpoint first
+            .then(response => response.json())
+            .then(data => {
+                console.log('API test successful:', data);
+                
+                // If test succeeds, proceed with heartbeat
+                return fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        timestamp: Date.now()
+                    })
+                });
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            failedHeartbeats = 0; // Reset failed counter on success
-            lastUserCount = data.onlineUsers;
-            updateOnlineCount(lastUserCount);
-        })
-        .catch(error => {
-            failedHeartbeats++;
-            console.error('Heartbeat failed:', error);
-            // Only stop heartbeat if we've failed multiple times
-            if (failedHeartbeats > 5) {
-                clearInterval(heartbeatInterval);
-                console.log('Heartbeat stopped due to multiple failures');
-            }
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                failedHeartbeats = 0;
+                lastUserCount = data.onlineUsers;
+                updateOnlineCount(lastUserCount);
+            })
+            .catch(error => {
+                console.error('Detailed error:', {
+                    message: error.message,
+                    stack: error.stack
+                });
+                failedHeartbeats++;
+                updateOnlineCount(lastUserCount || '--');
+                if (failedHeartbeats > 5) {
+                    clearInterval(heartbeatInterval);
+                    console.log('Heartbeat stopped due to multiple failures');
+                }
+            });
     }
 
     function updateOnlineCount(count) {
@@ -410,16 +427,19 @@ function initializeOnlineTracking() {
             clearInterval(heartbeatInterval);
         }
         
-        // Send offline status with keepalive to ensure it gets sent
-        fetch('/api/offline', {
+        // Send offline status with keepalive
+        fetch('https://projectvoid.is-not-a.dev/api/offline', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                sessionId: sessionId
+                sessionId: sessionId,
+                timestamp: Date.now()
             }),
             keepalive: true
-        }).catch(console.error);
+        }).catch(error => {
+            console.error('Failed to send offline status:', error);
+        });
     });
 }

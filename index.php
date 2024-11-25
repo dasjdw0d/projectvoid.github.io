@@ -93,10 +93,10 @@
                     <h2>Announcements</h2>
                 </div>
                 <div class="announcements-container">
-                    <div class="announcement-card new">
-                        <div class="announcement-date">NOV 25</div>
-                        <h3>Proxy Soon.</h3>
-                        <p>Project Void will soon have a proxy that can unblock any website you want. It will be like a search bar and you can search anything and it will be unblocked.</p>
+                    <div class="announcement-card _new">
+                        <div class="announcement-date"></div>
+                        <h3>None</h3>
+                        <p></p>
                     </div>
                 </div>
             </div>

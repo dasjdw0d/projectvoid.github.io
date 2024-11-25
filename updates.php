@@ -48,7 +48,7 @@
                         'version' => 'v1.3',
                         'title' => 'Update (Still In Development)',
                         'changes' => [
-                            'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 messages at once.',
+                            'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 responses at once.',
                             'Made the announcements and profile card look better.',
                             'Removed the chatroom, it may be added back in the future.',
                             'Added a Misc page that currently has only Blooket Hacks.',

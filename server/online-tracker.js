@@ -52,6 +52,11 @@ app.post('/api/offline', (req, res) => {
     res.status(200).send();
 });
 
+// Add this near your other endpoints
+app.get('/api/test', (req, res) => {
+    res.json({ status: 'online' });
+});
+
 // Start server
 const PORT = 3001;
 app.listen(PORT, () => {
