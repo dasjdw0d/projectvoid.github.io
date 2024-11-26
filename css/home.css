@@ -347,3 +347,74 @@
 .about-blank-btn:hover {
     transform: scale(0.97);
 }
+
+.online-graph {
+    position: relative;
+    height: 60px;
+    margin-bottom: 1rem;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 0.5px solid rgba(55, 255, 20, 0.3);
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    pointer-events: auto;
+}
+
+.graph-label {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: var(--neon-green);
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+}
+
+.graph-bars {
+    display: flex;
+    gap: 0px;
+    height: 100%;
+    align-items: flex-end;
+    pointer-events: auto;
+    justify-content: center;
+}
+
+.graph-bar {
+    flex: 1;
+    background: rgba(55, 255, 20, 0.2);
+    border: 1px solid rgba(55, 255, 20, 0.4);
+    border-radius: 1px;
+    transition: height 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    min-height: 2px;
+    pointer-events: auto;
+    margin: 0 1px;
+    max-width: 12px;
+}
+
+.graph-bar:hover {
+    background: rgba(55, 255, 20, 0.4);
+}
+
+.graph-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--neon-green);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--neon-green);
+    font-size: 0.8rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    top: -25px;
+    left: 50%;
+}

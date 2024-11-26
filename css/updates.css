@@ -78,6 +78,17 @@
     left: -1rem;
 }
 
+.update-section {
+    color: var(--neon-green);
+    margin: 1.2rem 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.update-content ul {
+    margin-bottom: 1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .update-container {

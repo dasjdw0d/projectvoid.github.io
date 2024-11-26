@@ -74,6 +74,11 @@
                 <p class="privacy-notice">All data is stored locally in your browser</p>
             </div>
             <div class="hero">
+                <div class="online-graph">
+                    <div class="graph-label">Graph updates every 30 seconds</div>
+                    <div class="graph-bars"></div>
+                    <div class="graph-tooltip"><span></span></div>
+                </div>
                 <div class="online-counter">
                     <span id="onlineCount">Loading...</span> Global Users Online
                 </div>

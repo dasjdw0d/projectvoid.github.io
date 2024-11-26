@@ -357,78 +357,17 @@ function initializeOnlineTracking() {
     const sessionId = getSessionId();
     let lastUserCount = 0;
     let failedHeartbeats = 0;
+    let reconnectAttempts = 0;
+    
+    // Clear existing interval with a unique identifier
+    const trackingId = `tracking_${Date.now()}`;
+    window.onlineTrackingIntervals = window.onlineTrackingIntervals || {};
+    
+    // Clear any existing intervals
+    Object.values(window.onlineTrackingIntervals).forEach(clearInterval);
     
     function sendHeartbeat() {
-        console.log('Attempting heartbeat...');  // Debug log
-        
-        fetch('https://projectvoid.is-not-a.dev/api/test')  // Test endpoint first
-            .then(response => response.json())
-            .then(data => {
-                console.log('API test successful:', data);
-                
-                // If test succeeds, proceed with heartbeat
-                return fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        sessionId: sessionId,
-                        timestamp: Date.now()
-                    })
-                });
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                failedHeartbeats = 0;
-                lastUserCount = data.onlineUsers;
-                updateOnlineCount(lastUserCount);
-            })
-            .catch(error => {
-                console.error('Detailed error:', {
-                    message: error.message,
-                    stack: error.stack
-                });
-                failedHeartbeats++;
-                updateOnlineCount(lastUserCount || '--');
-                if (failedHeartbeats > 5) {
-                    clearInterval(heartbeatInterval);
-                    console.log('Heartbeat stopped due to multiple failures');
-                }
-            });
-    }
-
-    function updateOnlineCount(count) {
-        const onlineCount = document.getElementById('onlineCount');
-        if (onlineCount) {
-            onlineCount.textContent = count;
-        }
-    }
-
-    // Send initial heartbeat
-    sendHeartbeat();
-
-    // Clear any existing interval
-    if (heartbeatInterval) {
-        clearInterval(heartbeatInterval);
-    }
-
-    // Heartbeat every 1 second
-    heartbeatInterval = setInterval(sendHeartbeat, 1000);
-
-    // Clean up on page unload
-    window.addEventListener('beforeunload', () => {
-        if (heartbeatInterval) {
-            clearInterval(heartbeatInterval);
-        }
-        
-        // Send offline status with keepalive
-        fetch('https://projectvoid.is-not-a.dev/api/offline', {
+        fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -436,10 +375,102 @@ function initializeOnlineTracking() {
             body: JSON.stringify({
                 sessionId: sessionId,
                 timestamp: Date.now()
-            }),
-            keepalive: true
-        }).catch(error => {
-            console.error('Failed to send offline status:', error);
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            failedHeartbeats = 0;
+            reconnectAttempts = 0;
+            lastUserCount = data.onlineUsers;
+            updateOnlineCount(lastUserCount);
+            updateOnlineGraph(lastUserCount, data.history);
+        })
+        .catch(error => {
+            failedHeartbeats++;
+            console.error('Heartbeat failed:', error);
+            
+            if (failedHeartbeats > 5) {
+                updateOnlineCount('--');
+                // Try to reconnect with exponential backoff
+                if (reconnectAttempts < 5) {
+                    setTimeout(() => {
+                        reconnectAttempts++;
+                        sendHeartbeat();
+                    }, Math.min(1000 * Math.pow(2, reconnectAttempts), 30000));
+                }
+            }
         });
+    }
+
+    window.onlineTrackingIntervals[trackingId] = setInterval(sendHeartbeat, 1000);
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(window.onlineTrackingIntervals[trackingId]);
+        delete window.onlineTrackingIntervals[trackingId];
+        
+        navigator.sendBeacon('https://projectvoid.is-not-a.dev/api/offline', 
+            JSON.stringify({ sessionId, timestamp: Date.now() })
+        );
     });
+}
+
+// Modify the updateOnlineGraph function
+let onlineHistory = new Array(40).fill(0);
+let maxOnlineUsers = 0;
+let lastGraphUpdate = 0;
+
+function updateOnlineGraph(currentUsers, newHistory = null) {
+    if (!newHistory) return;
+    
+    onlineHistory = newHistory;
+    maxOnlineUsers = Math.max(...onlineHistory, maxOnlineUsers);
+
+    const graphContainer = document.querySelector('.graph-bars');
+    if (!graphContainer) return;
+
+    // Clear existing bars
+    graphContainer.innerHTML = '';
+
+    // Create new bars
+    onlineHistory.forEach((users, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'graph-bar';
+        
+        // Simplified linear scaling
+        let heightPercent;
+        if (users === 0) {
+            heightPercent = 2; // Minimum height for visibility
+        } else {
+            // Linear scale from 15% to 100%
+            heightPercent = 15 + (users / maxOnlineUsers) * 85;
+        }
+        
+        bar.style.height = `${heightPercent}%`;
+        
+        // Add hover listeners
+        const tooltip = document.querySelector('.graph-tooltip');
+        bar.addEventListener('mousemove', (e) => {
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${e.target.offsetLeft + (e.target.offsetWidth / 2)}px`;
+            tooltip.querySelector('span').textContent = `Users: ${users}`;
+        });
+        
+        bar.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+        });
+
+        graphContainer.appendChild(bar);
+    });
+}
+
+// Add this function near your other online tracking functions
+function updateOnlineCount(count) {
+    const onlineCountElement = document.getElementById('onlineCount');
+    if (onlineCountElement) {
+        onlineCountElement.textContent = count;
+    }
 }

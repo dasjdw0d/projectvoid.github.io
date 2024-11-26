@@ -78,11 +78,6 @@
             thumbnail: "games/retro-bowl/icon.png"
         },
         {
-            title: "Retro Bowl College",
-            path: "games/retrobowlcollege/index.html",
-            thumbnail: "games/retrobowlcollege/unnamed.png"
-        },
-        {
             title: "Drift Hunters",
             path: "games/drifthunters/index.html",
             thumbnail: "games/drifthunters/icon.png"
@@ -101,6 +96,11 @@
             title: "Run",
             path: "games/run/index.html",
             thumbnail: "games/run/icon.jpeg"
+        },
+        {
+            title: "Eggy Car",
+            path: "games/eggycar/index.html",
+            thumbnail: "games/eggycar/logo.png"
         },
         {
             title: "Drift Boss",
@@ -136,6 +136,11 @@
             title: "2048",
             path: "games/2048/index.html",
             thumbnail: "games/2048/icon.png"
+        },
+        {
+            title: "Poly Track",
+            path: "games/polytrack/index.html",
+            thumbnail: "games/polytrack/logo.png"
         },
         {
             title: "Basketball Stars",
@@ -678,8 +683,11 @@
             path: "games/volleyrandom/index.html",
             thumbnail: "games/volleyrandom/icon.png"
         },
-
-
+        {
+            title: "A Dance of Fire & Ice",
+            path: "games/a-dance-of-fire-and-ice/index.html",
+            thumbnail: "games/a-dance-of-fire-and-ice/logo.png"
+        },
     ];
 
     let filteredGames = [...games]; // Copy of games array for filtering
@@ -717,7 +725,8 @@ function createGameCards(gamesSubset) {
         return `
             <a href="display.php?game=${path}&title=${encodeURIComponent(title)}" 
                class="game-card" 
-               data-title="${title}">
+               data-title="${title}"
+               onclick="updateLastGame('${title}')">
                 <div class="game-thumbnail">
                     <img src="${thumbnail}" 
                          alt="${title}" 

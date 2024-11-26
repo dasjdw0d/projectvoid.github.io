@@ -10,34 +10,107 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Store active sessions with their last heartbeat
+// Store active sessions with their last heartbeat and failure count
 const activeSessions = new Map();
 
-// Clean up inactive sessions every second
-setInterval(() => {
+// Add at the top with other variables
+const onlineHistory = new Array(40).fill(0);
+let lastHistoryUpdate = Date.now();
+
+// 1. Synchronize cleanup and history updates
+let isUpdating = false;
+
+async function updateHistoryWithCleanup() {
+    if (isUpdating) return;
+    
+    try {
+        isUpdating = true;
+        await cleanupInactiveSessions();
+        
+        const currentUsers = activeSessions.size;
+        onlineHistory.shift();
+        onlineHistory.push(currentUsers);
+        
+        lastHistoryUpdate = Date.now();
+        console.log('History updated:', [...onlineHistory]);
+    } catch (error) {
+        console.error('Error in history update:', error);
+    } finally {
+        isUpdating = false;
+    }
+}
+
+// 2. More robust session cleanup
+function cleanupInactiveSessions() {
     const now = Date.now();
-    for (const [sessionId, lastBeat] of activeSessions.entries()) {
-        if (now - lastBeat > 5000) { // Wait 5 full seconds before considering someone offline
+    const staleThreshold = 5000; // 5 seconds
+    let cleanupCount = 0;
+    
+    for (const [sessionId, session] of activeSessions.entries()) {
+        if (now - session.lastBeat > staleThreshold) {
             activeSessions.delete(sessionId);
-            console.log(`Session ${sessionId} timed out after 5s. Active sessions: ${activeSessions.size}`);
+            cleanupCount++;
         }
     }
-}, 1000); // Check every second
-
-// Heartbeat endpoint
-app.post('/api/heartbeat', (req, res) => {
-    const { sessionId, timestamp } = req.body;
     
-    if (!sessionId) {
-        return res.status(400).json({ error: 'Session ID required' });
+    if (cleanupCount > 0) {
+        console.log(`Cleaned up ${cleanupCount} stale sessions`);
     }
-    
-    activeSessions.set(sessionId, timestamp);
-    console.log(`Active sessions: ${activeSessions.size}`); // Debug log
-    
-    res.json({
-        onlineUsers: activeSessions.size
-    });
+}
+
+// Update immediately when server starts
+console.log('Server starting, performing initial history update...');
+updateHistoryWithCleanup();
+
+// Then start the 30-second interval
+console.log('Setting up 30-second interval...');
+const intervalId = setInterval(() => {
+    console.log('30-second interval triggered');
+    updateHistoryWithCleanup();
+}, 30000);
+
+// Add error handling for the interval
+if (intervalId) {
+    console.log('Interval successfully set up');
+} else {
+    console.error('Failed to set up interval');
+}
+
+// Heartbeat endpoint with logging
+app.post('/api/heartbeat', (req, res) => {
+    try {
+        const { sessionId, timestamp } = req.body;
+        
+        if (!sessionId) {
+            console.error('Missing sessionId in heartbeat request');
+            return res.status(400).json({ error: 'Session ID required' });
+        }
+        
+        // Check if session exists and update failure count
+        const existingSession = activeSessions.get(sessionId);
+        if (existingSession) {
+            existingSession.lastBeat = timestamp;
+            existingSession.failures = 0;
+            activeSessions.set(sessionId, existingSession);
+        } else {
+            // New session
+            activeSessions.set(sessionId, {
+                lastBeat: timestamp,
+                failures: 0,
+                createdAt: Date.now()
+            });
+        }
+        
+        console.log(`Heartbeat received from ${sessionId}, current sessions: ${activeSessions.size}`);
+        
+        res.json({
+            onlineUsers: activeSessions.size,
+            history: onlineHistory
+        });
+    } catch (error) {
+        console.error('Error in heartbeat endpoint:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Offline notification endpoint
@@ -55,6 +128,24 @@ app.post('/api/offline', (req, res) => {
 // Add this near your other endpoints
 app.get('/api/test', (req, res) => {
     res.json({ status: 'online' });
+});
+
+// Add a new endpoint to get history
+app.get('/api/history', (req, res) => {
+    res.json({
+        history: onlineHistory
+    });
+});
+
+// Add cleanup handling
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, cleaning up...');
+    clearInterval(intervalId);
+    // Add any other cleanup needed
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error);
 });
 
 // Start server

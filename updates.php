@@ -44,23 +44,54 @@
                 // Updates array - newest updates at the top
                 $updates = [
                     [
-                        'date' => 'Planed Release: November 25, 2024',
-                        'version' => 'v1.3',
-                        'title' => 'Update (Still In Development)',
+                        'date' => 'Planned Release: December 2, 2024',
+                        'version' => 'v1.2',
+                        'title' => 'Update (In Development)',
                         'changes' => [
-                            'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 responses at once.',
-                            'Made the announcements and profile card look better.',
-                            'Removed the chatroom, it may be added back in the future.',
-                            'Added a Misc page that currently has only Blooket Hacks.',
-                            'Removed Learn To Fly 3, couldnt find a working version.',
-                            'Added Getaway Shootout',
-                            'Added Gunspin',
-                            'Added House of Hazards',
-                            'Added Pandemic 2',
-                            'Added Stack Bump 3D',
-                            'Added Stickman Golf',
-                            'Added Volleyrandom',
-                            
+                            'Major Changes' => [
+                                '',
+                            ],
+                            'UI Improvements' => [
+                                'Added 20 more blocks in the online users graph, and updated the scaling. The graph now fits 20 minutes of history.',
+                            ],
+                            'Bug Fixes' => [
+                                'Fixed some bugs with the online users graph.',
+                            ],
+                            'Game Updates' => [
+                                'Fixed Eggy Car being blocked.',
+                                'Removed Retro Bowl College until further notice.',
+                            ],
+                        ]
+                    ],
+                    [
+                        'date' => 'November 26, 2024',
+                        'version' => 'v1.3',
+                        'title' => 'Update',
+                        'changes' => [
+                            'Major Changes' => [
+                                'Updated the AI chat to use the model to Mixtral-8x7B-Instruct-v0.1. It should be better now and can handle up to 200 messages at once.',
+                                'Improved the global users online system that is displayed on the home page. And also added a history graph that updates every 30 seconds.',
+                            ],
+                            'UI Improvements' => [
+                                'Made the announcements and profile card look better.',
+                                'Fixed some bugs related to the profile statistics.',
+                            ],
+                            'Game Updates' => [
+                                'Added Eggy Car (From game recommendations).',
+                                'Added A dance of Fire & Ice (From game recommendations).',
+                                'Added Getaway Shootout',
+                                'Added Gunspin',
+                                'Added House of Hazards',
+                                'Added Pandemic 2',
+                                'Added Stack Bump 3D',
+                                'Added Stickman Golf',
+                                'Added Volleyrandom',
+                                'Added Polytrack',
+                            ],
+                            'Removals' => [
+                                'Removed the chatroom, it may be added back in the future.',
+                                'Removed Learn To Fly 3, couldnt find a working version.',
+                            ]
                         ]
                     ],
                     [
@@ -68,15 +99,21 @@
                         'version' => 'v1.2',
                         'title' => 'Update',
                         'changes' => [
-                            'Removed Burrito Bison. (Couldnt find a working version).',
-                            'Added Doge Miner',
-                            'Added Draw The Hill',
-                            'Added Stack',
-                            'Added Idle Dice from game recommendations.',
-                            'Added Papas Cupcakeria from game reccomendation, (Couldnt find Papas Scooperia).',
-                            'Added an AI filter to the chatroom to filter certain words (profanity is still allowed). The AI can scan up to 200 messages at once. Also Made the chat filter toggelable by the admin panel',
-                            'Added a 404 page not found page if you try to go to a nonexistent page',
-                            
+                            'Game Updates' => [
+                                'Added Doge Miner',
+                                'Added Draw The Hill',
+                                'Added Stack',
+                                'Added Idle Dice from game recommendations.',
+                                'Added Papas Cupcakeria from game reccomendation, (Couldnt find Papas Scooperia).',
+                            ],
+                            'Features' => [
+                                'Added an AI filter to the chatroom to filter certain words (profanity is still allowed). The AI can scan up to 200 messages at once.',
+                                'Made the chat filter toggelable by the admin panel',
+                                'Added a 404 page not found page if you try to go to a nonexistent page',
+                            ],
+                            'Removals' => [
+                                'Removed Burrito Bison. (Couldnt find a working version).',
+                            ]
                         ]
                     ],
                     [
@@ -84,13 +121,20 @@
                         'version' => 'v1.1.5',
                         'title' => 'Small Update',
                         'changes' => [
-                            'Added Block Blast Puzzle (From Game Recommendations Form)',
-                            'Fixed the border scaling issue in the chat room when to much people join.',
-                            'Fixed spelling/grammar around the site.',
-                            'Changed Burrito Bison game version. (Old version crashed when you break through the second wall).',
-                            'Added an AI chat.',
-                            'Removed Leaderboard.'
-                            
+                            'Game Updates' => [
+                                'Added Block Blast Puzzle (From Game Recommendations Form)',
+                                'Changed Burrito Bison game version. (Old version crashed when you break through the second wall).',
+                            ],
+                            'Features' => [
+                                'Added an AI chat.',
+                            ],
+                            'Bug Fixes' => [
+                                'Fixed the border scaling issue in the chat room when to much people join.',
+                                'Fixed spelling/grammar around the site.',
+                            ],
+                            'Removals' => [
+                                'Removed Leaderboard.'
+                            ]
                         ]
                     ],
                     [
@@ -98,12 +142,18 @@
                         'version' => 'v1.1.0',
                         'title' => 'Update',
                         'changes' => [
-                            'Fixed the custom cursor not being infront of the Game Bar.',
-                            'Chat room improvement. Better designed system messages and user messages.',
-                            'Fixed the "Invalid Date" on the profile card, all users may have to click the reset data button to get a valid account creation date.',
-                            'Added Tetris Sand (From Game Recommendations Form).',
-                            'Added a "Pages" title above the page selectors on the games page.',
-                            'Added a leaderboard page.'
+                            'Bug Fixes' => [
+                                'Fixed the custom cursor not being infront of the Game Bar.',
+                                'Fixed the "Invalid Date" on the profile card, all users may have to click the reset data button to get a valid account creation date.',
+                            ],
+                            'Features' => [
+                                'Chat room improvement. Better designed system messages and user messages.',
+                                'Added a "Pages" title above the page selectors on the games page.',
+                                'Added a leaderboard page.',
+                            ],
+                            'Game Updates' => [
+                                'Added Tetris Sand (From Game Recommendations Form).',
+                            ]
                         ]
                     ],
                     [
@@ -111,7 +161,9 @@
                         'version' => 'v1.0.0',
                         'title' => 'Website Release',
                         'changes' => [
-                            'Website Release'
+                            'Release' => [
+                                'Website Release'
+                            ]
                         ]
                     ],
                 ];
@@ -124,16 +176,20 @@
                             <span class="update-version">' . $update['version'] . '</span>
                         </div>
                         <div class="update-content">
-                            <h3>' . $update['title'] . '</h3>
-                            <ul>';
+                            <h3>' . $update['title'] . '</h3>';
                     
-                    foreach ($update['changes'] as $change) {
-                        echo '<li>' . $change . '</li>';
+                    foreach ($update['changes'] as $section => $changes) {
+                        echo '<h4 class="update-section">' . $section . '</h4>
+                              <ul>';
+                        
+                        foreach ($changes as $change) {
+                            echo '<li>' . $change . '</li>';
+                        }
+                        
+                        echo '</ul>';
                     }
                     
-                    echo '</ul>
-                        </div>
-                    </div>';
+                    echo '</div></div>';
                 }
                 ?>
             </div>
