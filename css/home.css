@@ -9,6 +9,7 @@
     max-width: 1800px;
     margin: 0 auto;
     z-index: var(--z-content);
+    overflow-x: hidden;
 }
 
 /* Hero Section */
@@ -51,21 +52,19 @@
     pointer-events: auto;
 }
 
-/* User Section */
+/* User Section - Updated to match the right-side elements exactly */
 .user-section {
-    position: fixed;
-    left: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
-    top: 52%;
+    position: absolute;
+    left: 2rem;
+    top: 50%;
     transform: translateY(-50%);
-    width: 375px;
+    width: min(375px, 90vw);
     background: rgba(0, 0, 0, 0.6);
     border-radius: 10px;
     padding: 1rem;
     z-index: var(--z-nav);
     border: 0.5px solid var(--neon-green);
     pointer-events: all;
-    margin-top: 1rem;
-    isolation: isolate;
 }
 
 .user-header {
@@ -243,11 +242,9 @@
         margin-top: 2rem;
     }
 
-    .user-section,
-    .content-wrapper {
+    .user-section {
         position: relative;
-        left: 0;
-        right: 0;
+        left: auto;
         transform: none;
         width: 100%;
         max-width: 565px;
@@ -255,7 +252,8 @@
     }
 
     .online-counter,
-    .online-graph {
+    .online-graph,
+    .top-games-counter {
         position: relative;
         right: 0;
         top: 0;
@@ -271,7 +269,7 @@
 }
 
 .online-counter {
-    position: fixed;
+    position: absolute;
     right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
     top: 35%;
     transform: translateY(-50%);
@@ -282,7 +280,7 @@
     z-index: var(--z-content);
     pointer-events: auto;
     text-align: center;
-    width: 330px;
+    width: min(330px, 90vw);
     background: rgba(0, 0, 0, 0.3);
     padding: 10px;
     border-radius: 4px;
@@ -319,7 +317,7 @@
 }
 
 .online-graph {
-    position: fixed;
+    position: absolute;
     right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
     top: calc(35% + 45px);
     height: 60px;
@@ -327,7 +325,7 @@
     background: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
     border: 0.5px solid rgba(55, 255, 20, 0.3);
-    width: 330px;
+    width: min(330px, 90vw);
     z-index: var(--z-nav);
     pointer-events: all;
     isolation: isolate;
@@ -460,5 +458,111 @@ nav {
     height: 100%;
     display: block;
     object-fit: contain;
+}
+
+.top-games-counter {
+    position: absolute;
+    right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
+    top: calc(35% + 160px);
+    width: min(330px, 90vw);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 2.5px solid rgba(55, 255, 20, 0.6);
+    padding: 10px;
+    z-index: var(--z-content);
+    pointer-events: auto;
+}
+
+.top-games-counter h3 {
+    color: var(--neon-green);
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.top-games {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.game-stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    background: rgba(0, 255, 0, 0.15);
+    border: 1.5px solid rgba(55, 255, 20, 0.7);
+}
+
+.game-rank {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--neon-green);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 1.5px solid var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+.game-title {
+    flex-grow: 0;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.game-visits {
+    color: var(--neon-green);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--neon-green);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 1200px) {
+    .user-section {
+        left: 1rem;
+    }
+    
+    .online-counter,
+    .online-graph,
+    .top-games-counter {
+        right: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-section,
+    .online-counter,
+    .online-graph,
+    .top-games-counter {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin: 1rem auto;
+        width: calc(100% - 2rem);
+    }
 }
 

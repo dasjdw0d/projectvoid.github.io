@@ -48,6 +48,19 @@
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for tracking errors
+            const error = localStorage.getItem('lastGameError');
+            const success = localStorage.getItem('lastGameSuccess');
+            
+            if (error) {
+                console.error(error);
+                localStorage.removeItem('lastGameError');
+            }
+            if (success) {
+                console.log(success);
+                localStorage.removeItem('lastGameSuccess');
+            }
+            
             const urlParams = new URLSearchParams(window.location.search);
             const gamePath = urlParams.get('game');
             const gameTitle = urlParams.get('title');

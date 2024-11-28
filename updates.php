@@ -50,6 +50,7 @@
                         'changes' => [
                             'Major Changes' => [
                                 'Added a game pinning feature on the games page, to use it right click any game to pin the game at the top of the page.',
+                                'Added a most played games ranking on the home page. It is calculated by the amount of game clicks.'
                             ],
                             'UI Improvements' => [
                                 'Added 20 more blocks in the online users graph, and updated the scaling. The graph now fits 20 minutes of history.',
