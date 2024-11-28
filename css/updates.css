@@ -7,7 +7,7 @@
 .update-title {
     color: var(--neon-green);
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 2rem;
     text-shadow: 0 0 10px var(--neon-green);
 }
@@ -20,15 +20,10 @@
 
 .update-entry {
     background: rgb(15, 15, 15);
-    border: 1.5px solid rgba(57, 255, 20, 0.5);
+    border: 1.5px solid rgb(55, 255, 20);
     border-radius: 10px;
     padding: 1.5rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease;
-}
-
-.update-entry:hover {
-    transform: translateY(-2px);
+    box-shadow: 0 0 8px rgba(21, 255, 0, 0.74);
 }
 
 .update-header {
@@ -37,11 +32,11 @@
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(55, 255, 20, 0.411);
+    border-bottom: 1px solid rgb(55, 255, 20);
 }
 
 .update-date {
-    color: #a5a5a5;
+    color: #c0c0c0;
     font-size: 0.9rem;
 }
 
@@ -52,12 +47,13 @@
     padding: 0.2rem 0.6rem;
     background: rgba(57, 255, 20, 0.1);
     border-radius: 4px;
+    margin-bottom: 0.4rem;
 }
 
 .update-content h3 {
     color: #fff;
     margin-bottom: 0.8rem;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
 }
 
 .update-content ul {

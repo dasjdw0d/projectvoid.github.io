@@ -37,8 +37,12 @@
     </nav>
 
     <main>
+        <div id="pinnedGamesSection"></div>
         <div class="games-header">
-            <h1>Games Library</h1>
+            <div class="title-section">
+                <h1 class="section-title">Games Library</h1>
+                <p class="pin-instruction">(Right click any game to pin the game at the top of the page)</p>
+            </div>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search games...">
                 <button onclick="searchGames()">Search</button>
@@ -76,6 +80,11 @@
             title: "Retro Bowl",
             path: "games/retro-bowl/index.html",
             thumbnail: "games/retro-bowl/icon.png"
+        },
+        {
+            title: "Little Alchemy 2",
+            path: "games/littlealchemy2/index.html",
+            thumbnail: "games/littlealchemy2/logo.png"
         },
         {
             title: "Drift Hunters",
@@ -692,21 +701,69 @@
 
     let filteredGames = [...games]; // Copy of games array for filtering
 
-function searchGames() {
-    const searchInput = document.getElementById('searchInput');
-    const searchTerm = searchInput.value.trim().toLowerCase();
+    // Modify the initial pinnedGames declaration
+    window.pinnedGames = JSON.parse(localStorage.getItem('pinnedGames') || '[]');
 
-    if (!searchTerm) {
-        filteredGames = games; // Show all games if search is empty
-    } else {
-        filteredGames = games.filter(game => 
-            game.title.toLowerCase().includes(searchTerm)
-        );
+    // Modify the togglePinGame function
+    function togglePinGame(event, gameTitle) {
+        event.preventDefault(); // Prevent default context menu
+        
+        // Get fresh data from localStorage
+        window.pinnedGames = JSON.parse(localStorage.getItem('pinnedGames') || '[]');
+        const gameIndex = window.pinnedGames.findIndex(game => game.title === gameTitle);
+        
+        if (gameIndex === -1) {
+            // Game isn't pinned, so pin it
+            const gameToPin = games.find(game => game.title === gameTitle);
+            if (gameToPin) {
+                window.pinnedGames.push(gameToPin);
+                showToast('Game pinned!');
+            }
+        } else {
+            // Game is already pinned, so unpin it
+            window.pinnedGames.splice(gameIndex, 1);
+            showToast('Game unpinned!');
+        }
+        
+        // Update localStorage
+        localStorage.setItem('pinnedGames', JSON.stringify(window.pinnedGames));
+        
+        // Force a re-render of both pinned and regular games sections
+        updateDisplay();
+        
+        return false; // Prevent context menu
     }
 
-    currentPage = 1; // Reset to first page when searching
-    updateDisplay();
-}
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }, 100);
+    }
+
+    function searchGames() {
+        const searchInput = document.getElementById('searchInput');
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        if (!searchTerm) {
+            filteredGames = games; // Show all games if search is empty
+        } else {
+            filteredGames = games.filter(game => 
+                game.title.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        currentPage = 1; // Reset to first page when searching
+        updateDisplay();
+    }
 
 
     // Remove the old debounce listener and add enter key listener
@@ -716,100 +773,113 @@ function searchGames() {
         }
     });
 
-function createGameCards(gamesSubset) {
-    return gamesSubset.map(game => {
-        const title = game.title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        const path = encodeURIComponent(game.path);
-        const thumbnail = encodeURIComponent(game.thumbnail);
+    function createGameCards(gamesSubset) {
+        return gamesSubset.map(game => {
+            const title = game.title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const path = encodeURIComponent(game.path);
+            const thumbnail = encodeURIComponent(game.thumbnail);
+            const isPinned = window.pinnedGames.some(pinned => pinned.title === title);
 
-        return `
-            <a href="display.php?game=${path}&title=${encodeURIComponent(title)}" 
-               class="game-card" 
-               data-title="${title}"
-               onclick="updateLastGame('${title}')">
-                <div class="game-thumbnail">
-                    <img src="${thumbnail}" 
-                         alt="${title}" 
-                         loading="lazy">
-                </div>
-                <div class="game-info">
-                    <h3>${title}</h3>
-                </div>
-            </a>
-        `;
-    }).join('');
-}
+            return `
+                <a href="display.php?game=${path}&title=${encodeURIComponent(title)}" 
+                   class="game-card ${isPinned ? 'pinned' : ''}" 
+                   data-title="${title}"
+                   onclick="updateLastGame('${title}')"
+                   oncontextmenu="togglePinGame(event, '${title}')">
+                    <div class="game-thumbnail">
+                        <img src="${thumbnail}" 
+                             alt="${title}" 
+                             loading="lazy">
+                        ${isPinned ? '<div class="pin-indicator">📌</div>' : ''}
+                    </div>
+                    <div class="game-info">
+                        <h3>${title}</h3>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
 
 
     function updateDisplay() {
+        // Update pinned games section
+        const pinnedGamesSection = document.getElementById('pinnedGamesSection');
+        if (window.pinnedGames.length > 0) {
+            pinnedGamesSection.innerHTML = `
+                <div class="games-header">
+                    <h1 class="section-title">Pinned Games</h1>
+                </div>
+                <div class="games-grid">${createGameCards(window.pinnedGames)}</div>
+            `;
+            pinnedGamesSection.style.display = 'block';
+        } else {
+            pinnedGamesSection.style.display = 'none';
+        }
+
+        // Update regular games section
         const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
         const endIndex = startIndex + GAMES_PER_PAGE;
         const gamesSubset = filteredGames.slice(startIndex, endIndex);
         
         const gamesGrid = document.getElementById('gamesGrid');
-        
-        // Clear existing games
-        gamesGrid.innerHTML = '';
-        
-        // Add new games for current page
         gamesGrid.innerHTML = createGameCards(gamesSubset);
         
         updatePagination();
     }
 
-function updatePagination() {
-    const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
-    const pagination = document.querySelector('.pagination');
-    
-    // Clear existing pagination
-    pagination.innerHTML = '';
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+        const pagination = document.querySelector('.pagination');
+        
+        // Clear existing pagination
+        pagination.innerHTML = '';
 
-    // Create "Previous" button
-    const prevButton = document.createElement('button');
-    prevButton.textContent = '←';
-    prevButton.disabled = currentPage === 1;
-    prevButton.addEventListener('click', () => changePage('prev'));
-    pagination.appendChild(prevButton);
+        // Create "Previous" button
+        const prevButton = document.createElement('button');
+        prevButton.textContent = '←';
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener('click', () => changePage('prev'));
+        pagination.appendChild(prevButton);
 
-    // Create page number buttons
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i;
-        if (currentPage === i) {
-            pageButton.classList.add('active');
+        // Create page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (currentPage === i) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => changePage(i));
+            pagination.appendChild(pageButton);
         }
-        pageButton.addEventListener('click', () => changePage(i));
-        pagination.appendChild(pageButton);
+
+        // Create "Next" button
+        const nextButton = document.createElement('button');
+        nextButton.textContent = '→';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener('click', () => changePage('next'));
+        pagination.appendChild(nextButton);
     }
 
-    // Create "Next" button
-    const nextButton = document.createElement('button');
-    nextButton.textContent = '→';
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.addEventListener('click', () => changePage('next'));
-    pagination.appendChild(nextButton);
-}
-
-function changePage(page) {
-    const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
-    
-    if (page === 'prev') {
-        currentPage = Math.max(1, currentPage - 1);
-    } else if (page === 'next') {
-        currentPage = Math.min(totalPages, currentPage + 1);
-    } else if (typeof page === 'number' && page >= 1 && page <= totalPages) {
-        currentPage = page;
-    } else {
-        console.error('Invalid page number:', page);
-        return;
+    function changePage(page) {
+        const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+        
+        if (page === 'prev') {
+            currentPage = Math.max(1, currentPage - 1);
+        } else if (page === 'next') {
+            currentPage = Math.min(totalPages, currentPage + 1);
+        } else if (typeof page === 'number' && page >= 1 && page <= totalPages) {
+            currentPage = page;
+        } else {
+            console.error('Invalid page number:', page);
+            return;
+        }
+        
+        // Scroll to top of games grid
+        document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
+        
+        // Update display with new page
+        updateDisplay();
     }
-    
-    // Scroll to top of games grid
-    document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
-    
-    // Update display with new page
-    updateDisplay();
-}
 
 
     // Initial display

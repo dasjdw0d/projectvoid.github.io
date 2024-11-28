@@ -80,7 +80,7 @@ body::-webkit-scrollbar-thumb:hover,
 
 /* Navigation Styles */
 nav {
-    background: var(--nav-bg);
+    background: black;
     border-bottom: 1.5px solid var(--neon-green);
     padding: 1.2rem 3rem;
     display: flex;
@@ -89,10 +89,10 @@ nav {
     position: fixed;
     inset: 0 0 auto 0;
     z-index: var(--z-nav);
-    box-shadow: 
-        0 4px 30px rgba(0, 0, 0, 0.5),
-        0 0 15px rgba(57, 255, 20, 0.2);
-    animation: navFadeIn 1.2s var(--transition-curve);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 
+                0 0 15px rgba(57, 255, 20, 0.2);
+    animation: navFadeIn 1.2s var(--transition-curve) forwards;
+    backdrop-filter: none;
 }
 
 .nav-logo {
@@ -104,6 +104,7 @@ nav {
     height: 32px;
     width: auto;
     transition: transform var(--transition-speed) ease;
+    animation: spinIn 1s var(--transition-curve) forwards;
 }
 
 .nav-logo-img:hover {
@@ -124,22 +125,14 @@ nav {
     border-radius: 8px;
     position: relative;
     overflow: hidden;
-    transition: 
-        color var(--transition-speed) var(--transition-curve),
-        background var(--transition-speed) var(--transition-curve);
-}
-
-/* Navigation Animations */
-.nav-links a::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: var(--neon-green);
-    transition: width var(--transition-speed) ease;
+    transition: color var(--transition-speed) var(--transition-curve),
+                background var(--transition-speed) var(--transition-curve),
+                border-color var(--transition-speed) var(--transition-curve),
+                transform var(--transition-speed) var(--transition-curve);
+    border: 1.5px solid rgba(57, 255, 20, 0.6);
+    transform-origin: center;
+    display: inline-block;
+    transform: scale(1);
 }
 
 .nav-links a::after {
@@ -153,21 +146,13 @@ nav {
     filter: blur(15px);
 }
 
-.nav-links a:hover::before,
-.nav-links a.active::before {
-    width: 80%;
-}
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-    opacity: 0.1;
-}
-
 .nav-links a:hover, 
 .nav-links a.active {
     color: var(--neon-green);
     text-shadow: 0 0 10px var(--neon-green);
     background: var(--hover-bg);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+    border-color: var(--neon-green);
 }
 
 .nav-links a:active {
@@ -195,6 +180,17 @@ main {
     }
     100% {
         transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes spinIn {
+    0% {
+        transform: rotate(0deg) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
         opacity: 1;
     }
 }

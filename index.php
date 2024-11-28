@@ -36,6 +36,15 @@
         </div>
     </nav>
 
+    <div class="online-counter">
+        <span id="onlineCount">Loading...</span> Global Users Online
+    </div>
+    <div class="online-graph">
+        <div class="graph-label">Graph updates every 30 seconds</div>
+        <div class="graph-bars"></div>
+        <div class="graph-tooltip"><span></span></div>
+    </div>
+
     <main>
         <div class="top-section">
             <div class="user-section">
@@ -44,7 +53,6 @@
                         <img id="profileImage" src="images/favicon.png" alt="Profile Picture" title="Click to change profile picture">
                         <div class="user-details">
                             <h3>Welcome, <span id="usernameDisplay">Loading...</span></h3>
-                            <p>Member since <span id="dateCreated">Loading...</span></p>
                         </div>
                     </div>
                     <div class="user-stats">
@@ -74,36 +82,15 @@
                 <p class="privacy-notice">All data is stored locally in your browser</p>
             </div>
             <div class="hero">
-                <div class="online-graph">
-                    <div class="graph-label">Graph updates every 30 seconds</div>
-                    <div class="graph-bars"></div>
-                    <div class="graph-tooltip"><span></span></div>
-                </div>
-                <div class="online-counter">
-                    <span id="onlineCount">Loading...</span> Global Users Online
+                <div class="logo-card">
+                    <img src="images/newlogo.png" alt="Project Void Logo">
                 </div>
                 <h1>PROJECT VOID</h1>
                 <div class="subtitle-group">
                     <p class="tagline">Global Home Visits</p>
-                        <img src="https://hitwebcounter.com/counter/counter.php?page=17411431&style=0025&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" />
-                    </a>
+                    <img src="https://hitwebcounter.com/counter/counter.php?page=17411431&style=0025&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" />
                 </div>
                 <button class="about-blank-btn" onclick="openInAboutBlank()">Open in about:blank</button>
-            </div>
-        </div>
-
-        <div class="content-wrapper">
-            <div class="announcements">
-                <div class="announcements-title">
-                    <h2>Announcements</h2>
-                </div>
-                <div class="announcements-container">
-                    <div class="announcement-card _new">
-                        <div class="announcement-date"></div>
-                        <h3>None</h3>
-                        <p></p>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
@@ -119,7 +106,7 @@
             var iframe = win.document.createElement('iframe');
 
             // Set styles for the iframe
-            iframe.style = "position:fixed;width:100vw;height:100vh;top:0px;left:0px;right:0px;bottom:0px;z-index:2147483647;background-color:white;border:none;";
+            iframe.style = "position:fixed;width:100vw;height:100vh;top:0px;left:0px;right:0px;bottom:0px;z-index:2147483647;background-color:black;border:none;";
 
             // Check and assign the URL to the iframe
             if (url.includes('https://') || url.includes("http://")) {
@@ -149,5 +136,6 @@
             <script src="https://static.copyrighted.com/badges/helper.js"></script>
         </div>
     </footer>
+    <!-- <script type='text/javascript' src='//pl25131890.profitablecpmrate.com/1a/b3/0c/1ab30cc35df7c380a20b3b515f45644c.js'></script> -->
 </body>
 </html> 

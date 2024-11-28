@@ -9,6 +9,7 @@
       gtag('js', new Date());
       gtag('config', 'G-88VFMZRZHX');
     </script>
+    <script type='text/javascript' src='//pl25131890.profitablecpmrate.com/1a/b3/0c/1ab30cc35df7c380a20b3b515f45644c.js'></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">

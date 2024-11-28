@@ -1,0 +1,959 @@
+.completion[data-v-437348e0] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    background-color: #260026;
+    opacity: 0
+}
+
+.completion.js-active[data-v-437348e0] {
+    z-index: 12000;
+    transition: opacity 3s ease;
+    opacity: 1;
+    animation-name: completion-hide-data-v-437348e0;
+    animation-duration: 3s;
+    animation-delay: 18.3s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards
+}
+
+.completion .center[data-v-437348e0],.completion .items .animation-item[data-v-437348e0] {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0
+}
+
+.completion .items[data-v-437348e0] {
+    width: 10vmin;
+    height: 10vmin;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none
+}
+
+.completion .items .animation-item[data-v-437348e0] {
+    width: 10vmin;
+    height: 10vmin
+}
+
+.completion .hole-container[data-v-437348e0] {
+    transform: scale(0);
+    animation-name: reset;
+    pointer-events: none
+}
+
+.completion .hole[data-v-437348e0] {
+    width: 20vmin;
+    height: 20vmin;
+    border-radius: 50%
+}
+
+.completion .hole.dark[data-v-437348e0] {
+    background-color: #000;
+    z-index: 100;
+    animation-name: reset
+}
+
+.completion .hole.light[data-v-437348e0] {
+    background-color: #fff;
+    z-index: 90
+}
+
+.completion .rays[data-v-437348e0] {
+    width: 50%;
+    height: 50%;
+    background-image: url(../img/concentric-light-purple.5182ce7b.svg);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: cover;
+    transform: scale(2);
+    opacity: 0;
+    animation-name: reset;
+    pointer-events: none
+}
+
+.completion .text[data-v-437348e0] {
+    height: 0;
+    font-size: 50px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1em;
+    opacity: 0
+}
+
+.completion .text div[data-v-437348e0] {
+    transform: translatey(-50%)
+}
+
+.completion .cover[data-v-437348e0] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #fff;
+    opacity: 0;
+    animation-name: reset;
+    pointer-events: none
+}
+
+.completion.js-active .items[data-v-437348e0] {
+    transition: opacity 0s linear 12.3s;
+    opacity: 1
+}
+
+.completion.js-active .items .animation-item[data-v-437348e0] {
+    transition: transform .14s ease-out
+}
+
+.completion.js-active .items .item1[data-v-437348e0] {
+    transform: translate(60vmax,-60vmax);
+    transition-delay: 12.4s
+}
+
+.completion.js-active .items .item2[data-v-437348e0] {
+    transform: translate(-60vmax,10vmax);
+    transition-delay: 12.44s
+}
+
+.completion.js-active .items .item3[data-v-437348e0] {
+    transform: translate(60vmax,60vmax);
+    transition-delay: 12.42s
+}
+
+.completion.js-active .items .item4[data-v-437348e0] {
+    transform: translate(10vmax,-60vmax);
+    transition-delay: 13.1s
+}
+
+.completion.js-active .items .item5[data-v-437348e0] {
+    transform: translate(30vmax,60vmax);
+    transition-delay: 13.9s
+}
+
+.completion.js-active .items .item6[data-v-437348e0] {
+    transform: translate(-60vmax,20vmax);
+    transition-delay: 14s
+}
+
+.completion.js-active .items .item7[data-v-437348e0] {
+    transform: translate(60vmax,10vmax);
+    transition-delay: 14.1s
+}
+
+.completion.js-active .items .item8[data-v-437348e0] {
+    transform: translate(10vmax,-60vmax);
+    transition-delay: 14.2s
+}
+
+.completion.js-active .items .item9[data-v-437348e0] {
+    transform: translate(40vmax,60vmax);
+    transition-delay: 14.3s
+}
+
+.completion.js-active .items .item10[data-v-437348e0] {
+    transform: translate(40vmax,60vmax);
+    transition-delay: 13s
+}
+
+.completion.js-active .items .item11[data-v-437348e0] {
+    transform: translate(60vmax,-20vmax);
+    transition-delay: 13.2s
+}
+
+.completion.js-active .items .item12[data-v-437348e0] {
+    transform: translate(-30vmax,-60vmax);
+    transition-delay: 13.3s
+}
+
+.completion.js-active .items .item13[data-v-437348e0] {
+    transform: translate(-60vmax,-10vmax);
+    transition-delay: 13.4s
+}
+
+.completion.js-active .items .item14[data-v-437348e0] {
+    transform: translate(30vmax,60vmax);
+    transition-delay: 13.5s
+}
+
+.completion.js-active .items .item15[data-v-437348e0] {
+    transform: translate(-10vmax,-60vmax);
+    transition-delay: 13.6s
+}
+
+.completion.js-active .items .item16[data-v-437348e0] {
+    transform: translate(60vmax,50vmax);
+    transition-delay: 13.7s
+}
+
+.completion.js-active .hole-container[data-v-437348e0] {
+    animation-name: hole-grow-data-v-437348e0,hole-bump-data-v-437348e0,hole-shrink-data-v-437348e0;
+    animation-duration: 10s,.1s,4s;
+    animation-delay: 2.3s,12.3s,12.4s;
+    animation-timing-function: cubic-bezier(.01,.65,.58,.95),ease;
+    animation-fill-mode: forwards
+}
+
+.completion.js-active .hole.dark[data-v-437348e0] {
+    animation-name: hole-shake-in-data-v-437348e0,hole-shake-data-v-437348e0;
+    animation-duration: .9s,.6s;
+    animation-delay: 7.3s,8.2s;
+    animation-timing-function: steps(120,start),steps(40,start);
+    animation-iteration-count: 1,infinite
+}
+
+.completion.js-active .hole.light[data-v-437348e0] {
+    animation-name: hole-light-offset-data-v-437348e0;
+    animation-duration: 10s;
+    animation-delay: 2.3s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards
+}
+
+.completion.js-active .rays[data-v-437348e0] {
+    animation-name: rays-show-data-v-437348e0;
+    animation-duration: .3s;
+    animation-delay: 12.3s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards
+}
+
+.completion.js-active .text[data-v-437348e0] {
+    opacity: 1;
+    transition: opacity 2s ease 15.3s
+}
+
+.completion.js-active .cover[data-v-437348e0] {
+    animation-name: cover-flash-data-v-437348e0,cover-show-data-v-437348e0;
+    animation-duration: .3s,1.8s;
+    animation-delay: 12.3s,12.6s;
+    animation-timing-function: linear,cubic-bezier(.71,.05,1,.25);
+    animation-fill-mode: forwards
+}
+
+@keyframes completion-hide-data-v-437348e0 {
+    0% {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+@keyframes hole-grow-data-v-437348e0 {
+    0% {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(2)
+    }
+}
+
+@keyframes hole-bump-data-v-437348e0 {
+    0% {
+        transform: scale(2.4)
+    }
+
+    to {
+        transform: scale(2)
+    }
+}
+
+@keyframes hole-shrink-data-v-437348e0 {
+    0% {
+        transform: scale(2)
+    }
+
+    to {
+        transform: scale(1.8)
+    }
+}
+
+@keyframes hole-light-offset-data-v-437348e0 {
+    0% {
+        transform: scale(.95) translate(0)
+    }
+
+    to {
+        transform: scale(1.05) translate(2%,-2%)
+    }
+}
+
+@keyframes hole-shake-in-data-v-437348e0 {
+    0% {
+        transform: translate(.02%,.01%)
+    }
+
+    .83% {
+        transform: translate(.01%,.01%)
+    }
+
+    1.67% {
+        transform: translate(.01%,-.02%)
+    }
+
+    2.5% {
+        transform: translate(.01%,.03%)
+    }
+
+    3.33% {
+        transform: translate(-.04%,-.04%)
+    }
+
+    4.17% {
+        transform: translate(-.08%,-.01%)
+    }
+
+    5% {
+        transform: translate(-.12%,-.1%)
+    }
+
+    5.83% {
+        transform: translate(-.06%,-.07%)
+    }
+
+    6.67% {
+        transform: translate(.06%,-.12%)
+    }
+
+    7.5% {
+        transform: translate(-.16%,-.12%)
+    }
+
+    8.33% {
+        transform: translate(.18%,-.18%)
+    }
+
+    9.17% {
+        transform: translate(.12%,.09%)
+    }
+
+    10% {
+        transform: translate(-.09%,-.22%)
+    }
+
+    10.83% {
+        transform: translate(-.08%,-.22%)
+    }
+
+    11.67% {
+        transform: translate(-.09%,.18%)
+    }
+
+    12.5% {
+        transform: translate(-.26%,.23%)
+    }
+
+    13.33% {
+        transform: translate(-.04%,-.26%)
+    }
+
+    14.17% {
+        transform: translate(-.21%,-.05%)
+    }
+
+    15% {
+        transform: translate(-.13%,.2%)
+    }
+
+    15.83% {
+        transform: translate(-.13%,-.22%)
+    }
+
+    16.67% {
+        transform: translate(-.03%,-.14%)
+    }
+
+    17.5% {
+        transform: translate(-.21%,-.31%)
+    }
+
+    18.33% {
+        transform: translate(-.08%,-.08%)
+    }
+
+    19.17% {
+        transform: translate(-.21%,-.07%)
+    }
+
+    20% {
+        transform: translate(.17%,-.32%)
+    }
+
+    20.83% {
+        transform: translate(.11%,-.43%)
+    }
+
+    21.67% {
+        transform: translate(-.41%,.36%)
+    }
+
+    22.5% {
+        transform: translate(-.33%,.42%)
+    }
+
+    23.33% {
+        transform: translate(-.03%,.38%)
+    }
+
+    24.17% {
+        transform: translate(-.13%,.13%)
+    }
+
+    25% {
+        transform: translate(-.43%,-.38%)
+    }
+
+    25.83% {
+        transform: translate(-.49%,.05%)
+    }
+
+    26.67% {
+        transform: translate(-.32%,-.23%)
+    }
+
+    27.5% {
+        transform: translate(-.42%,.28%)
+    }
+
+    28.33% {
+        transform: translate(-.12%,-.42%)
+    }
+
+    29.17% {
+        transform: translate(.16%,.46%)
+    }
+
+    30% {
+        transform: translate(-.58%,-.35%)
+    }
+
+    30.83% {
+        transform: translate(-.22%,-.61%)
+    }
+
+    31.67% {
+        transform: translate(.46%,.06%)
+    }
+
+    32.5% {
+        transform: translate(-.29%,.34%)
+    }
+
+    33.33% {
+        transform: translate(-.01%,.68%)
+    }
+
+    34.17% {
+        transform: translate(-.46%,.53%)
+    }
+
+    35% {
+        transform: translate(.65%,-.34%)
+    }
+
+    35.83% {
+        transform: translate(.16%,-.09%)
+    }
+
+    36.67% {
+        transform: translate(-.74%,-.33%)
+    }
+
+    37.5% {
+        transform: translate(-.59%,.32%)
+    }
+
+    38.33% {
+        transform: translate(.46%,-.62%)
+    }
+
+    39.17% {
+        transform: translate(.38%,-.39%)
+    }
+
+    40% {
+        transform: translate(-.57%,-.46%)
+    }
+
+    40.83% {
+        transform: translate(-.54%,-.69%)
+    }
+
+    41.67% {
+        transform: translate(-.81%,.57%)
+    }
+
+    42.5% {
+        transform: translate(-.81%,-.34%)
+    }
+
+    43.33% {
+        transform: translate(-.58%,.07%)
+    }
+
+    44.17% {
+        transform: translate(.01%,-.15%)
+    }
+
+    45% {
+        transform: translate(.11%,-.17%)
+    }
+
+    45.83% {
+        transform: translate(-.3%,.68%)
+    }
+
+    46.67% {
+        transform: translate(-.13%,.81%)
+    }
+
+    47.5% {
+        transform: translate(.72%,.94%)
+    }
+
+    48.33% {
+        transform: translate(.36%,-.84%)
+    }
+
+    49.17% {
+        transform: translate(.37%,.91%)
+    }
+
+    50% {
+        transform: translate(-.86%,-.96%)
+    }
+
+    50.83% {
+        transform: translate(-.26%,.31%)
+    }
+
+    51.67% {
+        transform: translate(-.69%,-.88%)
+    }
+
+    52.5% {
+        transform: translate(.64%,.61%)
+    }
+
+    53.33% {
+        transform: translate(-.33%,.92%)
+    }
+
+    54.17% {
+        transform: translate(.76%,-.58%)
+    }
+
+    55% {
+        transform: translate(-.04%,-1%)
+    }
+
+    55.83% {
+        transform: translate(.37%,1.1%)
+    }
+
+    56.67% {
+        transform: translate(-.4%,-.81%)
+    }
+
+    57.5% {
+        transform: translate(-.36%,-1.16%)
+    }
+
+    58.33% {
+        transform: translate(-1.11%,-.42%)
+    }
+
+    59.17% {
+        transform: translate(-.86%,-.66%)
+    }
+
+    60% {
+        transform: translate(-.33%,1.07%)
+    }
+
+    60.83% {
+        transform: translate(-.94%,-.49%)
+    }
+
+    61.67% {
+        transform: translate(-.75%,-.02%)
+    }
+
+    62.5% {
+        transform: translate(-.41%,.07%)
+    }
+
+    63.33% {
+        transform: translate(.38%,-.79%)
+    }
+
+    64.17% {
+        transform: translate(-1.28%,-.66%)
+    }
+
+    65% {
+        transform: translate(-.48%,-1.06%)
+    }
+
+    65.83% {
+        transform: translate(.07%,-.24%)
+    }
+
+    66.67% {
+        transform: translate(.23%,-1.31%)
+    }
+
+    67.5% {
+        transform: translate(-.96%,-.64%)
+    }
+
+    68.33% {
+        transform: translate(-1.05%,1.03%)
+    }
+
+    69.17% {
+        transform: translate(-.14%,-.81%)
+    }
+
+    70% {
+        transform: translate(1.24%,1.18%)
+    }
+
+    70.83% {
+        transform: translate(-.31%,-.47%)
+    }
+
+    71.67% {
+        transform: translate(-.5%,1.21%)
+    }
+
+    72.5% {
+        transform: translate(.63%,-.33%)
+    }
+
+    73.33% {
+        transform: translate(.45%,-1.47%)
+    }
+
+    74.17% {
+        transform: translate(-.22%,-.39%)
+    }
+
+    75% {
+        transform: translate(-.81%,-.45%)
+    }
+
+    75.83% {
+        transform: translate(.48%,-.18%)
+    }
+
+    76.67% {
+        transform: translate(-1.34%,-.48%)
+    }
+
+    77.5% {
+        transform: translate(-.61%,-1.51%)
+    }
+
+    78.33% {
+        transform: translate(1.57%,-1.57%)
+    }
+
+    79.17% {
+        transform: translate(-1.3%,-1.13%)
+    }
+
+    80% {
+        transform: translate(-.74%,-.41%)
+    }
+
+    80.83% {
+        transform: translate(-.01%,.99%)
+    }
+
+    81.67% {
+        transform: translate(.35%,-.99%)
+    }
+
+    82.5% {
+        transform: translate(1.31%,1.65%)
+    }
+
+    83.33% {
+        transform: translate(.83%,-.23%)
+    }
+
+    84.17% {
+        transform: translate(-.09%,-.83%)
+    }
+
+    85% {
+        transform: translate(-1.16%,-1.46%)
+    }
+
+    85.83% {
+        transform: translate(-.57%,-.32%)
+    }
+
+    86.67% {
+        transform: translate(-.48%,.77%)
+    }
+
+    87.5% {
+        transform: translate(-.92%,-1.29%)
+    }
+
+    88.33% {
+        transform: translate(.67%,.84%)
+    }
+
+    89.17% {
+        transform: translate(-.15%,1.63%)
+    }
+
+    90% {
+        transform: translate(-.1%,-1.53%)
+    }
+
+    90.83% {
+        transform: translate(-1.74%,-1.81%)
+    }
+
+    91.67% {
+        transform: translate(-1.2%,1.33%)
+    }
+
+    92.5% {
+        transform: translate(-1.42%,-1.52%)
+    }
+
+    93.33% {
+        transform: translate(-.18%,-.83%)
+    }
+
+    94.17% {
+        transform: translate(1.7%,-.19%)
+    }
+
+    95% {
+        transform: translate(-.95%,-1.47%)
+    }
+
+    95.83% {
+        transform: translate(1.04%,-1.18%)
+    }
+
+    96.67% {
+        transform: translate(-1.45%,1.32%)
+    }
+
+    97.5% {
+        transform: translate(.21%,-.58%)
+    }
+
+    98.33% {
+        transform: translate(-1.66%,-.82%)
+    }
+
+    99.17% {
+        transform: translate(-.73%,-.1%)
+    }
+}
+
+@keyframes hole-shake-data-v-437348e0 {
+    0% {
+        transform: translate(-2%)
+    }
+
+    2.5% {
+        transform: translate(2%,-1%)
+    }
+
+    5% {
+        transform: translate(1%)
+    }
+
+    7.5% {
+        transform: translate(1%,-2%)
+    }
+
+    10% {
+        transform: translate(1%,-2%)
+    }
+
+    12.5% {
+        transform: translate(0)
+    }
+
+    15% {
+        transform: translate(2%,-1%)
+    }
+
+    17.5% {
+        transform: translate(1%)
+    }
+
+    20% {
+        transform: translate(0)
+    }
+
+    22.5% {
+        transform: translate(1%)
+    }
+
+    25% {
+        transform: translate(1%,-1%)
+    }
+
+    27.5% {
+        transform: translate(-1%)
+    }
+
+    30% {
+        transform: translate(-1%)
+    }
+
+    32.5% {
+        transform: translate(-2%,1%)
+    }
+
+    35% {
+        transform: translate(-1%,-2%)
+    }
+
+    37.5% {
+        transform: translate(1%,-1%)
+    }
+
+    40% {
+        transform: translateY(-1%)
+    }
+
+    42.5% {
+        transform: translateY(2%)
+    }
+
+    45% {
+        transform: translate(0)
+    }
+
+    47.5% {
+        transform: translate(-2%,-2%)
+    }
+
+    50% {
+        transform: translate(0)
+    }
+
+    52.5% {
+        transform: translateY(-1%)
+    }
+
+    55% {
+        transform: translate(-2%,-1%)
+    }
+
+    57.5% {
+        transform: translate(0)
+    }
+
+    60% {
+        transform: translate(-2%)
+    }
+
+    62.5% {
+        transform: translate(0)
+    }
+
+    65% {
+        transform: translateY(-1%)
+    }
+
+    67.5% {
+        transform: translate(-1%)
+    }
+
+    70% {
+        transform: translate(2%,-2%)
+    }
+
+    72.5% {
+        transform: translate(0)
+    }
+
+    75% {
+        transform: translate(-2%)
+    }
+
+    77.5% {
+        transform: translate(-2%)
+    }
+
+    80% {
+        transform: translate(-1%)
+    }
+
+    82.5% {
+        transform: translateY(1%)
+    }
+
+    85% {
+        transform: translate(1%,-1%)
+    }
+
+    87.5% {
+        transform: translate(1%)
+    }
+
+    90% {
+        transform: translateY(2%)
+    }
+
+    92.5% {
+        transform: translateY(-2%)
+    }
+
+    95% {
+        transform: translateY(-1%)
+    }
+
+    97.5% {
+        transform: translate(-2%)
+    }
+}
+
+@keyframes rays-show-data-v-437348e0 {
+    0% {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes cover-show-data-v-437348e0 {
+    0% {
+        opacity: .1
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes cover-flash-data-v-437348e0 {
+    0% {
+        opacity: .7
+    }
+
+    to {
+        opacity: .1
+    }
+}

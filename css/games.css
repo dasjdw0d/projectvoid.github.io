@@ -137,20 +137,26 @@
 .pagination button {
     padding: 0.5rem 1rem;
     background: var(--dark-bg);
-    border: 1px solid var(--neon-green);
+    border: 1px solid rgba(57, 255, 20, 0.6);
     color: var(--neon-green);
     cursor: pointer;
     font-weight: 600;
     text-shadow: 0 0 5px var(--neon-green);
     border-radius: 4px;
-    transition: transform var(--transition-speed) ease,
-                background var(--transition-speed) ease;
+    transition: box-shadow 0.4s var(--transition-curve),
+                border-color 0.4s var(--transition-curve);
+    box-shadow: 0 0 0 rgba(55, 255, 20, 0);
 }
 
 .pagination button:hover,
 .pagination button.active {
-    transform: scale(0.97);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 8px rgba(55, 255, 20, 0.6);
     background: var(--hover-bg);
+}
+
+.pagination button:hover {
+    transform: none;
 }
 
 /* Add this before the .pagination styles */
@@ -188,6 +194,11 @@
         padding: 0 1rem;
         justify-content: center;
     }
+
+    .pin-instruction {
+        margin: -1rem 0 1rem 0;  /* Adjust margins for mobile */
+        text-align: left;
+    }
 }
 
 @media (max-width: 480px) {
@@ -200,4 +211,76 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+}
+
+.section-title {
+    color: var(--neon-green);
+    font-size: 2.5rem;
+    text-shadow: 0 0 15px var(--neon-green);
+    padding: 2rem;
+}
+
+.pin-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.toast {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--neon-green);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: bottom 0.3s ease;
+    z-index: 1000;
+    border: 2px solid var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+}
+
+.toast.show {
+    bottom: 20px;
+}
+
+#pinnedGamesSection {
+    margin-bottom: 1rem;
+}
+
+#pinnedGamesSection .games-header {
+    padding: 2rem 2rem 1rem 2rem;
+}
+
+#pinnedGamesSection .games-grid {
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.game-card.pinned {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+}
+
+#pinnedGamesSection .section-title {
+    padding-bottom: 1rem;
+    margin-left: 0;
+}
+
+.title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pin-instruction {
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: -1.5rem 0 0 2rem;  /* Negative top margin to bring it closer to title */
 }

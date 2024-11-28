@@ -45,14 +45,17 @@
                 $updates = [
                     [
                         'date' => 'Planned Release: December 2, 2024',
-                        'version' => 'v1.2',
+                        'version' => 'v1.4',
                         'title' => 'Update (In Development)',
                         'changes' => [
                             'Major Changes' => [
-                                '',
+                                'Added a game pinning feature on the games page, to use it right click any game to pin the game at the top of the page.',
                             ],
                             'UI Improvements' => [
                                 'Added 20 more blocks in the online users graph, and updated the scaling. The graph now fits 20 minutes of history.',
+                                'Moved the Global Users Online and graph to where the announcements were.',
+                                'Made the navigation bar look better.',
+                                'Added a logo card above the title on the home page.',
                             ],
                             'Bug Fixes' => [
                                 'Fixed some bugs with the online users graph.',
@@ -60,6 +63,11 @@
                             'Game Updates' => [
                                 'Fixed Eggy Car being blocked.',
                                 'Removed Retro Bowl College until further notice.',
+                                'Added Little Alchemy 2 (From game recommendations).'
+                            ],
+                            'Removals' => [
+                                'Removed the announcements.',
+                                'Removed the "Member Since" text in the profile card on the home page.'
                             ],
                         ]
                     ],

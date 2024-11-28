@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             username: 'Guest',
             lastGame: null,
             profilePicture: 'images/favicon.png',
-            dateCreated: formattedDate,  // Uses current date
             totalPlayTime: 0
         };
         localStorage.setItem('siteStats', JSON.stringify(stats));
@@ -119,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     username: 'Guest',
                     lastGame: null,
                     profilePicture: 'images/favicon.png',
-                    dateCreated: '2024-11-19',
                     totalPlayTime: 0
                 };
                 localStorage.setItem('siteStats', JSON.stringify(stats));
@@ -155,7 +153,6 @@ function updateLastGame(gameName) {
             username: 'Guest',
             lastGame: gameName,
             profilePicture: 'images/favicon.png',
-            dateCreated: '2024-11-19',
             totalPlayTime: 0
         };
     } else {
