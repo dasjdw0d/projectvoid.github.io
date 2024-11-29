@@ -14,6 +14,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const sanitizeHtml = require('sanitize-html');
+const fs = require('fs');
+const path = require('path');
 
 app.use(cors({
     origin: ['https://projectvoid.is-not-a.dev', 'http://projectvoid.is-not-a.dev'],
@@ -22,9 +24,36 @@ app.use(cors({
 }));
 app.use(express.json());  // This is important for parsing JSON requests
 
-// Store messages and users (change Map key to username instead of socketId)
-const messages = [];
-const users = new Map(); // Key: username, Value: {socketId, userData, lastSeen}
+// Add these constants at the top
+const MESSAGES_FILE = path.join(__dirname, 'chat_messages.json');
+
+// Function to load messages from file
+function loadMessages() {
+    try {
+        if (fs.existsSync(MESSAGES_FILE)) {
+            const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+    return [];
+}
+
+// Function to save messages to file
+function saveMessages() {
+    try {
+        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages), 'utf8');
+    } catch (error) {
+        console.error('Error saving messages:', error);
+    }
+}
+
+// Initialize messages from file
+const messages = loadMessages();
+
+// Store messages and users (change Map key to userId instead of socketId)
+const users = new Map(); // Key: userId, Value: {socketIds: Set, userData, lastSeen}
 
 // Add at the top with other state variables
 let isChatLocked = false;
@@ -43,64 +72,65 @@ function validateUserData(userData) {
     };
 }
 
-// Add this helper function to call DeepInfra's API
-async function aiFilterMessage(text) {
-    try {
-        const requestBody = {
-            input: `You are a content filter. You must respond with ONLY one word: either "ALLOW" or "BLOCK". Do not explain, do not add anything else.
+// Add this function to check for valid characters
+function containsInvalidCharacters(text) {
+    // Only allow: letters, numbers, basic punctuation, and common symbols
+    const validPattern = /^[a-zA-Z0-9\s.,!?'"()\-_@#$%&*+= ]+$/;
+    return !validPattern.test(text);
+}
 
-I want you to filter anything talking about or containing these words (case insensitive):
-- Joey
-- Joey Lentz
-- Lentz
-- Joseph Lentz
-- Joseph
-- Lentz Joey
-
-
-IMPORTANT: If you see ANY of these words in ANY form, you MUST respond with BLOCK. If you don't see these words, respond with ALLOW.
-
-Message to analyze: "${text}"`,
-            max_new_tokens: 10,
-            temperature: 0.1,
-            stream: false
-        };
-
-        const response = await fetch('https://api.deepinfra.com/v1/inference/mistralai/Mixtral-8x7B-Instruct-v0.1', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.DEEPINFRA_API_KEY}`
-            },
-            body: JSON.stringify(requestBody)
-        });
-
-        const data = await response.json();
+// Enhanced sensitive info filter
+function containsSensitiveInfo(text) {
+    // First, normalize the text more aggressively
+    const normalizedText = text
+        .toLowerCase()
+        // Replace common number/letter substitutions
+        .replace(/0/g, 'o')
+        .replace(/1/g, 'i')
+        .replace(/3/g, 'e')
+        .replace(/4/g, 'a')
+        .replace(/5/g, 's')
+        .replace(/7/g, 't')
+        .replace(/8/g, 'b')
+        .replace(/\$/g, 's')
+        .replace(/@/g, 'a')
+        .replace(/[èéêë]/g, 'e')
+        .replace(/[àáâãäå]/g, 'a')
+        .replace(/[ìíîï]/g, 'i')
+        .replace(/[òóôõö]/g, 'o')
+        .replace(/[ùúûü]/g, 'u')
+        .replace(/[ýÿ]/g, 'y')
+        // Remove all non-alphanumeric characters
+        .replace(/[^a-z0-9]/g, '');
+    
+    // Also create a reversed version to catch reversed text
+    const reversedText = normalizedText.split('').reverse().join('');
+    
+    // Define sensitive patterns (using normalized text)
+    const sensitivePatterns = [
+        // Specific name patterns
+        /\bjo[es]y?\b/i,         // Matches joey, joe, jos
+        /\bjoseph\b/i,           // Matches joseph
+        /\blentz\b/i,            // Matches lentz exactly
         
-        if (!response.ok) {
-            console.error('AI filter error:', response.status);
-            return true;
-        }
+        // Address patterns (more specific)
+        /\b5[o0]5\b/i,          // Specifically match "505" with variations
+        /str.*flow/i,           // Match any combination of str and flow
+        /flow.*str/i,           // Match any combination in reverse
+        /\bstar\s*flow/i,       // Matches star flow
+        /\bflow[e3]r/i,         // Matches flower variations
+        
+        // Combined patterns (more specific)
+        /\bjo[es]y?\s*lentz\b/i, // Matches joey/joe lentz
+        /\blentz\s*jo[es]y?\b/i  // Matches lentz joey/joe
+    ];
 
-        // Clean up response to ensure we only get ALLOW or BLOCK
-        let aiResponse = data.results[0].generated_text
-            .replace(/^response:\s*/i, '')  // Remove 'RESPONSE:' prefix
-            .replace(/^the answer is\s*/i, '')  // Remove 'The answer is' prefix
-            .trim()
-            .split(/[\s\n]/)[0]  // Take only the first word
-            .toUpperCase();
-            
-        // If response isn't BLOCK, default to ALLOW
-        aiResponse = aiResponse === 'BLOCK' ? 'BLOCK' : 'ALLOW';
-            
-        console.log(`AI Filter: ${text} -> ${aiResponse}`);
-
-        return aiResponse === 'BLOCK';
-
-    } catch (error) {
-        console.error('AI Filter Error:', error.message);
-        return true;
-    }
+    // Check both original, normalized, and reversed text
+    return sensitivePatterns.some(pattern => 
+        pattern.test(normalizedText) || 
+        pattern.test(reversedText) ||
+        pattern.test(text)
+    );
 }
 
 // Simplified filterMessage function
@@ -108,32 +138,70 @@ async function filterMessage(text) {
     return text;  // Now just returns the original text without filtering
 }
 
-// Add the initial system message to the messages array when server starts
-messages.push({
-    content: 'Chat room has started',
-    timestamp: new Date().toISOString(),
-    system: true
-});
+// Clear existing messages and add initial system message ONLY when server starts
+function initializeChat() {
+    // Clear all messages when server starts
+    messages.length = 0;
+    
+    // Add initial system message
+    const systemMessage = {
+        content: 'Chat room has started',
+        timestamp: new Date().toISOString(),
+        system: true
+    };
+    messages.push(systemMessage);
+    saveMessages();
+    
+    // Broadcast to all connected clients
+    if (io) {
+        io.emit('chat_reset', {
+            message: systemMessage
+        });
+    }
+}
+
+// Call initialization when server starts
+initializeChat();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Send existing messages and initial state to new user
+    // Send existing messages to newly connected client
     socket.emit('load_messages', messages);
     socket.emit('chat_lock_status', isChatLocked);
-    
+
     // Handle new messages
     socket.on('send_message', async (data) => {
-        // Validate message length
         if (!data.content || data.content.length > MAX_MESSAGE_LENGTH) {
             return;
         }
         
-        // Apply filters to the content
-        const filteredContent = await filterMessage(data.content);
+        // Check for invalid characters
+        if (containsInvalidCharacters(data.content)) {
+            const systemMessage = {
+                content: 'Message blocked: Contains invalid characters',
+                timestamp: new Date().toISOString(),
+                system: true
+            };
+            messages.push(systemMessage);
+            io.emit('new_message', systemMessage);
+            return;
+        }
         
-        // Sanitize the filtered content
-        const sanitizedContent = sanitizeHtml(filteredContent);
+        // Check for sensitive information
+        if (containsSensitiveInfo(data.content)) {
+            const systemMessage = {
+                content: 'Message blocked: Contains filtered content',
+                timestamp: new Date().toISOString(),
+                system: true
+            };
+            messages.push(systemMessage);
+            io.emit('new_message', systemMessage);
+            return;
+        }
+        
+        // Continue with existing message processing
+        const sanitizedContent = sanitizeHtml(data.content);
         
         const message = {
             content: sanitizedContent,
@@ -141,46 +209,53 @@ io.on('connection', (socket) => {
             timestamp: new Date().toISOString()
         };
         messages.push(message);
+        saveMessages(); // Save after adding message
         
-        // Broadcast the message to all clients
         io.emit('new_message', message);
     });
 
-    // Handle user updates with duplicate prevention
+    // Rest of your socket event handlers...
     socket.on('user_update', (userData) => {
-        if (!userData || !userData.username) return;
+        if (!userData || !userData.userId) return;
 
-        // Remove any existing socket entries for this socket ID
-        for (const [existingUsername, user] of users.entries()) {
-            if (user.socketId === socket.id) {
-                users.delete(existingUsername);
-            }
+        const validatedData = validateUserData(userData);
+        const userId = validatedData.userId;
+
+        // Get or create user entry
+        let userEntry = users.get(userId);
+        if (userEntry) {
+            // Update existing user
+            userEntry.socketIds.add(socket.id);
+            userEntry.userData = validatedData;
+            userEntry.lastSeen = Date.now();
+        } else {
+            // Create new user entry
+            userEntry = {
+                socketIds: new Set([socket.id]),
+                userData: validatedData,
+                lastSeen: Date.now()
+            };
+            users.set(userId, userEntry);
         }
 
-        // Add new user entry
-        users.set(socket.id, {
-            socketId: socket.id,
-            userData: validateUserData(userData),
-            lastSeen: Date.now()
-        });
-
-        io.emit('users_update', Array.from(users.values()));
+        // Emit unique users list
+        const uniqueUsers = Array.from(users.values()).map(user => ({
+            userData: user.userData
+        }));
+        io.emit('users_update', uniqueUsers);
     });
 
-    // Handle admin actions
     socket.on('clear_chat', () => {
-        // Create system message before clearing
         const systemMessage = {
             content: 'Chat has been cleared by admin',
             timestamp: new Date().toISOString(),
             system: true
         };
         
-        // Clear messages but keep the system message
         messages.length = 0;
         messages.push(systemMessage);
+        saveMessages(); // Save after clearing
         
-        // Broadcast both the clear event and the new system message
         io.emit('chat_cleared');
         io.emit('new_message', systemMessage);
     });
@@ -194,7 +269,8 @@ io.on('connection', (socket) => {
                 system: true
             };
             messages[messageIndex] = systemMessage;
-            // Broadcast to all connected clients
+            saveMessages(); // Save after deleting
+            
             io.emit('message_deleted', { 
                 oldTimestamp: timestamp,
                 message: systemMessage 
@@ -223,9 +299,23 @@ io.on('connection', (socket) => {
 
     // Handle disconnection
     socket.on('disconnect', () => {
-        // Remove user by socket ID
-        users.delete(socket.id);
-        io.emit('users_update', Array.from(users.values()));
+        // Find and update the user that owns this socket
+        for (const [userId, user] of users.entries()) {
+            if (user.socketIds.has(socket.id)) {
+                user.socketIds.delete(socket.id);
+                // Remove user only if they have no active connections
+                if (user.socketIds.size === 0) {
+                    users.delete(userId);
+                }
+                break;
+            }
+        }
+
+        // Emit updated users list
+        const uniqueUsers = Array.from(users.values()).map(user => ({
+            userData: user.userData
+        }));
+        io.emit('users_update', uniqueUsers);
         console.log('User disconnected:', socket.id);
     });
 
@@ -233,10 +323,11 @@ io.on('connection', (socket) => {
     socket.on('verify_admin', async (credentials) => {
         try {
             const { username, password } = credentials;
-            console.log('Admin login attempt:', { username }); // Don't log passwords!
+            console.log('Admin login attempt received'); // Don't log credentials
             
-            // Check username
-            if (username !== process.env.ADMIN_USERNAME) {
+            // Check username hash
+            const usernameMatch = await bcrypt.compare(username, process.env.ADMIN_USERNAME_HASH);
+            if (!usernameMatch) {
                 console.log('Username mismatch');
                 socket.emit('admin_verified', { success: false });
                 return;
@@ -244,8 +335,6 @@ io.on('connection', (socket) => {
             
             // Verify password hash
             const passwordMatch = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
-            console.log('Password match:', passwordMatch);
-            
             if (!passwordMatch) {
                 console.log('Password mismatch');
                 socket.emit('admin_verified', { success: false });
@@ -256,8 +345,17 @@ io.on('connection', (socket) => {
             socket.emit('admin_verified', { success: true });
         } catch (error) {
             console.error('Admin verification error:', error);
+            console.error('Error details:', error.message);
             socket.emit('admin_verified', { success: false });
         }
+    });
+
+    // Add this new event listener
+    socket.on('chat_reset', () => {
+        // Clear messages on client side
+        socket.emit('chat_cleared');
+        // Send the new initial message
+        socket.emit('new_message', messages[0]);
     });
 });
 
@@ -266,18 +364,21 @@ setInterval(() => {
     const now = Date.now();
     let updated = false;
 
-    for (const [username, user] of users.entries()) {
+    for (const [userId, user] of users.entries()) {
         if (now - user.lastSeen > 30000) { // 30 seconds
-            users.delete(username);
+            users.delete(userId);
             updated = true;
         }
     }
 
     if (updated) {
-        io.emit('users_update', Array.from(users.values()));
+        const uniqueUsers = Array.from(users.values()).map(user => ({
+            userData: user.userData
+        }));
+        io.emit('users_update', uniqueUsers);
     }
 }, 1000); // Check every second
 
 http.listen(3000, () => {
     console.log('Chat server running on port 3000');
-}); 
+});

@@ -28,6 +28,7 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
+            <a href="chat.php">Chatroom</a>
             <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>

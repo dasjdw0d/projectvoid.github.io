@@ -252,7 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('load_messages', (messages) => {
-        updateChat(messages);
+        chatMessages.innerHTML = '';
+        displayedMessages.clear();
+        lastMessageCount = 0;
+        
+        messages.forEach(message => {
+            addMessage(message);
+            displayedMessages.add(message.timestamp);
+        });
+        lastMessageCount = messages.length;
     });
 
     socket.on('new_message', (message) => {
@@ -625,5 +633,39 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('chat_lock_status', (status) => {
         isChatLocked = status;
         updateChatLockUI();
+    });
+
+    // Add this function near your other message-related functions
+    function addSystemMessage(content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message system-message';
+        messageDiv.dataset.timestamp = new Date().toISOString();
+        
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <span class="message-text">${content}</span>
+            </div>
+        `;
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Add to displayed messages set to prevent duplicates
+        displayedMessages.add(messageDiv.dataset.timestamp);
+    }
+
+    // Update the chat_reset socket listener
+    socket.on('chat_reset', (data) => {
+        // Always clear existing messages when receiving a chat reset
+        chatMessages.innerHTML = '';
+        displayedMessages.clear();
+        lastMessageCount = 0;
+        
+        // Add the new system message
+        if (data.message) {
+            addMessage(data.message);
+            displayedMessages.add(data.message.timestamp);
+            lastMessageCount = 1;
+        }
     });
 });

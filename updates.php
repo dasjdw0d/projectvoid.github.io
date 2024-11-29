@@ -27,6 +27,7 @@
         <div class="nav-links">
             <a href="index.php">Home</a>
             <a href="games.php">Games</a>
+            <a href="chat.php">Chatroom</a>
             <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
@@ -50,16 +51,19 @@
                         'changes' => [
                             'Major Changes' => [
                                 'Added a game pinning feature on the games page, to use it right click any game to pin the game at the top of the page.',
-                                'Added a most played games ranking on the home page. It is calculated by the amount of game clicks.'
+                                'Added a most played games ranking on the home page. It is calculated by the amount of game clicks.',
+                                'Added back the chat room with a comprehensive filter to filter out the things that got the chat room removed. Also added extra security to the Admin login.'
                             ],
                             'UI Improvements' => [
                                 'Added 20 more blocks in the online users graph, and updated the scaling. The graph now fits 20 minutes of history.',
                                 'Moved the Global Users Online and graph to where the announcements were.',
                                 'Made the navigation bar look better.',
                                 'Added a logo card above the title on the home page.',
+                                'Made the page number buttons on the games page better and less glitchy.'
                             ],
                             'Bug Fixes' => [
                                 'Fixed some bugs with the online users graph.',
+                                'Fixed the profile system and the content to the right on the home page not properly scaling with the page zoom. '
                             ],
                             'Game Updates' => [
                                 'Fixed Eggy Car being blocked.',

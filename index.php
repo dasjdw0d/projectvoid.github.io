@@ -14,8 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>Project Void - Home</title>
-    <link rel="stylesheet" href="css/home.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/home.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -28,6 +28,7 @@
         <div class="nav-links">
             <a href="index.php" class="active">Home</a>
             <a href="games.php">Games</a>
+            <a href="chat.php">Chatroom</a>
             <a href="ai.php">AI Chat</a>
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
@@ -174,7 +175,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateTopGames();
         // Update every 30 seconds
-        setInterval(updateTopGames, 30000);
+        setInterval(updateTopGames, 5000);
     });
     </script>
 </body>

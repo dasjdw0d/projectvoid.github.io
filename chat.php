@@ -7,6 +7,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+
       gtag('config', 'G-88VFMZRZHX');
     </script>
     <meta charset="UTF-8">
@@ -32,6 +33,7 @@
             <a href="forms.php">Forms</a>
             <a href="settings.php">Settings</a>
             <a href="updates.php">Updates</a>
+            <a href="misc.php">Misc</a>
         </div>
     </nav>
 

@@ -78,7 +78,22 @@ body::-webkit-scrollbar-thumb:hover,
     pointer-events: none;
 }
 
-/* Navigation Styles */
+/* Add this before the nav styles */
+.announcement-bar {
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--z-nav) + 1);
+    border-bottom: 1.5px solid var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+/* Adjust nav position when announcement is present */
 nav {
     background: black;
     border-bottom: 1.5px solid var(--neon-green);
@@ -95,77 +110,24 @@ nav {
     backdrop-filter: none;
 }
 
-.nav-logo {
-    display: flex;
-    align-items: center;
+/* Only add the transition when the announcement class is present */
+nav.with-announcement {
+    top: 40px;
+    transition: top 0.3s ease;
 }
 
-.nav-logo-img {
-    height: 32px;
-    width: auto;
-    transition: transform var(--transition-speed) ease;
-    animation: spinIn 1s var(--transition-curve) forwards;
-}
-
-.nav-logo-img:hover {
-    transform: rotate(360deg);
-}
-
-.nav-links {
-    display: flex;
-    gap: 2.5rem;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 0.6rem 1.8rem;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    transition: color var(--transition-speed) var(--transition-curve),
-                background var(--transition-speed) var(--transition-curve),
-                border-color var(--transition-speed) var(--transition-curve),
-                transform var(--transition-speed) var(--transition-curve);
-    border: 1.5px solid rgba(57, 255, 20, 0.6);
-    transform-origin: center;
-    display: inline-block;
-    transform: scale(1);
-}
-
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--neon-green);
-    opacity: 0;
-    transition: opacity var(--transition-speed) ease;
-    z-index: -1;
-    filter: blur(15px);
-}
-
-.nav-links a:hover, 
-.nav-links a.active {
-    color: var(--neon-green);
-    text-shadow: 0 0 10px var(--neon-green);
-    background: var(--hover-bg);
-    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
-    border-color: var(--neon-green);
-}
-
-.nav-links a:active {
-    transform: scale(0.97);
-}
-
-/* Main Content Styles */
+/* Adjust main content */
 main {
     position: relative;
     z-index: var(--z-content);
     min-height: 100vh;
     padding-top: 80px;
     pointer-events: auto;
+}
+
+main.with-announcement {
+    padding-top: 120px;
+    transition: padding-top 0.3s ease;
 }
 
 /* Animations */
@@ -231,9 +193,14 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
     }
 
     .nav-links {
-        gap: 1rem;
+        gap: 0.8rem;
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .nav-links a {
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
     }
 }
 
@@ -326,4 +293,140 @@ footer {
 .copyrighted-badge {
     display: block;
     line-height: 0;
+}
+
+/* Announcement Styles */
+.announcement-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Above everything else */
+    animation: fadeIn 0.3s ease;
+}
+
+.announcement-content {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    text-align: center;
+    color: white;
+    border: 1.5px solid var(--neon-green);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+    animation: slideIn 0.3s ease;
+}
+
+.announcement-content p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.announcement-content button {
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: #333;
+    border: 1.5px solid var(--neon-green);
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.announcement-content button:hover {
+    background: var(--hover-bg);
+    color: var(--neon-green);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.announcement-content small {
+    display: block;
+    margin-top: 10px;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-img {
+    height: 32px;
+    width: auto;
+    transition: transform var(--transition-speed) ease;
+    animation: spinIn 1s var(--transition-curve) forwards;
+}
+
+.nav-logo-img:hover {
+    transform: rotate(360deg);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.8rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: color var(--transition-speed) var(--transition-curve),
+                background var(--transition-speed) var(--transition-curve),
+                border-color var(--transition-speed) var(--transition-curve),
+                transform var(--transition-speed) var(--transition-curve);
+    border: 1.5px solid rgba(57, 255, 20, 0.6);
+    transform-origin: center;
+    display: inline-block;
+    transform: scale(1);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--neon-green);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+    z-index: -1;
+    filter: blur(15px);
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    background: var(--hover-bg);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+    border-color: var(--neon-green);
+}
+
+.nav-links a:active {
+    transform: scale(0.97);
 }
