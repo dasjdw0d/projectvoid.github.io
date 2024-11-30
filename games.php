@@ -806,8 +806,13 @@
         event.preventDefault();
         
         try {
-            // Update this line to use the correct path
-            const response = await fetch('/track_game_visits.php', {  // Changed from '/api/track_game_visits.php'
+            // Update last played game in stats
+            let stats = JSON.parse(localStorage.getItem('siteStats') || '{}');
+            stats.lastGame = title;
+            localStorage.setItem('siteStats', JSON.stringify(stats));
+
+            // Existing tracking code
+            const response = await fetch('/track_game_visits.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

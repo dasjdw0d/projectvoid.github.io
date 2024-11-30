@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (lastGameDisplay) {
-            lastGameDisplay.textContent = (stats.lastGame === null || stats.lastGame === '') ? 'N/A' : stats.lastGame;
+            lastGameDisplay.textContent = stats.lastGame || 'N/A';
         }
         
         if (profileImage) {

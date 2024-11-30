@@ -52,7 +52,8 @@
                             'Major Changes' => [
                                 'Added a game pinning feature on the games page, to use it right click any game to pin the game at the top of the page.',
                                 'Added a most played games ranking on the home page. It is calculated by the amount of game clicks.',
-                                'Added back the chat room with a comprehensive filter to filter out the things that got the chat room removed. Also added extra security to the Admin login.'
+                                'Added back the chat room with a comprehensive filter to filter out the things that got the chat room removed. Also added extra security to the chat Admin login.',
+                                'Added a global announcement system that shows on all pages above the navigation bar when activated.',
                             ],
                             'UI Improvements' => [
                                 'Added 20 more blocks in the online users graph, and updated the scaling. The graph now fits 20 minutes of history.',

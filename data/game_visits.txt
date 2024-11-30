@@ -1,18 +1,22 @@
 Drift Hunters:7
-Little Alchemy 2:3
-Retro Bowl:6
-MotoX3M Winter:2
-Slope:8
+Little Alchemy 2:4
+Retro Bowl:8
+MotoX3M Winter:3
+Slope:12
 Vex 5:1
-Paper.io 2:2
+Paper.io 2:3
 Among Us:1
 Idle Breakout:1
 MotoX3M:2
 Run:1
 Run 3:1
-The Impossible Quiz:1
-Death Run 3D:1
+The Impossible Quiz:3
+Death Run 3D:2
 Osu:1
 Cluster Rush:1
 OvO:1
-Snow Rider 3D:1
+Snow Rider 3D:2
+Poly Track:1
+Bit Life:1
+Helix Jump:1
+Duck Life 1:1
