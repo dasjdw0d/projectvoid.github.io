@@ -20,6 +20,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <?php include 'loading-screen.php'; ?>
 
     <nav>
         <div class="nav-logo">
@@ -36,12 +37,11 @@
             <a href="misc.php">Misc</a>
         </div>
     </nav>
-
     <div class="online-counter">
         <span id="onlineCount">Loading...</span> Global Users Online
     </div>
     <div class="online-graph">
-        <div class="graph-label">Graph updates every 30 seconds</div>
+        <div class="graph-label">Updates every 30 seconds. Stores 20 min of history.</div>
         <div class="graph-bars"></div>
         <div class="graph-tooltip"><span></span></div>
     </div>
@@ -144,7 +144,6 @@
             <script src="https://static.copyrighted.com/badges/helper.js"></script>
         </div>
     </footer>
-    <!-- <script type='text/javascript' src='//pl25131890.profitablecpmrate.com/1a/b3/0c/1ab30cc35df7c380a20b3b515f45644c.js'></script> -->
     <script>
     function updateTopGames() {
         const topGamesElement = document.getElementById('topGames');
@@ -174,7 +173,6 @@
     // Call this when the page loads and periodically
     document.addEventListener('DOMContentLoaded', function() {
         updateTopGames();
-        // Update every 30 seconds
         setInterval(updateTopGames, 5000);
     });
     </script>

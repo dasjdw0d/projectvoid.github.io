@@ -19,6 +19,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <?php include 'loading-screen.php'; ?>
 
     <nav>
         <div class="nav-logo">
@@ -60,13 +61,15 @@
                                 'Moved the Global Users Online and graph to where the announcements were.',
                                 'Made the navigation bar look better.',
                                 'Added a logo card above the title on the home page.',
-                                'Made the page number buttons on the games page better and less glitchy.'
+                                'Made the page number buttons on the games page better and less glitchy.',
+                                'Added a short loading animation on every page when it loads.'
                             ],
                             'Bug Fixes' => [
                                 'Fixed some bugs with the online users graph.',
                                 'Fixed the profile system and the content to the right on the home page not properly scaling with the page zoom. '
                             ],
                             'Game Updates' => [
+                                'Changed the placement of some games on the games page.',
                                 'Fixed Eggy Car being blocked.',
                                 'Removed Retro Bowl College until further notice.',
                                 'Added Little Alchemy 2 (From game recommendations).'

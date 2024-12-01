@@ -20,6 +20,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <?php include 'loading-screen.php'; ?>
 
     <nav>
         <div class="nav-logo">
@@ -148,6 +149,16 @@
             thumbnail: "games/2048/icon.png"
         },
         {
+            title: "Idle Dice",
+            path: "games/idle-dice/index.html",
+            thumbnail: "games/idle-dice/icon.png"
+        },
+        {
+            title: "Avalanche",
+            path: "games/avalanche/index.html",
+            thumbnail: "games/avalanche/icon.png"
+        },
+        {
             title: "Poly Track",
             path: "games/polytrack/index.html",
             thumbnail: "games/polytrack/logo.png"
@@ -178,6 +189,16 @@
             thumbnail: "games/learntoflyidle/icon.jpg"
         },
         {
+            title: "Roof Top Snipers",
+            path: "games/rooftopsnipers/index.html",
+            thumbnail: "games/rooftopsnipers/logo.png"
+        },
+        {
+            title: "Roof Top Snipers 2",
+            path: "games/rooftopsnipers2/index.html",
+            thumbnail: "games/rooftopsnipers2/icon.png"
+        },
+        {
             title: "OvO",
             path: "games/ovo/index.html",
             thumbnail: "games/ovo/ovo.png"
@@ -191,31 +212,6 @@
             title: "Rise Higher",
             path: "games/risehigher/index.html",
             thumbnail: "games/risehigher/icon.png"
-        },
-        {
-            title: "Duck Life 1",
-            path: "games/ducklife1/index.html",
-            thumbnail: "games/ducklife1/ducklife1.png"
-        },
-        {
-            title: "Duck Life 2",
-            path: "games/ducklife2/index.html",
-            thumbnail: "games/ducklife2/ducklife2.png"
-        },
-        {
-            title: "Duck Life 3",
-            path: "games/ducklife3/index.html",
-            thumbnail: "games/ducklife3/ducklife3.png"
-        },
-        {
-            title: "Duck Life 4",
-            path: "games/ducklife4/index.html",
-            thumbnail: "games/ducklife4/icon.png"
-        },
-        {
-            title: "Duck Life 5",
-            path: "games/ducklife5/index.html",
-            thumbnail: "games/ducklife5/ducklife5.png"
         },
         {
             title: "Death Run 3D",
@@ -233,9 +229,14 @@
             thumbnail: "games/achieveunlocked2/icon.png"
         },
         {
-            title: "Bit Life",
-            path: "games/bitlife/index.html",
-            thumbnail: "games/bitlife/logo.png"
+            title: "Gun Spin",
+            path: "games/gunspin/index.html",
+            thumbnail: "games/gunspin/icon.png"
+        },
+        {
+            title: "House of Hazards",
+            path: "games/house-of-hazards/index.html",
+            thumbnail: "games/house-of-hazards/icon.png"
         },
         {
             title: "Basket Random",
@@ -270,7 +271,36 @@
 
 
 
-
+        {
+            title: "Bit Life",
+            path: "games/bitlife/index.html",
+            thumbnail: "games/bitlife/logo.png"
+        },
+        {
+            title: "Duck Life 1",
+            path: "games/ducklife1/index.html",
+            thumbnail: "games/ducklife1/ducklife1.png"
+        },
+        {
+            title: "Duck Life 2",
+            path: "games/ducklife2/index.html",
+            thumbnail: "games/ducklife2/ducklife2.png"
+        },
+        {
+            title: "Duck Life 3",
+            path: "games/ducklife3/index.html",
+            thumbnail: "games/ducklife3/ducklife3.png"
+        },
+        {
+            title: "Duck Life 4",
+            path: "games/ducklife4/index.html",
+            thumbnail: "games/ducklife4/icon.png"
+        },
+        {
+            title: "Duck Life 5",
+            path: "games/ducklife5/index.html",
+            thumbnail: "games/ducklife5/ducklife5.png"
+        },
         {
             title: "Crossy Road Space",
             path: "games/crossyroadspace/index.html",
@@ -357,11 +387,6 @@
             thumbnail: "games/2drocketleague/unnamed.png"
         },
         {
-            title: "Avalanche",
-            path: "games/avalanche/index.html",
-            thumbnail: "games/avalanche/icon.png"
-        },
-        {
             title: "Bad Ice Cream",
             path: "games/badicecream/index.html",
             thumbnail: "games/badicecream/bad-ice-cream.png"
@@ -395,16 +420,6 @@
             title: "Red Ball 4",
             path: "games/redball4/index.html",
             thumbnail: "games/redball4/redball4.webp"
-        },
-        {
-            title: "Roof Top Snipers",
-            path: "games/rooftopsnipers/index.html",
-            thumbnail: "games/rooftopsnipers/logo.png"
-        },
-        {
-            title: "Roof Top Snipers 2",
-            path: "games/rooftopsnipers2/index.html",
-            thumbnail: "games/rooftopsnipers2/icon.png"
         },
         {
             title: "Super Hot",
@@ -634,11 +649,6 @@
             thumbnail: "games/block-blast-puzzle/logo.png"
         },
         {
-            title: "Idle Dice",
-            path: "games/idle-dice/index.html",
-            thumbnail: "games/idle-dice/icon.png"
-        },
-        {
             title: "Doge Miner",
             path: "games/doge-miner/index.html",
             thumbnail: "games/doge-miner/logo.png"
@@ -662,16 +672,6 @@
             title: "Gun Mayhem",
             path: "games/gun-mayhem/index.html",
             thumbnail: "games/gun-mayhem/icon.png"
-        },
-        {
-            title: "Gun Spin",
-            path: "games/gunspin/index.html",
-            thumbnail: "games/gunspin/icon.png"
-        },
-        {
-            title: "House of Hazards",
-            path: "games/house-of-hazards/index.html",
-            thumbnail: "games/house-of-hazards/icon.png"
         },
         {
             title: "Pandemic 2",

@@ -19,6 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<?php include 'loading-screen.php'; ?>
     <div class="game-bar">
         <div class="game-bar-left">
             <a href="games.php" class="back-button">

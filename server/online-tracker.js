@@ -43,19 +43,18 @@ async function updateHistoryWithCleanup() {
 // 2. More robust session cleanup
 function cleanupInactiveSessions() {
     const now = Date.now();
-    const staleThreshold = 5000; // 5 seconds
+    const staleThreshold = 3500; // 3 seconds
     let cleanupCount = 0;
     
     for (const [sessionId, session] of activeSessions.entries()) {
         if (now - session.lastBeat > staleThreshold) {
             activeSessions.delete(sessionId);
             cleanupCount++;
+            console.log(`Session ${sessionId} considered offline due to inactivity`);
         }
     }
     
-    if (cleanupCount > 0) {
-        console.log(`Cleaned up ${cleanupCount} stale sessions`);
-    }
+    return cleanupCount;
 }
 
 // Update immediately when server starts
@@ -86,14 +85,16 @@ app.post('/api/heartbeat', (req, res) => {
             return res.status(400).json({ error: 'Session ID required' });
         }
         
-        // Check if session exists and update failure count
+        // Clean up stale sessions before processing new heartbeat
+        cleanupInactiveSessions();
+        
+        // Rest of the heartbeat handling
         const existingSession = activeSessions.get(sessionId);
         if (existingSession) {
             existingSession.lastBeat = timestamp;
             existingSession.failures = 0;
             activeSessions.set(sessionId, existingSession);
         } else {
-            // New session
             activeSessions.set(sessionId, {
                 lastBeat: timestamp,
                 failures: 0,

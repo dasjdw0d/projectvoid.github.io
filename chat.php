@@ -20,6 +20,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
+    <?php include 'loading-screen.php'; ?>
 
     <nav>
         <div class="nav-logo">
@@ -69,10 +70,10 @@
             <div class="chat-info-sidebar">
                 <div class="info-section profile">
                     <h3>Profile Information</h3>
-                    <p>Your profile in this chat room is synced with the profile system on the home page:</p>
+                    <p>Your profile in this chat room is synced with the profile system on the home page.</p>
                     <ul>
-                        <li>To change your username: Go to the home page and click the "Change Username" button</li>
-                        <li>To change your profile picture: Go to the home page and click on the pfp image.</li>
+                        <li>To change your username go to the home page and click the "Change Username" button</li>
+                        <li>To change your profile picture go to the home page and click on the pfp image.</li>
                     </ul>
                     <h3>Rules</h3>
                     <ul>

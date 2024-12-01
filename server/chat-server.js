@@ -50,7 +50,7 @@ function saveMessages() {
 }
 
 // Initialize messages from file
-const messages = loadMessages();
+const messages = [];  // Just use an in-memory array
 
 // Store messages and users (change Map key to userId instead of socketId)
 const users = new Map(); // Key: userId, Value: {socketIds: Set, userData, lastSeen}
@@ -209,7 +209,6 @@ io.on('connection', (socket) => {
             timestamp: new Date().toISOString()
         };
         messages.push(message);
-        saveMessages(); // Save after adding message
         
         io.emit('new_message', message);
     });
@@ -254,7 +253,6 @@ io.on('connection', (socket) => {
         
         messages.length = 0;
         messages.push(systemMessage);
-        saveMessages(); // Save after clearing
         
         io.emit('chat_cleared');
         io.emit('new_message', systemMessage);
@@ -269,7 +267,6 @@ io.on('connection', (socket) => {
                 system: true
             };
             messages[messageIndex] = systemMessage;
-            saveMessages(); // Save after deleting
             
             io.emit('message_deleted', { 
                 oldTimestamp: timestamp,
@@ -280,20 +277,18 @@ io.on('connection', (socket) => {
 
     // Handle chat lock toggle
     socket.on('toggle_chat_lock', (status) => {
-        if (isChatLocked !== status) {  // Only update if status actually changed
+        if (isChatLocked !== status) {
             isChatLocked = status;
             
-            // Create system message
             const systemMessage = {
                 content: status ? 'Chat has been locked by admin' : 'Chat has been unlocked by admin',
                 timestamp: new Date().toISOString(),
                 system: true
             };
             
-            // Add to messages array and broadcast both the message and status
             messages.push(systemMessage);
-            io.emit('new_message', systemMessage);  // Send as a new message
-            io.emit('chat_lock_status', isChatLocked);  // Update lock status
+            io.emit('new_message', systemMessage);
+            io.emit('chat_lock_status', isChatLocked);
         }
     });
 

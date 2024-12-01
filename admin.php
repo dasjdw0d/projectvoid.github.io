@@ -97,6 +97,7 @@ $hasActiveAnnouncement = $currentAnnouncement && $currentAnnouncement['active'] 
 </head>
 <body>
     <div id="particles-js"></div>
+    <?php include 'loading-screen.php'; ?>
 
     <nav>
         <div class="nav-logo">

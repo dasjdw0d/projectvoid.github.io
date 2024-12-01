@@ -1,22 +1,29 @@
-Drift Hunters:7
-Little Alchemy 2:4
-Retro Bowl:8
+Drift Hunters:8
+Little Alchemy 2:5
+Retro Bowl:17
 MotoX3M Winter:3
 Slope:12
 Vex 5:1
 Paper.io 2:3
 Among Us:1
-Idle Breakout:1
+Idle Breakout:2
 MotoX3M:2
 Run:1
 Run 3:1
 The Impossible Quiz:3
-Death Run 3D:2
+Death Run 3D:3
 Osu:1
-Cluster Rush:1
+Cluster Rush:2
 OvO:1
-Snow Rider 3D:2
-Poly Track:1
+Snow Rider 3D:3
+Poly Track:3
 Bit Life:1
 Helix Jump:1
 Duck Life 1:1
+Tetris:1
+A Dance of Fire & Ice:1
+geometrydash:2
+Cookie Clicker:1
+Idle Dice:9
+CSGO Clicker:2
+Bad Times Simulator:1
