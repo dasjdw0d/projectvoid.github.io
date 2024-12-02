@@ -49,6 +49,15 @@
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Add this at the start of your DOMContentLoaded handler
+            const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
+            const gameBar = document.querySelector('.game-bar');
+            if (gameBar && settings.gameBarToggle === false) {
+                gameBar.style.display = 'none';
+                // Adjust the game container to take full height
+                document.querySelector('.game-container').style.height = '100vh';
+            }
+
             // Check for tracking errors
             const error = localStorage.getItem('lastGameError');
             const success = localStorage.getItem('lastGameSuccess');

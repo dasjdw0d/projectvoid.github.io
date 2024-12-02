@@ -12,7 +12,7 @@
     /* Z-index layers - Reorganized for clarity */
     --z-particles: 1;    /* Particles in the very back */
     --z-content: 2;      /* All main content in the middle */
-    --z-nav: 3;          /* Navigation in the very front */
+    --z-nav: 1000;       /* Navigation in the very front */
     
     /* Transitions */
     --transition-speed: 0.3s;
@@ -72,9 +72,11 @@ body::-webkit-scrollbar-thumb:hover,
 /* Particles Background */
 #particles-js {
     position: fixed;
-    inset: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     z-index: var(--z-particles);
-    background: transparent;
     pointer-events: none;
 }
 
@@ -106,7 +108,6 @@ nav {
     z-index: var(--z-nav);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 
                 0 0 15px rgba(57, 255, 20, 0.2);
-    animation: navFadeIn 1.2s var(--transition-curve) forwards;
     backdrop-filter: none;
 }
 
@@ -131,21 +132,6 @@ main.with-announcement {
 }
 
 /* Animations */
-@keyframes navFadeIn {
-    0% {
-        transform: translateY(-120%);
-        opacity: 0;
-    }
-    40% {
-        transform: translateY(5%);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 @keyframes spinIn {
     0% {
         transform: rotate(0deg) scale(0.5);
@@ -295,54 +281,6 @@ footer {
     line-height: 0;
 }
 
-/* Announcement Styles */
-.announcement-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000; /* Above everything else */
-    animation: fadeIn 0.3s ease;
-}
-
-.announcement-content {
-    background: #1a1a1a;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 500px;
-    text-align: center;
-    color: white;
-    border: 1.5px solid var(--neon-green);
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-    animation: slideIn 0.3s ease;
-}
-
-.announcement-content p {
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-}
-
-.announcement-content button {
-    margin-top: 15px;
-    padding: 8px 20px;
-    background: #333;
-    border: 1.5px solid var(--neon-green);
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.announcement-content button:hover {
-    background: var(--hover-bg);
-    color: var(--neon-green);
-}
 
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -360,13 +298,6 @@ footer {
     }
 }
 
-.announcement-content small {
-    display: block;
-    margin-top: 10px;
-    color: #888;
-    font-size: 0.9rem;
-}
-
 .nav-logo {
     display: flex;
     align-items: center;
@@ -376,7 +307,6 @@ footer {
     height: 32px;
     width: auto;
     transition: transform var(--transition-speed) ease;
-    animation: spinIn 1s var(--transition-curve) forwards;
 }
 
 .nav-logo-img:hover {

@@ -46,13 +46,6 @@
         <div class="graph-tooltip"><span></span></div>
     </div>
 
-    <div class="top-games-counter">
-        <h3>Most Played Games</h3>
-        <div id="topGames" class="top-games">
-            <div class="loading-spinner"></div>
-        </div>
-    </div>
-
     <main>
         <div class="top-section">
             <div class="user-section">
@@ -144,37 +137,5 @@
             <script src="https://static.copyrighted.com/badges/helper.js"></script>
         </div>
     </footer>
-    <script>
-    function updateTopGames() {
-        const topGamesElement = document.getElementById('topGames');
-        
-        fetch('/api/get_game_stats.php')
-            .then(response => response.json())
-            .then(games => {
-                if (games.length === 0) {
-                    topGamesElement.innerHTML = '<p style="text-align: center; color: #888;">No games played yet</p>';
-                    return;
-                }
-
-                topGamesElement.innerHTML = games.map(game => `
-                    <div class="game-stat">
-                        <div class="game-rank">${game.rank}</div>
-                        <div class="game-title">${game.title} - </div>
-                        <div class="game-visits">${game.visits}</div>
-                    </div>
-                `).join('');
-            })
-            .catch(error => {
-                console.error('Error fetching top games:', error);
-                topGamesElement.innerHTML = '<p style="text-align: center; color: #888;">Failed to load stats</p>';
-            });
-    }
-
-    // Call this when the page loads and periodically
-    document.addEventListener('DOMContentLoaded', function() {
-        updateTopGames();
-        setInterval(updateTopGames, 5000);
-    });
-    </script>
 </body>
 </html> 

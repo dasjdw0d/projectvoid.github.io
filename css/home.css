@@ -22,7 +22,6 @@
     width: 100%;
     padding: 0 450px;
     z-index: var(--z-content);
-    pointer-events: auto;
 }
 
 .hero h1 {
@@ -32,7 +31,6 @@
     margin: 0;
     letter-spacing: 4px;
     user-select: text;
-    pointer-events: auto;
 }
 
 .hero .tagline {
@@ -41,7 +39,6 @@
     margin: 0;
     padding: 0;
     user-select: text;
-    pointer-events: auto;
     line-height: 1;
     font-weight: 900;
     font-family: 'Rajdhani', sans-serif;
@@ -64,7 +61,6 @@
     padding: 1rem;
     z-index: var(--z-nav);
     border: 0.5px solid var(--neon-green);
-    pointer-events: all;
 }
 
 .user-header {
@@ -78,7 +74,6 @@
     margin-bottom: 1.5rem;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .user-info img {
@@ -112,7 +107,6 @@
     overflow-x: auto;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .stat-item {
@@ -122,7 +116,6 @@
     gap: 0.2rem;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .stat-icon {
@@ -142,7 +135,6 @@
     margin-bottom: 1rem;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .action-btn {
@@ -157,7 +149,6 @@
     transition: all 0.2s ease;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .action-btn:hover {
@@ -210,7 +201,6 @@
     line-height: 1.4;
     position: relative;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 /* Media Queries */
@@ -274,11 +264,10 @@
     top: 35%;
     transform: translateY(-50%);
     color: #c7c7c7;
-    font-size: 2.03rem;
+    font-size: 1.8rem;
     font-weight: 600;
     letter-spacing: 1px;
     z-index: var(--z-content);
-    pointer-events: auto;
     text-align: center;
     width: min(330px, 90vw);
     background: rgba(0, 0, 0, 0.3);
@@ -327,7 +316,6 @@
     border: 0.5px solid rgba(55, 255, 20, 0.3);
     width: min(330px, 90vw);
     z-index: var(--z-nav);
-    pointer-events: all;
     isolation: isolate;
 }
 
@@ -352,7 +340,6 @@
     align-items: flex-end;
     justify-content: center;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .graph-bar {
@@ -367,7 +354,6 @@
     margin: 0 1px;
     max-width: 12px;
     z-index: var(--z-nav);
-    pointer-events: all;
 }
 
 .graph-bar:hover {
@@ -385,7 +371,7 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s ease;
-    z-index: calc(var(--z-nav) + 1);
+    z-index: calc(var(--z-content) + 1);
     transform: translateX(-50%);
     white-space: nowrap;
     top: -25px;
@@ -400,7 +386,6 @@
     top: 0;
     left: 0;
     z-index: var(--z-particles);
-    pointer-events: none !important;
 }
 
 /* Update navigation z-index */
@@ -458,85 +443,6 @@ nav {
     height: 100%;
     display: block;
     object-fit: contain;
-}
-
-.top-games-counter {
-    position: absolute;
-    right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
-    top: calc(35% + 160px);
-    width: min(330px, 90vw);
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    border: 2.5px solid rgba(55, 255, 20, 0.6);
-    padding: 10px;
-    z-index: var(--z-content);
-    pointer-events: auto;
-}
-
-.top-games-counter h3 {
-    color: var(--neon-green);
-    text-align: center;
-    font-size: 1.2rem;
-    margin: 0 0 10px 0;
-    text-shadow: 0 0 10px var(--neon-green);
-}
-
-.top-games {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.game-stat {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px;
-    border-radius: 4px;
-    background: rgba(0, 255, 0, 0.15);
-    border: 1.5px solid rgba(55, 255, 20, 0.7);
-}
-
-.game-rank {
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--neon-green);
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.9rem;
-    border: 1.5px solid var(--neon-green);
-    text-shadow: 0 0 5px var(--neon-green);
-}
-
-.game-title {
-    flex-grow: 0;
-    color: white;
-    font-size: 0.9rem;
-}
-
-.game-visits {
-    color: var(--neon-green);
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--neon-green);
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 10px auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 1200px) {

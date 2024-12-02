@@ -105,6 +105,17 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="settings-card">
+                    <div class="setting-header">
+                        <h3>Game Bar</h3>
+                        <label class="toggle">
+                            <input type="checkbox" id="gameBarToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <p class="setting-description">Show or hide the game bar at the top of game pages. The bar includes the back button, game title, and fullscreen controls.</p>
+                </div>
             </div>
         </div>
     </main>

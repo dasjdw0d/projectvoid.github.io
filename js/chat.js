@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterToggleBtn = document.getElementById('filterToggleBtn');
 
     // State variables
-    let isAdmin = localStorage.getItem('isAdmin') === 'true';
+    let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
     let isAnonymous = isAdmin;
     let isIdle = false;
     let lastMessageCount = 0;
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('Are you sure you want to logout?')) {
             isAdmin = false;
             isAnonymous = false;
-            localStorage.removeItem('isAdmin');
+            sessionStorage.removeItem('isAdmin');
             updateAdminUI();
             userData = getUserData();
             updateUserStatus();
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
             isAdmin = true;
             isAnonymous = true;
-            localStorage.setItem('isAdmin', 'true');
+            sessionStorage.setItem('isAdmin', 'true');
             adminModal.style.display = 'none';
             updateAdminUI();
             userData = getUserData();

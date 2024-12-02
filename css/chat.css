@@ -295,7 +295,7 @@
 }
 
 #sendMessage:hover {
-    background: rgba(57, 255, 20, 0.2);
+    background: rgba(55, 255, 20, 0.048);
 }
 
 .button-icon {
@@ -609,8 +609,7 @@
 }
 
 #adminLoginForm button:hover {
-    background: var(--neon-green);
-    color: var(--dark-bg);
+    background: rgba(55, 255, 20, 0.048);
 }
 
 .modal-content h2 {

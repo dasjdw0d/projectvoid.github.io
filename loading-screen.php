@@ -13,6 +13,6 @@
             setTimeout(function() {
                 loadingScreen.style.display = 'none';
             }, 500);
-        }, 200);
+        }, 300);
     });
 </script>

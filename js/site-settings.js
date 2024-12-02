@@ -74,49 +74,6 @@ function getSessionId() {
     return sessionId;
 }
 
-// Add these variables at the top of the file
-let lastAnnouncementCheck = 0;
-
-function checkForAnnouncements() {
-    if (Date.now() - lastAnnouncementCheck < 5000) return;
-    
-    fetch('/api/get_announcement.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.message && data.active) {
-                showAnnouncementBar(data.message);
-            } else {
-                hideAnnouncementBar();
-            }
-        })
-        .catch(error => console.error('Error checking announcements:', error));
-    
-    lastAnnouncementCheck = Date.now();
-}
-
-function showAnnouncementBar(message) {
-    let bar = document.querySelector('.announcement-bar');
-    if (!bar) {
-        bar = document.createElement('div');
-        bar.className = 'announcement-bar';
-        document.body.insertBefore(bar, document.body.firstChild);
-    }
-    bar.textContent = message;
-    
-    // Adjust nav and main content
-    document.querySelector('nav').classList.add('with-announcement');
-    document.querySelector('main').classList.add('with-announcement');
-}
-
-function hideAnnouncementBar() {
-    const bar = document.querySelector('.announcement-bar');
-    if (bar) {
-        bar.remove();
-        document.querySelector('nav').classList.remove('with-announcement');
-        document.querySelector('main').classList.remove('with-announcement');
-    }
-}
-
 // Modify your DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize cloaking features for all pages
@@ -124,10 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize online tracking
     initializeOnlineTracking();
-
-    // Start checking for announcements
-    checkForAnnouncements(); // Initial check
-    setInterval(checkForAnnouncements, 5000); // Check every 5 seconds
 
     // Initialize particles and cursor settings
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
@@ -290,8 +243,9 @@ function initializeSettingsPage() {
     const globalCloakToggle = document.getElementById('globalCloakToggle');
     const globalCloakSelect = document.getElementById('globalCloakSelect');
     const clickoffCloakSelect = document.getElementById('clickoffCloakSelect');
+    const gameBarToggle = document.getElementById('gameBarToggle');
 
-    if (!particleToggle || !cursorToggle || !cloakingToggle || !globalCloakToggle) {
+    if (!particleToggle || !cursorToggle || !cloakingToggle || !globalCloakToggle || !gameBarToggle) {
         return; // Not on settings page, exit early
     }
 
@@ -300,6 +254,7 @@ function initializeSettingsPage() {
     cursorToggle.checked = settings.cursorToggle === true;
     cloakingToggle.checked = settings.cloakingToggle === true;
     globalCloakToggle.checked = settings.globalCloakToggle === true;
+    gameBarToggle.checked = settings.gameBarToggle !== false; // true by default
     
     // Set initial select values
     if (settings.globalCloakType) {
@@ -378,6 +333,11 @@ function initializeSettingsPage() {
         settings.clickoffCloakType = this.value;
         localStorage.setItem('siteSettings', JSON.stringify(settings));
     });
+
+    gameBarToggle.addEventListener('change', function() {
+        settings.gameBarToggle = this.checked;
+        localStorage.setItem('siteSettings', JSON.stringify(settings));
+    });
 }
 
 // Run settings initialization when DOM is loaded
@@ -435,9 +395,6 @@ function initializeOnlineTracking() {
             lastUserCount = data.onlineUsers;
             updateOnlineCount(lastUserCount);
             updateOnlineGraph(lastUserCount, data.history);
-            
-            // Add this line to check for announcements
-            checkForAnnouncements();
         })
         .catch(error => {
             failedHeartbeats++;
@@ -497,7 +454,7 @@ function updateOnlineGraph(currentUsers, newHistory = null) {
             heightPercent = 2; // Minimum height for visibility
         } else {
             // Linear scale from 15% to 100%
-            heightPercent = 15 + (users / maxOnlineUsers) * 85;
+            heightPercent = 15 + (users / maxOnlineUsers) * 80;
         }
         
         bar.style.height = `${heightPercent}%`;
@@ -524,34 +481,4 @@ function updateOnlineCount(count) {
     if (onlineCountElement) {
         onlineCountElement.textContent = count;
     }
-}
-
-function sendAnnouncement() {
-    const message = document.getElementById('message').value.trim();
-    
-    if (!message) {
-        showStatus('Please enter a message', false);
-        return;
-    }
-
-    // Change to use form data instead of JSON
-    const formData = new FormData();
-    formData.append('action', 'update');
-    formData.append('message', message);
-
-    fetch('announcements.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            window.location.reload();
-        } else {
-            showStatus('Error sending announcement', false);
-        }
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-        showStatus('Error sending announcement', false);
-    });
 }

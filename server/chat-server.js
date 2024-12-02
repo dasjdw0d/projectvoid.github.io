@@ -133,11 +133,6 @@ function containsSensitiveInfo(text) {
     );
 }
 
-// Simplified filterMessage function
-async function filterMessage(text) {
-    return text;  // Now just returns the original text without filtering
-}
-
 // Clear existing messages and add initial system message ONLY when server starts
 function initializeChat() {
     // Clear all messages when server starts

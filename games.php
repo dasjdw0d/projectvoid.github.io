@@ -811,28 +811,10 @@
             stats.lastGame = title;
             localStorage.setItem('siteStats', JSON.stringify(stats));
 
-            // Existing tracking code
-            const response = await fetch('/track_game_visits.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'gameTitle=' + encodeURIComponent(title)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.text();
-            localStorage.setItem('lastGameSuccess', `Game tracked successfully: ${data}`);
-            
-            // Then redirect to the game
+            // Just redirect to the game
             window.location.href = `display.php?game=${path}&title=${encodeURIComponent(title)}`;
         } catch (error) {
             console.error('Error:', error);
-            localStorage.setItem('lastGameError', `Error tracking game visit: ${error.message}`);
-            // Still redirect even if tracking fails
             window.location.href = `display.php?game=${path}&title=${encodeURIComponent(title)}`;
         }
     }

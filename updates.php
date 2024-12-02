@@ -46,9 +46,25 @@
                 // Updates array - newest updates at the top
                 $updates = [
                     [
-                        'date' => 'Planned Release: December 2, 2024',
+                        'date' => 'December 3, 2024',
+                        'version' => 'v1.35',
+                        'title' => 'Small Update',
+                        'changes' => [
+                            'Major Changes' => [
+                                'Added an option in the settings page to toggle the game bar at the top of your screen when playing a game.',
+                            ],
+                            'Game Updates' => [
+                                '',
+                            ],
+                            'Removals' => [
+                                'The most played games ranking on the home page has been removed.',
+                            ]
+                        ]
+                    ],
+                    [
+                        'date' => 'December 2, 2024',
                         'version' => 'v1.4',
-                        'title' => 'Update (In Development)',
+                        'title' => 'Update',
                         'changes' => [
                             'Major Changes' => [
                                 'Added a game pinning feature on the games page, to use it right click any game to pin the game at the top of the page.',
