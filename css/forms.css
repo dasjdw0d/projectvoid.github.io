@@ -95,6 +95,38 @@
     background: white;
 }
 
+.external-form-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    height: 100%;
+    min-height: 200px;
+}
+
+.external-form-link p {
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.form-link-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.form-link-button:hover {
+    background: rgba(57, 255, 20, 0.2);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .forms-container {

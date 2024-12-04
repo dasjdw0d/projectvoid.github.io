@@ -15,14 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
         sendButton.disabled = true;
         
         addMessage('user', message);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
         userInput.value = '';
 
         const loadingId = addMessage('system', 'Thinking...');
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
         let dots = 0;
         const loadingInterval = setInterval(() => {
             dots = (dots + 1) % 4;
             loadingId.textContent = 'Thinking' + '.'.repeat(dots);
             loadingId.className = 'message system-message thinking-dots';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
 
         try {
@@ -47,8 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.response) {
                 addMessage('ai', data.response.trim());
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             } else {
                 addMessage('system', 'Sorry, I could not generate a response.');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }
 
         } catch (error) {
@@ -68,7 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.className = `message ${type}-message`;
         messageDiv.textContent = content;
         messagesDiv.appendChild(messageDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+        requestAnimationFrame(() => {
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        });
+        
         return messageDiv;
     }
 

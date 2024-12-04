@@ -5,7 +5,86 @@
         document.body.classList.add('custom-cursor');
         enableCustomCursor();
     }
+
+    // Only create announcement bar and check flash if not on display.php or admin.php
+    if (!window.location.pathname.endsWith('display.php') && 
+        !window.location.pathname.endsWith('admin.php')) {
+        createAnnouncementBar();
+        // Check immediately on page load
+        checkAnnouncement();
+        // Then check every 1 second instead of 5
+        setInterval(checkAnnouncement, 1000);
+        
+        // Check flash mode immediately and every second
+        checkFlashMode();
+        setInterval(checkFlashMode, 1000);
+    }
 })();
+
+async function createAnnouncementBar() {
+    const existingBar = document.querySelector('.announcement-bar');
+    if (existingBar) {
+        return;
+    }
+
+    const announcementBar = document.createElement('div');
+    announcementBar.className = 'announcement-bar';
+    announcementBar.style.display = 'none';
+    document.body.insertBefore(announcementBar, document.body.firstChild);
+}
+
+async function checkAnnouncement() {
+    try {
+        const response = await fetch('admin.php?action=get_announcement');
+        const data = await response.json();
+        
+        const announcementBar = document.querySelector('.announcement-bar');
+        if (!announcementBar) return;
+
+        if (data.active === 'true' && data.message) {
+            announcementBar.textContent = data.message;
+            announcementBar.style.display = 'block';
+            document.body.classList.add('has-announcement');
+        } else {
+            announcementBar.style.display = 'none';
+            document.body.classList.remove('has-announcement');
+        }
+    } catch (error) {
+        console.error('Failed to check announcement:', error);
+    }
+}
+
+async function checkFlashMode() {
+    // Don't run on display.php or admin.php
+    if (window.location.pathname.endsWith('display.php') || 
+        window.location.pathname.endsWith('admin.php')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/admin.php?action=get_flash');
+        const data = await response.json();
+        
+        if (data.active === 'true') {
+            if (!document.getElementById('flash-overlay')) {
+                createFlashOverlay();
+            }
+        } else {
+            const overlay = document.getElementById('flash-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+    } catch (error) {
+        console.error('Failed to check flash mode:', error);
+    }
+}
+
+function createFlashOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'flash-overlay';
+    document.body.appendChild(overlay);
+}
 
 function initializeParticles() {
     // Add a small delay to ensure the config file is loaded
@@ -118,19 +197,89 @@ function enableCustomCursor() {
         cursor.className = 'custom-cursor-dot';
         document.body.appendChild(cursor);
         
+        // Create trail elements (reduced number for subtlety)
+        const numTrails = 3;
+        const trails = Array.from({ length: numTrails }, (_, i) => {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.opacity = 0.3 - (i * 0.1);
+            document.body.appendChild(trail);
+            return trail;
+        });
+
+        let cursorPos = { x: 0, y: 0 };
+        let targetPos = { x: 0, y: 0 };
+        let velocity = { x: 0, y: 0 };
+        let lastMousePos = { x: 0, y: 0 };
+        let lastTime = performance.now();
+
+        // Spring physics settings
+        let spring = { x: 0, y: 0 };
+        const springStrength = 0.2;  // Increased for faster response
+        const dampening = 0.7;
+
         document.addEventListener('mousemove', (e) => {
-            requestAnimationFrame(() => {
-                cursor.style.left = e.clientX - 6 + 'px';
-                cursor.style.top = e.clientY - 6 + 'px';
+            const currentTime = performance.now();
+            const deltaTime = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
+
+            velocity.x = (e.clientX - lastMousePos.x) / deltaTime;
+            velocity.y = (e.clientY - lastMousePos.y) / deltaTime;
+            
+            velocity.x *= 0.2;
+            velocity.y *= 0.2;
+            
+            const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+            
+            targetPos.x = e.clientX;
+            targetPos.y = e.clientY;
+            
+            lastMousePos.x = e.clientX;
+            lastMousePos.y = e.clientY;
+
+            const maxDeform = 0.8;
+            const deformX = Math.min(Math.abs(velocity.x) / 3000, maxDeform);
+            const deformY = Math.min(Math.abs(velocity.y) / 3000, maxDeform);
+            const angle = Math.atan2(velocity.y, velocity.x) * 0.5;
+            const scaleX = 1 + (deformX * 0.3);
+            const scaleY = 1 - (deformY * 0.15);
+
+            // Update spring physics
+            spring.x += (targetPos.x - cursorPos.x) * springStrength;
+            spring.y += (targetPos.y - cursorPos.y) * springStrength;
+            
+            spring.x *= dampening;
+            spring.y *= dampening;
+            
+            cursorPos.x += spring.x;
+            cursorPos.y += spring.y;
+
+            cursor.style.transform = `translate(${cursorPos.x - 6}px, ${cursorPos.y - 6}px) 
+                                    rotate(${angle}rad) 
+                                    scale(${scaleX}, ${scaleY})`;
+
+            // Update trails immediately without delay
+            trails.forEach((trail, index) => {
+                trail.style.transform = `translate(${cursorPos.x - 3}px, ${cursorPos.y - 3}px) 
+                                       scale(${1 - index * 0.1})`;
+                trail.style.opacity = Math.max(0, 0.3 - (speed / 8000) - (index * 0.08));
             });
         });
+
+        function animate() {
+            if (!document.querySelector('.custom-cursor-dot')) return;
+            requestAnimationFrame(animate);
+        }
+        animate();
     }
 }
 
 function disableCustomCursor() {
     document.body.classList.remove('custom-cursor');
     const cursor = document.querySelector('.custom-cursor-dot');
+    const trails = document.querySelectorAll('.cursor-trail');
     if (cursor) cursor.remove();
+    trails.forEach(trail => trail.remove());
 }
 
 const CLOAK_CONFIGS = {
@@ -378,7 +527,7 @@ function initializeOnlineTracking() {
         fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 sessionId: sessionId,

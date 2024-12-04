@@ -50,19 +50,45 @@
                             Enter a Blooket game, press F12 or right-click and select "Inspect", go to Console tab, paste the code, and press Enter.
                         </div>
                     </div>
-                    <button class="copy-btn" onclick="copyScript()">Copy Script</button>
+                    <button class="copy-btn" onclick="copyBlooketScript()">Copy Script</button>
+                </div>
+
+                <div class="hack-card">
+                    <div class="hack-content">
+                        <h3>Project Void - Kahoot Hacks</h3>
+                        <div class="instructions">
+                            Enter a Kahoot game, press F12 or right-click and select "Inspect", go to Console tab, paste the code, and press Enter. (The quiz id is shown on the url bar of the teachers screen, you have to type it out into the hacks gui).
+                        </div>
+                    </div>
+                    <button class="copy-btn" onclick="copyKahootScript()">Copy Script</button>
                 </div>
             </div>
         </div>
     </main>
     <script>
-        async function copyScript() {
+        async function copyBlooketScript() {
             try {
                 const response = await fetch('js/blooket.js');
                 const text = await response.text();
                 await navigator.clipboard.writeText(text);
                 
                 const button = document.querySelector('.copy-btn');
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Script';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        }
+
+        async function copyKahootScript() {
+            try {
+                const response = await fetch('js/kahoot.js');
+                const text = await response.text();
+                await navigator.clipboard.writeText(text);
+                
+                const button = document.querySelectorAll('.copy-btn')[1];
                 button.textContent = 'Copied!';
                 setTimeout(() => {
                     button.textContent = 'Copy Script';

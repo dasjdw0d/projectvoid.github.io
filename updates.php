@@ -46,18 +46,37 @@
                 // Updates array - newest updates at the top
                 $updates = [
                     [
-                        'date' => 'December 3, 2024',
-                        'version' => 'v1.35',
+                        'date' => 'December 5, 2024',
+                        'version' => 'v1.55',
                         'title' => 'Small Update',
                         'changes' => [
                             'Major Changes' => [
-                                'Added an option in the settings page to toggle the game bar at the top of your screen when playing a game.',
+                                'Added a 7-Day Online Users graph on the home page. All data comes from Google Analytics.',
+                                'Added a Contact Form on the forms page.',
                             ],
-                            'Game Updates' => [
-                                '',
+                        ]
+                    ],
+                    [
+                        'date' => 'December 4, 2024',
+                        'version' => 'v1.5',
+                        'title' => 'Update',
+                        'changes' => [
+                            'Major Changes' => [
+                                'Added an option in the settings page to toggle the game bar at the top of your screen when playing a game.',
+                                'Heavily improved the global announcement system and added a few more global website features.',
+                                'Added kahoot hacks in the misc page.'
+                            ],
+                            'UI Improvements' => [
+                                'Removed the slide down animation for the navigation on page load.',
+                                'Made the custom cursor a lot better by adding a trail, aerodynamic physics, and a small delay. (You can enable the custom cursor on the settings page.)',
+                                'Added auto scroll to the AI chat when sending and receiving messages.'
                             ],
                             'Removals' => [
                                 'The most played games ranking on the home page has been removed.',
+                            ],
+                            'Bug FIxed' => [
+                                'Fixed the online counter on the home page staying in the same place when scrolling.',
+                                'Fixed spelling errros across the site.',
                             ]
                         ]
                     ],

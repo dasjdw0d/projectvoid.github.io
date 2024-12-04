@@ -37,14 +37,6 @@
             <a href="misc.php">Misc</a>
         </div>
     </nav>
-    <div class="online-counter">
-        <span id="onlineCount">Loading...</span> Global Users Online
-    </div>
-    <div class="online-graph">
-        <div class="graph-label">Updates every 30 seconds. Stores 20 min of history.</div>
-        <div class="graph-bars"></div>
-        <div class="graph-tooltip"><span></span></div>
-    </div>
 
     <main>
         <div class="top-section">
@@ -83,8 +75,15 @@
                 <p class="privacy-notice">All data is stored locally in your browser</p>
             </div>
             <div class="hero">
-                <div class="logo-card">
-                    <img src="images/newlogo.png" alt="Project Void Logo">
+                <div class="online-section">
+                    <div class="online-counter">
+                        <span id="onlineCount">Loading...</span> Global Users Online
+                    </div>
+                    <div class="online-graph">
+                        <div class="graph-bars"></div>
+                        <div class="graph-tooltip"><span></span></div>
+                        <div class="graph-label">Updates every 30 seconds. Stores 20 min of history.</div>
+                    </div>
                 </div>
                 <h1>PROJECT VOID</h1>
                 <div class="subtitle-group">
@@ -92,6 +91,11 @@
                     <img src="https://hitwebcounter.com/counter/counter.php?page=17411431&style=0025&nbdigits=5&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites" border="0" />
                 </div>
                 <button class="about-blank-btn" onclick="openInAboutBlank()">Open in about:blank</button>
+            </div>
+            <div class="seven-day-graph">
+                <h3>7-Day Online Users</h3>
+                <div class="graph-description">(All data comes from Google Analytics. The data will always be 1-2 days behind to unsire it's accurate.)</div>
+                <div class="graph-container" id="sevenDayGraph"></div>
             </div>
         </div>
     </main>
@@ -137,5 +141,94 @@
             <script src="https://static.copyrighted.com/badges/helper.js"></script>
         </div>
     </footer>
+    <script>
+    const graphData = [
+        { date: 'Nov 27', users: 8 },
+        { date: 'Nov 28', users: 10 },
+        { date: 'Nov 29', users: 7 },
+        { date: 'Nov 30', users: 19 },
+        { date: 'Dec 1', users: 11 },
+        { date: 'Dec 2', users: 193 },
+        { date: 'Dec 3', users: 240 }
+    ];
+
+    function initializeGraph() {
+        const container = document.getElementById('sevenDayGraph');
+        const maxUsers = Math.max(...graphData.map(d => d.users));
+        const roundedMax = Math.ceil(maxUsers / 10) * 10;
+        const width = container.offsetWidth - 40;
+        const height = container.offsetHeight - 60;
+        
+        // Create Y-axis labels
+        const numYLabels = 5;
+        const yLabelStep = roundedMax / (numYLabels - 1);
+        
+        for (let i = 0; i < numYLabels; i++) {
+            const yLabel = document.createElement('div');
+            yLabel.className = 'y-axis-label';
+            const value = Math.round(roundedMax - (i * yLabelStep));
+            yLabel.textContent = value;
+            const yPos = (i * (height / (numYLabels - 1))) + 20;
+            yLabel.style.top = `${yPos}px`;
+            container.appendChild(yLabel);
+        }
+        
+        // Create points and lines
+        graphData.forEach((data, index) => {
+            const xPos = (index * (width / 6)) + 40;
+            const yPos = height - (data.users / roundedMax * height) + 20;
+            
+            // Create date label
+            const dateLabel = document.createElement('div');
+            dateLabel.className = 'date-label';
+            dateLabel.textContent = data.date;
+            dateLabel.style.left = `${xPos}px`;
+            container.appendChild(dateLabel);
+
+            if (index < graphData.length - 1) {
+                const nextXPos = ((index + 1) * (width / 6)) + 40;
+                const nextYPos = height - (graphData[index + 1].users / roundedMax * height) + 20;
+                
+                const line = document.createElement('div');
+                line.className = 'graph-line';
+                const length = Math.sqrt(Math.pow(nextXPos - xPos, 2) + Math.pow(nextYPos - yPos, 2));
+                const angle = Math.atan2(nextYPos - yPos, nextXPos - xPos) * 180 / Math.PI;
+                
+                line.style.width = `${length}px`;
+                line.style.left = `${xPos + 4}px`;
+                line.style.top = `${yPos + 4}px`;
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                container.appendChild(line);
+            }
+            
+            // Create point
+            const point = document.createElement('div');
+            point.className = 'graph-point';
+            point.style.left = `${xPos}px`;
+            point.style.top = `${yPos}px`;
+            
+            point.addEventListener('mouseover', () => {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'graph-tooltip';
+                tooltip.style.opacity = '1';
+                tooltip.textContent = `${data.users} users`;
+                tooltip.style.left = `${xPos}px`;
+                tooltip.style.top = `${yPos - 25}px`;
+                container.appendChild(tooltip);
+            });
+            
+            point.addEventListener('mouseout', () => {
+                const tooltip = container.querySelector('.graph-tooltip');
+                if (tooltip) tooltip.remove();
+            });
+            
+            container.appendChild(point);
+        });
+    }
+
+    // Initialize the graph when the page loads
+    window.addEventListener('load', initializeGraph);
+    </script>
 </body>
 </html> 

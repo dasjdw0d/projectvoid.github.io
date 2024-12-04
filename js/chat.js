@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             .message-time {
-                color: #666;
+                color: #00000;
                 font-size: 0.75rem;
                 margin-left: auto;  /* Push timestamp to the right */
             }

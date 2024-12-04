@@ -87,6 +87,7 @@ function containsSensitiveInfo(text) {
         // Replace common number/letter substitutions
         .replace(/0/g, 'o')
         .replace(/1/g, 'i')
+        .replace(/2/g, 'z')
         .replace(/3/g, 'e')
         .replace(/4/g, 'a')
         .replace(/5/g, 's')
@@ -108,21 +109,38 @@ function containsSensitiveInfo(text) {
     
     // Define sensitive patterns (using normalized text)
     const sensitivePatterns = [
-        // Specific name patterns
-        /\bjo[es]y?\b/i,         // Matches joey, joe, jos
-        /\bjoseph\b/i,           // Matches joseph
-        /\blentz\b/i,            // Matches lentz exactly
+        // Simple "joe" variations
+        /j[o0][e3]/i,            // Matches joe, j0e, jo3, j03
+        /[e3][o0]j/i,            // Matches reversed joe
         
-        // Address patterns (more specific)
-        /\b5[o0]5\b/i,          // Specifically match "505" with variations
-        /str.*flow/i,           // Match any combination of str and flow
-        /flow.*str/i,           // Match any combination in reverse
-        /\bstar\s*flow/i,       // Matches star flow
-        /\bflow[e3]r/i,         // Matches flower variations
+        // Name variations for Joseph/Joey
+        /j[o0][es][ey]p*h*/i,    // Matches joseph, joesph, etc
+        /j[o0][es3][ey]/i,       // Matches joey, josey, jo3y
+        /dz[o0][es3][ey]/i,      // Matches reversed joey
         
-        // Combined patterns (more specific)
-        /\bjo[es]y?\s*lentz\b/i, // Matches joey/joe lentz
-        /\blentz\s*jo[es]y?\b/i  // Matches lentz joey/joe
+        // Lentz variations
+        /l[e3]n[t7]*[sz2]*/i,    // Matches lentz, l3ntz, lentzz
+        /[sz2][t7]n[e3]l/i,      // Matches reversed lentz
+        
+        // Full name combinations
+        /j[o0][es][ey]p*h*\s*l[e3]n[t7]*[sz2]*/i,  // Joseph Lentz variations
+        /j[o0][es3][ey]\s*l[e3]n[t7]*[sz2]*/i,      // Joey Lentz variations
+        
+        // Additional names
+        /g[a4][i1]l/i,           // Matches gail
+        /br[i1][a4]n/i,          // Matches brian
+        
+        // Full name combinations for additional names
+        /g[a4][i1]l\s*l[e3]n[t7]*[sz2]*/i,  // Gail Lentz variations
+        /br[i1][a4]n\s*l[e3]n[t7]*[sz2]*/i,  // Brian Lentz variations
+        
+        // Catch common misspellings and variations
+        /j[o0]s[e3]ph[i1]n[e3]/i,  // Matches josephine
+        /j[o0][e3][ui]/i,          // Matches joeu
+        
+        // Additional patterns for reversed names
+        /l[i1][a4]g/i,            // Reversed gail
+        /n[a4][i1]rb/i            // Reversed brian
     ];
 
     // Check both original, normalized, and reversed text
@@ -131,6 +149,11 @@ function containsSensitiveInfo(text) {
         pattern.test(reversedText) ||
         pattern.test(text)
     );
+}
+
+// Simplified filterMessage function
+async function filterMessage(text) {
+    return text;  // Now just returns the original text without filtering
 }
 
 // Clear existing messages and add initial system message ONLY when server starts

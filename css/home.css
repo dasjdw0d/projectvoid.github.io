@@ -49,11 +49,11 @@
     pointer-events: auto;
 }
 
-/* User Section - Updated to match the right-side elements exactly */
+/* User Section - Updated position */
 .user-section {
     position: absolute;
     left: 2rem;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     width: min(375px, 90vw);
     background: rgba(0, 0, 0, 0.6);
@@ -258,11 +258,12 @@
     }
 }
 
+.online-section {
+    margin-bottom: 2rem;
+}
+
 .online-counter {
-    position: absolute;
-    right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
-    top: 35%;
-    transform: translateY(-50%);
+    position: relative;
     color: #c7c7c7;
     font-size: 1.8rem;
     font-weight: 600;
@@ -274,6 +275,7 @@
     padding: 10px;
     border-radius: 4px;
     user-select: text;
+    margin: 0 auto;
 }
 
 .online-counter #onlineCount {
@@ -306,9 +308,7 @@
 }
 
 .online-graph {
-    position: absolute;
-    right: max(2rem, calc((100vw - 1800px) / 2 + 2rem));
-    top: calc(35% + 45px);
+    position: relative;
     height: 60px;
     padding: 5px;
     background: rgba(0, 0, 0, 0.3);
@@ -317,6 +317,8 @@
     width: min(330px, 90vw);
     z-index: var(--z-nav);
     isolation: isolate;
+    margin: 0 auto;
+    margin-top: 10px;
 }
 
 .graph-label {
@@ -394,80 +396,122 @@ nav {
     z-index: var(--z-nav);
 }
 
-/* Add this to your home.css */
-.logo-card {
-    background: rgb(0, 0, 0);
-    border: 2px solid var(--neon-green);
-    border-radius: 12px;
-    padding: 0.3rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-    max-width: 120px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.logo-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(57, 255, 20, 0.2),
-        transparent
-    );
-    transition: 0.5s;
-}
-
-.logo-card:hover::before {
-    left: 100%;
-}
-
-.logo-card:hover {
-    box-shadow: 0 0 30px rgba(55, 255, 20, 0.514);
-}
-
-.logo-card img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
-}
-
-@media (max-width: 1200px) {
-    .user-section {
-        left: 1rem;
+@media (max-width: 968px) {
+    .online-counter,
+    .online-graph {
+        width: min(330px, 90vw);
+        margin: 0 auto;
     }
     
-    .online-counter,
-    .online-graph,
-    .top-games-counter {
-        right: 1rem;
+    .online-graph {
+        margin-top: 10px;
     }
 }
 
-@media (max-width: 768px) {
-    .user-section,
-    .online-counter,
-    .online-graph,
-    .top-games-counter {
+/* Seven Day Graph */
+.seven-day-graph {
+    position: absolute;
+    right: 2rem;
+    top: 45%;
+    transform: translateY(-50%);
+    width: min(375px, 90vw);
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 1.5rem;
+    z-index: var(--z-nav);
+    border: 0.5px solid var(--neon-green);
+}
+
+.seven-day-graph h3 {
+    color: var(--neon-green);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.graph-container {
+    position: relative;
+    height: 200px;
+    width: 100%;
+    padding-bottom: 20px;
+    padding-left: 60px;
+}
+
+.y-axis-label {
+    position: absolute;
+    left: -30px;
+    transform: translateY(-50%);
+    color: var(--neon-green);
+    font-size: 0.8rem;
+    text-align: right;
+    width: 35px;
+}
+
+.graph-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--neon-green);
+    transition: transform 0.2s ease;
+}
+
+.graph-point:hover {
+    transform: scale(1.5);
+}
+
+.graph-line {
+    position: absolute;
+    height: 2px;
+    background: var(--neon-green);
+    opacity: 0.5;
+    transform-origin: left center;
+    box-shadow: 0 0 5px var(--neon-green);
+}
+
+.graph-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--neon-green);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--neon-green);
+    font-size: 0.8rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: calc(var(--z-content) + 1);
+    white-space: nowrap;
+}
+
+@media (max-width: 968px) {
+    .seven-day-graph {
         position: relative;
-        left: auto;
         right: auto;
-        top: auto;
         transform: none;
+        width: 100%;
+        max-width: 565px;
         margin: 1rem auto;
-        width: calc(100% - 2rem);
     }
+}
+
+.date-label {
+    position: absolute;
+    bottom: -20px;
+    transform: translateX(-50%);
+    color: var(--neon-green);
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Add styles for the description */
+.graph-description {
+    color: #888;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
 }

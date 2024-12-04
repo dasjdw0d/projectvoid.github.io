@@ -48,7 +48,7 @@
                             <h2>Game Recommendations</h2>
                             <p class="form-description">Submit game recommendations for games you want added to Project Void.</p>
                         </div>
-                        <span class="expand-icon">▼</span>
+                        <span class="expand-icon">△</span>
                     </div>
                     <div class="form-embed collapsed">
                         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdsB1TkrLDxQ6S084pVFRKTEXTL6WkeU9z7JENdpVjo48Al9w/viewform?embedded=true" 
@@ -66,9 +66,9 @@
                     <div class="form-header" onclick="toggleForm(this)">
                         <div class="form-title">
                             <h2>Website Recommendations</h2>
-                            <p class="form-description">Submit website recommendations to give ideas to possibly imrpove Project Void.</p>
+                            <p class="form-description">Submit website recommendations to give ideas to possibly improve Project Void.</p>
                         </div>
-                        <span class="expand-icon">▼</span>
+                        <span class="expand-icon">△</span>
                     </div>
                     <div class="form-embed collapsed">
                         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScgkPgn3SSJqKXaf-XFd4QQWUPHpkOyuFy3gf5VKfuqYi3Q4g/viewform?embedded=true" 
@@ -88,7 +88,7 @@
                             <h2>Website Bug Form</h2>
                             <p class="form-description">Report any bugs or issues you find on Project Void.</p>
                         </div>
-                        <span class="expand-icon">▼</span>
+                        <span class="expand-icon">△</span>
                     </div>
                     <div class="form-embed collapsed">
                         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScWNHAgzC7WQ76zG7YF2cxIDrxrwqF6Xu14BHWnO4YPJc7LTQ/viewform?embedded=true" 
@@ -99,6 +99,26 @@
                                 marginwidth="0">
                             Loading…
                         </iframe>
+                    </div>
+                </div>
+                
+                <div class="form-card">
+                    <div class="form-header" onclick="toggleForm(this)">
+                        <div class="form-title">
+                            <h2>Contact Form</h2>
+                            <p class="form-description">In this form you can reach out to us for anything like questions you want an answer back from, or if you want to give us something.</p>
+                        </div>
+                        <span class="expand-icon">△</span>
+                    </div>
+                    <div class="form-embed collapsed">
+                        <div class="external-form-link">
+                            <p>This form requires a direct link. Please click below to access the contact form:</p>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfieeEtRpUMAGoasHkAL8W4OCsuwo7baKEJXKUReR1kYW3efA/viewform?usp=sf_link" 
+                               target="_blank" 
+                               class="form-link-button">
+                                Open Contact Form
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

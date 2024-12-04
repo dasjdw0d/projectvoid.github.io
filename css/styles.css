@@ -93,6 +93,7 @@ body::-webkit-scrollbar-thumb:hover,
     z-index: calc(var(--z-nav) + 1);
     border-bottom: 1.5px solid var(--neon-green);
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    height: 40px;
 }
 
 /* Adjust nav position when announcement is present */
@@ -159,7 +160,9 @@ body.custom-cursor * {
     pointer-events: none;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-    transition: transform var(--transition-speed) var(--transition-curve);
+    transform-origin: center;
+    will-change: transform;
+    transition: width 0.1s ease, height 0.1s ease;
 }
 
 /* Slightly larger cursor for clickable elements */
@@ -392,4 +395,60 @@ footer {
 @keyframes loaderSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Add these new styles for the trail effect */
+.cursor-trail {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(57, 255, 20, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999;
+    transition: opacity 0.3s ease;
+}
+
+/* Announcement Bar */
+.announcement-bar {
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--z-nav) + 1);
+    border-bottom: 1.5px solid var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+    height: 40px;
+}
+
+/* Adjust nav position when announcement is present */
+body.has-announcement nav {
+    top: 40px;
+}
+
+/* Adjust main content when announcement is present */
+body.has-announcement main {
+    padding-top: 120px;
+}
+
+@keyframes flash {
+    0% { opacity: 1; background: white; }
+    50% { opacity: 1; background: black; }
+    100% { opacity: 1; background: white; }
+}
+
+#flash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    pointer-events: none;
+    animation: flash 0.1s infinite;
+    mix-blend-mode: difference;
 }
