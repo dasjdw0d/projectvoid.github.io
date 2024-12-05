@@ -1,14 +1,19 @@
 :root {
+
     --neon-green: #39ff14;
     --dark-bg: #000000;
     --card-bg: #111111;
+
     --nav-bg: rgba(0, 0, 0, 0.753);
     --hover-bg: rgba(57, 255, 20, 0.1);
-    --z-particles: 1;
-    --z-content: 2;
-    --z-nav: 1000;
+
+    --z-particles: 1;    
+    --z-content: 2;      
+    --z-nav: 1000;       
+
     --transition-speed: 0.3s;
     --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+
     --cursor-size: 12px;
     --cursor-border: 2px;
 }
@@ -342,7 +347,7 @@ footer {
 .loading-screen {
     position: fixed;
     inset: 0;
-    background: rgb(0, 0, 0);
+    background: rgb(0, 0, 0); 
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
@@ -403,16 +408,6 @@ body.has-announcement nav {
 
 body.has-announcement main {
     padding-top: 120px;
-}
-
-.online-counter {
-    position: fixed !important;
-    z-index: calc(var(--z-nav) + 2) !important;
-}
-
-.online-graph {
-    position: fixed !important;
-    z-index: calc(var(--z-nav) + 2) !important;
 }
 
 @keyframes flash {
