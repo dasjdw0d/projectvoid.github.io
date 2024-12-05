@@ -82,7 +82,6 @@
     background: rgba(55, 255, 20, 0.048);
 }
 
-/* Update the system message styling instead of hiding it */
 .system-message {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -95,7 +94,6 @@
     font-size: 0.9em;
 }
 
-/* Add animation for the thinking dots */
 @keyframes blink {
     0% { opacity: 0.2; }
     20% { opacity: 1; }
@@ -106,7 +104,6 @@
     animation: blink 1.4s infinite both;
 }
 
-/* Style console errors nicely */
 .error-details {
     font-family: monospace;
     background: rgba(255, 0, 0, 0.1);
@@ -116,7 +113,6 @@
     white-space: pre-wrap;
 }
 
-/* Only style the thinking animation differently */
 .system-message.thinking-dots {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -130,7 +126,6 @@
     animation: blink 1.4s infinite both;
 }
 
-/* Hide other system messages */
 .system-message:not(.thinking-dots) {
     display: none;
 }

@@ -1,21 +1,19 @@
 (function() {
-    // Check localStorage immediately
+
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     if (settings.cursorToggle === true) {
         document.body.classList.add('custom-cursor');
         enableCustomCursor();
     }
 
-    // Only create announcement bar and check flash if not on display.php or admin.php
     if (!window.location.pathname.endsWith('display.php') && 
         !window.location.pathname.endsWith('admin.php')) {
         createAnnouncementBar();
-        // Check immediately on page load
+
         checkAnnouncement();
-        // Then check every 1 second instead of 5
+
         setInterval(checkAnnouncement, 1000);
-        
-        // Check flash mode immediately and every second
+
         checkFlashMode();
         setInterval(checkFlashMode, 1000);
     }
@@ -37,7 +35,7 @@ async function checkAnnouncement() {
     try {
         const response = await fetch('admin.php?action=get_announcement');
         const data = await response.json();
-        
+
         const announcementBar = document.querySelector('.announcement-bar');
         if (!announcementBar) return;
 
@@ -55,16 +53,16 @@ async function checkAnnouncement() {
 }
 
 async function checkFlashMode() {
-    // Don't run on display.php or admin.php
+
     if (window.location.pathname.endsWith('display.php') || 
         window.location.pathname.endsWith('admin.php')) {
         return;
     }
-    
+
     try {
         const response = await fetch('/admin.php?action=get_flash');
         const data = await response.json();
-        
+
         if (data.active === 'true') {
             if (!document.getElementById('flash-overlay')) {
                 createFlashOverlay();
@@ -87,13 +85,13 @@ function createFlashOverlay() {
 }
 
 function initializeParticles() {
-    // Add a small delay to ensure the config file is loaded
+
     setTimeout(() => {
         if (typeof particlesJS !== 'undefined' && typeof particlesConfig !== 'undefined') {
             particlesJS('particles-js', particlesConfig);
         } else {
             console.warn('Particles config not loaded. Retrying...');
-            // Try one more time after a longer delay
+
             setTimeout(() => {
                 if (typeof particlesJS !== 'undefined' && typeof particlesConfig !== 'undefined') {
                     particlesJS('particles-js', particlesConfig);
@@ -112,38 +110,30 @@ function destroyParticles() {
     }
 }
 
-// Add these variables at the top of the file
 let originalTitle = '';
 let originalFavicon = '';
 
-// Separate the initialization of cloaking features from the settings page initialization
 function initializeCloakingFeatures() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
-    
-    // Get the current page name from the URL
+
     const pathParts = window.location.pathname.split('/');
     const pageName = pathParts[pathParts.length - 1].split('.')[0] || 'index';
-    
-    // Store the original values for this page
+
     originalTitle = `Project Void - ${pageName.charAt(0).toUpperCase() + pageName.slice(1)}`;
     originalFavicon = 'images/favicon.png';
 
-    // Apply cloaking if enabled
     if (settings.cloakingToggle) {
         handleCloaking(originalTitle, originalFavicon);
     }
 
-    // Apply global cloak if enabled
     if (settings.globalCloakToggle) {
         applyGlobalCloak(settings.globalCloakType || 'google');
     }
 }
 
-// Add these at the top of the file
 let heartbeatInterval;
 const SESSION_KEY = 'userSessionId';
 
-// Generate a unique session ID if one doesn't exist
 function getSessionId() {
     let sessionId = localStorage.getItem(SESSION_KEY);
     if (!sessionId) {
@@ -153,20 +143,16 @@ function getSessionId() {
     return sessionId;
 }
 
-// Modify your DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize cloaking features for all pages
+
     initializeCloakingFeatures();
 
-    // Initialize online tracking
     initializeOnlineTracking();
 
-    // Initialize particles and cursor settings
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
         particleToggle: true
     };
-    
-    // Apply particle setting
+
     const particlesSetting = settings.particleToggle !== false;
     const particles = document.getElementById('particles-js');
     if (particles) {
@@ -178,12 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Apply cursor setting
     if (settings.cursorToggle === true) {
         enableCustomCursor();
     }
 
-    // Only initialize settings page if we're on settings.php
     if (window.location.pathname.includes('settings.php')) {
         initializeSettingsPage();
     }
@@ -191,13 +175,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function enableCustomCursor() {
     document.body.classList.add('custom-cursor');
-    
+
     if (!document.querySelector('.custom-cursor-dot')) {
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor-dot';
         document.body.appendChild(cursor);
-        
-        // Create trail elements (reduced number for subtlety)
+
         const numTrails = 3;
         const trails = Array.from({ length: numTrails }, (_, i) => {
             const trail = document.createElement('div');
@@ -213,9 +196,8 @@ function enableCustomCursor() {
         let lastMousePos = { x: 0, y: 0 };
         let lastTime = performance.now();
 
-        // Spring physics settings
         let spring = { x: 0, y: 0 };
-        const springStrength = 0.2;  // Increased for faster response
+        const springStrength = 0.2;  
         const dampening = 0.7;
 
         document.addEventListener('mousemove', (e) => {
@@ -225,15 +207,15 @@ function enableCustomCursor() {
 
             velocity.x = (e.clientX - lastMousePos.x) / deltaTime;
             velocity.y = (e.clientY - lastMousePos.y) / deltaTime;
-            
+
             velocity.x *= 0.2;
             velocity.y *= 0.2;
-            
+
             const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-            
+
             targetPos.x = e.clientX;
             targetPos.y = e.clientY;
-            
+
             lastMousePos.x = e.clientX;
             lastMousePos.y = e.clientY;
 
@@ -244,13 +226,12 @@ function enableCustomCursor() {
             const scaleX = 1 + (deformX * 0.3);
             const scaleY = 1 - (deformY * 0.15);
 
-            // Update spring physics
             spring.x += (targetPos.x - cursorPos.x) * springStrength;
             spring.y += (targetPos.y - cursorPos.y) * springStrength;
-            
+
             spring.x *= dampening;
             spring.y *= dampening;
-            
+
             cursorPos.x += spring.x;
             cursorPos.y += spring.y;
 
@@ -258,7 +239,6 @@ function enableCustomCursor() {
                                     rotate(${angle}rad) 
                                     scale(${scaleX}, ${scaleY})`;
 
-            // Update trails immediately without delay
             trails.forEach((trail, index) => {
                 trail.style.transform = `translate(${cursorPos.x - 3}px, ${cursorPos.y - 3}px) 
                                        scale(${1 - index * 0.1})`;
@@ -309,49 +289,42 @@ const CLOAK_CONFIGS = {
     }
 };
 
-// Add this variable at the top of the file to store the event listener
 let visibilityChangeHandler = null;
 
-// Modify the handleCloaking function
 function handleCloaking(pageTitle, pageFavicon) {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
-    
-    // Remove any existing visibility change listener
+
     if (visibilityChangeHandler) {
         document.removeEventListener('visibilitychange', visibilityChangeHandler);
     }
-    
-    // Create new visibility change handler
+
     visibilityChangeHandler = function() {
         const currentSettings = JSON.parse(localStorage.getItem('siteSettings')) || {};
         if (!currentSettings.cloakingToggle) return;
-        
+
         const selectedCloak = currentSettings.clickoffCloakType || 'google';
         const cloak = CLOAK_CONFIGS[selectedCloak];
-        
+
         const favicon = document.querySelector('link[rel="icon"]');
-        
+
         if (document.hidden) {
             document.title = cloak.title;
             if (favicon) favicon.href = cloak.favicon;
         } else {
-            // Use the stored original values
+
             document.title = pageTitle;
             if (favicon) favicon.href = pageFavicon;
         }
     };
-    
-    // Add the new listener
+
     document.addEventListener('visibilitychange', visibilityChangeHandler);
 }
 
-// Modify the removeCloak function
 function removeCloak() {
     if (visibilityChangeHandler) {
         document.removeEventListener('visibilitychange', visibilityChangeHandler);
         visibilityChangeHandler = null;
-        
-        // Reset to original values
+
         document.title = originalTitle;
         const favicon = document.querySelector('link[rel="icon"]');
         if (favicon) favicon.href = originalFavicon;
@@ -379,13 +352,11 @@ function resetGlobalCloak() {
     }
 }
 
-// Move settings page code into a separate function
 function initializeSettingsPage() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
-        particleToggle: true  // Set default to true
+        particleToggle: true  
     };
 
-    // Initialize toggles
     const particleToggle = document.getElementById('particleToggle');
     const cursorToggle = document.getElementById('cursorToggle');
     const cloakingToggle = document.getElementById('cloakingToggle');
@@ -395,17 +366,15 @@ function initializeSettingsPage() {
     const gameBarToggle = document.getElementById('gameBarToggle');
 
     if (!particleToggle || !cursorToggle || !cloakingToggle || !globalCloakToggle || !gameBarToggle) {
-        return; // Not on settings page, exit early
+        return; 
     }
 
-    // Set initial states
-    particleToggle.checked = settings.particleToggle !== false; // This ensures true by default
+    particleToggle.checked = settings.particleToggle !== false; 
     cursorToggle.checked = settings.cursorToggle === true;
     cloakingToggle.checked = settings.cloakingToggle === true;
     globalCloakToggle.checked = settings.globalCloakToggle === true;
-    gameBarToggle.checked = settings.gameBarToggle !== false; // true by default
-    
-    // Set initial select values
+    gameBarToggle.checked = settings.gameBarToggle !== false; 
+
     if (settings.globalCloakType) {
         globalCloakSelect.value = settings.globalCloakType;
     }
@@ -413,15 +382,14 @@ function initializeSettingsPage() {
         clickoffCloakSelect.value = settings.clickoffCloakType;
     }
 
-    // Add event listeners
     particleToggle.addEventListener('change', function() {
         settings.particleToggle = this.checked;
         localStorage.setItem('siteSettings', JSON.stringify(settings));
-        
+
         const particles = document.getElementById('particles-js');
         if (particles) {
             if (this.checked) {
-                // Save the setting and refresh the page
+
                 location.reload();
             } else {
                 particles.style.display = 'none';
@@ -489,40 +457,34 @@ function initializeSettingsPage() {
     });
 }
 
-// Run settings initialization when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if we're on settings page (change .html to .php)
+
     if (window.location.pathname.includes('settings.php')) {
         initializeSettingsPage();
     }
 });
 
-// Add this helper function to check if global cloaking is enabled
 function isGlobalCloakEnabled() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     return settings.globalCloakToggle === true;
 }
 
-// Add this function to get the current cloak config
 function getCurrentCloakConfig() {
     const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
     return CLOAK_CONFIGS[settings.globalCloakType || 'google'];
 }
 
-// Modify your initializeOnlineTracking function to include announcement checks
 function initializeOnlineTracking() {
     const sessionId = getSessionId();
     let lastUserCount = 0;
     let failedHeartbeats = 0;
     let reconnectAttempts = 0;
-    
-    // Clear existing interval with a unique identifier
+
     const trackingId = `tracking_${Date.now()}`;
     window.onlineTrackingIntervals = window.onlineTrackingIntervals || {};
-    
-    // Clear any existing intervals
+
     Object.values(window.onlineTrackingIntervals).forEach(clearInterval);
-    
+
     function sendHeartbeat() {
         fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
             method: 'POST',
@@ -548,10 +510,10 @@ function initializeOnlineTracking() {
         .catch(error => {
             failedHeartbeats++;
             console.error('Heartbeat failed:', error);
-            
+
             if (failedHeartbeats > 5) {
                 updateOnlineCount('--');
-                // Try to reconnect with exponential backoff
+
                 if (reconnectAttempts < 5) {
                     setTimeout(() => {
                         reconnectAttempts++;
@@ -563,59 +525,53 @@ function initializeOnlineTracking() {
     }
 
     window.onlineTrackingIntervals[trackingId] = setInterval(sendHeartbeat, 1000);
-    
-    // Cleanup on page unload
+
     window.addEventListener('beforeunload', () => {
         clearInterval(window.onlineTrackingIntervals[trackingId]);
         delete window.onlineTrackingIntervals[trackingId];
-        
+
         navigator.sendBeacon('https://projectvoid.is-not-a.dev/api/offline', 
             JSON.stringify({ sessionId, timestamp: Date.now() })
         );
     });
 }
 
-// Modify the updateOnlineGraph function
 let onlineHistory = new Array(40).fill(0);
 let maxOnlineUsers = 0;
 let lastGraphUpdate = 0;
 
 function updateOnlineGraph(currentUsers, newHistory = null) {
     if (!newHistory) return;
-    
+
     onlineHistory = newHistory;
     maxOnlineUsers = Math.max(...onlineHistory, maxOnlineUsers);
 
     const graphContainer = document.querySelector('.graph-bars');
     if (!graphContainer) return;
 
-    // Clear existing bars
     graphContainer.innerHTML = '';
 
-    // Create new bars
     onlineHistory.forEach((users, index) => {
         const bar = document.createElement('div');
         bar.className = 'graph-bar';
-        
-        // Simplified linear scaling
+
         let heightPercent;
         if (users === 0) {
-            heightPercent = 2; // Minimum height for visibility
+            heightPercent = 2; 
         } else {
-            // Linear scale from 15% to 100%
+
             heightPercent = 15 + (users / maxOnlineUsers) * 80;
         }
-        
+
         bar.style.height = `${heightPercent}%`;
-        
-        // Add hover listeners
+
         const tooltip = document.querySelector('.graph-tooltip');
         bar.addEventListener('mousemove', (e) => {
             tooltip.style.opacity = '1';
             tooltip.style.left = `${e.target.offsetLeft + (e.target.offsetWidth / 2)}px`;
             tooltip.querySelector('span').textContent = `Users: ${users}`;
         });
-        
+
         bar.addEventListener('mouseleave', () => {
             tooltip.style.opacity = '0';
         });
@@ -624,7 +580,6 @@ function updateOnlineGraph(currentUsers, newHistory = null) {
     });
 }
 
-// Add this function near your other online tracking functions
 function updateOnlineCount(count) {
     const onlineCountElement = document.getElementById('onlineCount');
     if (onlineCountElement) {

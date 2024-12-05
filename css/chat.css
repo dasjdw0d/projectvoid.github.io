@@ -31,7 +31,6 @@
     min-height: 0;
 }
 
-/* Consolidated scrollbar styles - remove duplicate declarations */
 #chatMessages::-webkit-scrollbar,
 #onlineUsers::-webkit-scrollbar,
 .info-section::-webkit-scrollbar {
@@ -204,7 +203,7 @@
 }
 
 .delete-icon {
-    display: none;  /* Hidden by default */
+    display: none;
     position: absolute;
     right: 10px;
     top: 50%;
@@ -218,7 +217,6 @@
     border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
-/* Show delete icon only on message hover and for admin */
 .message:hover .delete-icon {
     display: block;
 }
@@ -228,9 +226,8 @@
     background: rgba(255, 0, 0, 0.2);
 }
 
-/* Ensure message content has right padding for delete icon */
 .message-content {
-    padding-right: 40px;  /* Make room for delete icon */
+    padding-right: 40px;
 }
 
 .message-avatar {
@@ -302,7 +299,6 @@
     font-size: 0.8rem;
 }
 
-/* Consolidated media queries - remove duplicates */
 @media (max-width: 1200px) {
     .chat-container {
         grid-template-columns: 240px 1fr 240px;
@@ -331,7 +327,6 @@
     }
 }
 
-/* Consolidated admin styles - remove duplicates */
 .admin-controls {
     position: fixed;
     bottom: 20px;
@@ -355,7 +350,6 @@
     transition: background-color 0.2s, border-color 0.2s;
 }
 
-/* Consolidated message styles - remove duplicates */
 .message {
     display: flex;
     gap: 0.5rem;
@@ -366,7 +360,6 @@
     position: relative;
 }
 
-/* Consolidated media queries - remove duplicates */
 @media (max-width: 1200px) {
     .chat-container {
         grid-template-columns: 240px 1fr 240px;
@@ -395,7 +388,6 @@
     }
 }
 
-/* Add these styles */
 .status-badge.idle {
     background: rgba(255, 165, 0, 0.1);
     color: orange;
@@ -426,7 +418,6 @@
     background: rgba(128, 128, 128, 0.3);
 }
 
-/* Add these styles */
 .chat-info-sidebar {
     width: 224px;
     background: rgb(15, 15, 15);
@@ -504,7 +495,6 @@
     cursor: not-allowed;
 }
 
-/* Avatar adjustments */
 .message-avatar {
     width: 24px;
     height: 24px;
@@ -512,7 +502,6 @@
     border: none;
 }
 
-/* Message content - sleeker design */
 .message-content {
     background: rgba(0, 0, 0, 0.2);
     padding: 0.4rem 0.6rem;
@@ -523,7 +512,6 @@
     overflow: hidden;
 }
 
-/* Username style */
 .message-username {
     color: var(--neon-green);
     font-weight: 600;
@@ -534,7 +522,6 @@
     text-overflow: ellipsis;
 }
 
-/* Message text */
 .message-text {
     color: #fff;
     font-size: 0.9rem;
@@ -542,13 +529,11 @@
     word-break: break-word;
 }
 
-/* Messages container spacing */
 .chat-messages {
     padding: 0.5rem;
     gap: 0.2rem;
 }
 
-/* Admin Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -617,7 +602,6 @@
     margin-bottom: 10px;
 }
 
-/* Admin Button Styles */
 .admin-button {
     position: fixed;
     bottom: 20px;
@@ -634,7 +618,6 @@
     opacity: 0.9;
 }
 
-/* Admin Controls Styles */
 .admin-controls {
     position: fixed;
     bottom: 20px;
@@ -661,7 +644,6 @@
     background: rgba(0, 0, 0, 0.8);
 }
 
-/* Update admin user in online list as well */
 .user-item .user-name-container .user-name[data-admin]::after {
     content: ' [ADMIN]';
     color: red;
@@ -670,7 +652,6 @@
     white-space: nowrap;
 }
 
-/* Add these styles to chat.css */
 #chatMessages,
 #onlineUsers,
 .info-section {
@@ -679,7 +660,6 @@
     min-height: 0;
 }
 
-/* Override any inherited scrollbar styles */
 #chatMessages::-webkit-scrollbar,
 #onlineUsers::-webkit-scrollbar,
 .info-section::-webkit-scrollbar {
@@ -709,7 +689,6 @@
     background: rgba(0, 0, 0, 0.8);
 }
 
-/* Add these new styles */
 .emoji-picker {
     padding: 0.4rem;
     background: rgba(0, 0, 0, 0.2);
@@ -733,7 +712,6 @@
     background: rgba(57, 255, 20, 0.1);
 }
 
-/* Update system message styles */
 .message.system-message {
     background: none;
     border: none;
@@ -758,7 +736,6 @@
     text-align: center;
 }
 
-/* System message adjustments */
 .message.system-message {
     background: none;
     border: none;
@@ -771,12 +748,10 @@
     margin: 0 auto;
 }
 
-/* Admin message styling */
 .message.admin-message .message-username {
     color: red;
 }
 
-/* Add or update these styles */
 .message.deleted {
     background: rgba(255, 0, 0, 0.05);
 }
@@ -790,7 +765,6 @@
     font-weight: bold;
 }
 
-/* Update the delete message system styling */
 .message-content.delete-message {
     border: 1px solid rgba(255, 0, 0, 0.3) !important;
     background: rgba(255, 0, 0, 0.05) !important;
@@ -801,7 +775,6 @@
     font-weight: bold;
 }
 
-/* Fix online users scrolling */
 #onlineUsers {
     flex: 1;
     overflow-y: auto;
@@ -815,15 +788,34 @@
     flex-shrink: 0;
 }
 
-/* Update deletion message width */
 .message-content.delete-message {
     width: auto;
     min-width: 150px;
     max-width: 85%;
 } 
 
-/* Admin message styling override */
 .admin-message .message-content {
     border: 1px solid rgba(255, 0, 0, 0.5);
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.486);
+}
+
+.chat-reset-timer {
+    color: red;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.chat-header {
+    padding: 0.8rem 1.2rem;
+    min-height: 50px;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(15, 15, 15);
+    position: relative;
+    z-index: 2;
 }

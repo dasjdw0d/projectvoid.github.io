@@ -54,7 +54,6 @@
     text-align: left;
 }
 
-/* Toggle Switch */
 .toggle {
     position: relative;
     display: inline-block;
@@ -102,7 +101,6 @@ input:checked + .slider:before {
     background-color: var(--neon-green);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .settings-container {
         padding: 1rem;
@@ -113,7 +111,6 @@ input:checked + .slider:before {
     }
 }
 
-/* Update the cloak options styles */
 .cloak-options {
     position: absolute;
     left: 1.5rem;

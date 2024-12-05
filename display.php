@@ -49,19 +49,18 @@
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add this at the start of your DOMContentLoaded handler
+
             const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
             const gameBar = document.querySelector('.game-bar');
             if (gameBar && settings.gameBarToggle === false) {
                 gameBar.style.display = 'none';
-                // Adjust the game container to take full height
+
                 document.querySelector('.game-container').style.height = '100vh';
             }
 
-            // Check for tracking errors
             const error = localStorage.getItem('lastGameError');
             const success = localStorage.getItem('lastGameSuccess');
-            
+
             if (error) {
                 console.error(error);
                 localStorage.removeItem('lastGameError');
@@ -70,7 +69,7 @@
                 console.log(success);
                 localStorage.removeItem('lastGameSuccess');
             }
-            
+
             const urlParams = new URLSearchParams(window.location.search);
             const gamePath = urlParams.get('game');
             const gameTitle = urlParams.get('title');
@@ -82,12 +81,11 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.src = gamePath;
                 document.getElementById('gameTitle').textContent = gameTitle || 'Game';
-                
-                // Only set the title if global cloaking is disabled
+
                 if (!isGlobalCloakEnabled()) {
                     document.title = 'Project Void - Playing Game';
                 } else {
-                    // Apply the global cloak
+
                     const cloak = getCurrentCloakConfig();
                     document.title = cloak.title;
                     const favicon = document.querySelector('link[rel="icon"]');
@@ -95,7 +93,7 @@
                         favicon.href = cloak.favicon;
                     }
                 }
-                
+
                 startTimer();
                 setTimeout(() => {
                     window.history.replaceState({}, '', '/display.php');
@@ -104,7 +102,6 @@
                 window.location.href = 'games.php';
             }
 
-            // Fullscreen functionality
             document.getElementById('fullscreenBtn').addEventListener('click', function() {
                 if (!document.fullscreenElement) {
                     document.documentElement.requestFullscreen();
@@ -122,7 +119,6 @@
                 }
             });
 
-            // Timer functionality
             function startTimer() {
                 if (timerInterval) clearInterval(timerInterval);
                 timerInterval = setInterval(updateTimer, 1000);
@@ -134,15 +130,14 @@
                 const seconds = Math.floor(newElapsedTime / 1000);
                 const minutes = Math.floor(seconds / 60);
                 const remainingSeconds = seconds % 60;
-                
+
                 document.getElementById('playTime').textContent = 
                     `Session Time: ${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
             }
 
-            // Cleanup on page unload
             window.addEventListener('beforeunload', function() {
                 totalElapsedTime += Date.now() - lastUpdateTime;
-                
+
                 let stats = JSON.parse(localStorage.getItem('siteStats')) || {};
                 stats.totalPlayTime = (stats.totalPlayTime || 0) + Math.floor(totalElapsedTime / 1000);
                 localStorage.setItem('siteStats', JSON.stringify(stats));

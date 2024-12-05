@@ -52,6 +52,7 @@
             <div class="chat-main">
                 <div class="chat-header">
                     <h2>Global Chatroom</h2>
+                    <span id="chatResetTimer" class="chat-reset-timer">Chat Reset: 0m 0s</span>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">

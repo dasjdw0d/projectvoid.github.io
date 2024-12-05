@@ -1,29 +1,18 @@
-/* Variables with improved organization */
 :root {
-    /* Colors */
     --neon-green: #39ff14;
     --dark-bg: #000000;
     --card-bg: #111111;
-    
-    /* Derived Colors */
     --nav-bg: rgba(0, 0, 0, 0.753);
     --hover-bg: rgba(57, 255, 20, 0.1);
-    
-    /* Z-index layers - Reorganized for clarity */
-    --z-particles: 1;    /* Particles in the very back */
-    --z-content: 2;      /* All main content in the middle */
-    --z-nav: 1000;       /* Navigation in the very front */
-    
-    /* Transitions */
+    --z-particles: 1;
+    --z-content: 2;
+    --z-nav: 1000;
     --transition-speed: 0.3s;
     --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Cursor */
     --cursor-size: 12px;
     --cursor-border: 2px;
 }
 
-/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -43,7 +32,6 @@ main {
     flex: 1;
 }
 
-/* Scrollbar Styles */
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
     width: 8px;
@@ -69,7 +57,6 @@ body::-webkit-scrollbar-thumb:hover,
     background: rgba(0, 0, 0, 0.8);
 }
 
-/* Particles Background */
 #particles-js {
     position: fixed;
     width: 100%;
@@ -80,7 +67,6 @@ body::-webkit-scrollbar-thumb:hover,
     pointer-events: none;
 }
 
-/* Add this before the nav styles */
 .announcement-bar {
     background: rgba(0, 0, 0, 0.9);
     color: white;
@@ -96,7 +82,6 @@ body::-webkit-scrollbar-thumb:hover,
     height: 40px;
 }
 
-/* Adjust nav position when announcement is present */
 nav {
     background: black;
     border-bottom: 1.5px solid var(--neon-green);
@@ -112,13 +97,11 @@ nav {
     backdrop-filter: none;
 }
 
-/* Only add the transition when the announcement class is present */
 nav.with-announcement {
     top: 40px;
     transition: top 0.3s ease;
 }
 
-/* Adjust main content */
 main {
     position: relative;
     z-index: var(--z-content);
@@ -132,7 +115,6 @@ main.with-announcement {
     transition: padding-top 0.3s ease;
 }
 
-/* Animations */
 @keyframes spinIn {
     0% {
         transform: rotate(0deg) scale(0.5);
@@ -144,7 +126,6 @@ main.with-announcement {
     }
 }
 
-/* Custom Cursor Styles */
 body.custom-cursor,
 body.custom-cursor * {
     cursor: none !important;
@@ -165,7 +146,6 @@ body.custom-cursor * {
     transition: width 0.1s ease, height 0.1s ease;
 }
 
-/* Slightly larger cursor for clickable elements */
 body.custom-cursor a:hover ~ .custom-cursor-dot,
 body.custom-cursor button:hover ~ .custom-cursor-dot,
 body.custom-cursor input:hover ~ .custom-cursor-dot,
@@ -173,7 +153,6 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
     transform: scale(1.5);
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
@@ -193,7 +172,6 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
     }
 }
 
-/* Custom Context Menu */
 .custom-context-menu {
     position: fixed;
     background: rgba(0, 0, 0, 0.6);
@@ -252,7 +230,6 @@ body.custom-cursor label:hover ~ .custom-cursor-dot {
     }
 }
 
-/* Footer Styles */
 footer {
     background: rgba(0, 0, 0, 0.7);
     padding: 1rem 1.5rem;
@@ -278,12 +255,10 @@ footer {
     padding: 0;
 }
 
-/* Remove any potential extra space from the badge */
 .copyrighted-badge {
     display: block;
     line-height: 0;
 }
-
 
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -364,11 +339,10 @@ footer {
     transform: scale(0.97);
 }
 
-/* Loading Screen */
 .loading-screen {
     position: fixed;
     inset: 0;
-    background: rgb(0, 0, 0); /* Pure black background */
+    background: rgb(0, 0, 0);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
@@ -397,7 +371,6 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
-/* Add these new styles for the trail effect */
 .cursor-trail {
     position: fixed;
     width: 6px;
@@ -409,7 +382,6 @@ footer {
     transition: opacity 0.3s ease;
 }
 
-/* Announcement Bar */
 .announcement-bar {
     background: rgba(0, 0, 0, 0.9);
     color: white;
@@ -425,14 +397,22 @@ footer {
     height: 40px;
 }
 
-/* Adjust nav position when announcement is present */
 body.has-announcement nav {
     top: 40px;
 }
 
-/* Adjust main content when announcement is present */
 body.has-announcement main {
     padding-top: 120px;
+}
+
+.online-counter {
+    position: fixed !important;
+    z-index: calc(var(--z-nav) + 2) !important;
+}
+
+.online-graph {
+    position: fixed !important;
+    z-index: calc(var(--z-nav) + 2) !important;
 }
 
 @keyframes flash {

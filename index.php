@@ -94,7 +94,7 @@
             </div>
             <div class="seven-day-graph">
                 <h3>7-Day Online Users</h3>
-                <div class="graph-description">(All data comes from Google Analytics. The data will always be 1-2 days behind to unsire it's accurate.)</div>
+                <div class="graph-description">(All data comes from Google Analytics. The data will always be 1-2 days behind to insures it's accurate.)</div>
                 <div class="graph-container" id="sevenDayGraph"></div>
             </div>
         </div>
@@ -104,27 +104,21 @@
         (function () {
             var url = "https://projectvoid.is-not-a.dev";
 
-            // Open a new about:blank window
             var win = window.open();
 
-            // Create an iframe
             var iframe = win.document.createElement('iframe');
 
-            // Set styles for the iframe
             iframe.style = "position:fixed;width:100vw;height:100vh;top:0px;left:0px;right:0px;bottom:0px;z-index:2147483647;background-color:black;border:none;";
 
-            // Check and assign the URL to the iframe
             if (url.includes('https://') || url.includes("http://")) {
                 iframe.src = url;
             } else {
                 iframe.src = "https://" + url;
             }
 
-            // Append the iframe to the body of the window
             win.document.body.appendChild(iframe);
         })();
 
-        // Redirect to google
         window.location.href = "https://google.com";
     }
     </script>
@@ -143,14 +137,14 @@
     </footer>
     <script>
     const graphData = [
-        { date: 'Nov 27', users: 8 },
-        { date: 'Nov 28', users: 10 },
-        { date: 'Nov 29', users: 7 },
-        { date: 'Nov 30', users: 19 },
-        { date: 'Dec 1', users: 11 },
-        { date: 'Dec 2', users: 193 },
-        { date: 'Dec 3', users: 240 }
-    ];
+    { date: 'Nov 28', users: 10 },
+    { date: 'Nov 29', users: 7 },
+    { date: 'Nov 30', users: 19 },
+    { date: 'Dec 1', users: 11 },
+    { date: 'Dec 2', users: 193 },
+    { date: 'Dec 3', users: 240 },
+    { date: 'Dec 4', users: 359 }
+];
 
     function initializeGraph() {
         const container = document.getElementById('sevenDayGraph');
@@ -158,11 +152,10 @@
         const roundedMax = Math.ceil(maxUsers / 10) * 10;
         const width = container.offsetWidth - 40;
         const height = container.offsetHeight - 60;
-        
-        // Create Y-axis labels
+
         const numYLabels = 5;
         const yLabelStep = roundedMax / (numYLabels - 1);
-        
+
         for (let i = 0; i < numYLabels; i++) {
             const yLabel = document.createElement('div');
             yLabel.className = 'y-axis-label';
@@ -172,13 +165,11 @@
             yLabel.style.top = `${yPos}px`;
             container.appendChild(yLabel);
         }
-        
-        // Create points and lines
+
         graphData.forEach((data, index) => {
             const xPos = (index * (width / 6)) + 40;
             const yPos = height - (data.users / roundedMax * height) + 20;
-            
-            // Create date label
+
             const dateLabel = document.createElement('div');
             dateLabel.className = 'date-label';
             dateLabel.textContent = data.date;
@@ -188,26 +179,25 @@
             if (index < graphData.length - 1) {
                 const nextXPos = ((index + 1) * (width / 6)) + 40;
                 const nextYPos = height - (graphData[index + 1].users / roundedMax * height) + 20;
-                
+
                 const line = document.createElement('div');
                 line.className = 'graph-line';
                 const length = Math.sqrt(Math.pow(nextXPos - xPos, 2) + Math.pow(nextYPos - yPos, 2));
                 const angle = Math.atan2(nextYPos - yPos, nextXPos - xPos) * 180 / Math.PI;
-                
+
                 line.style.width = `${length}px`;
                 line.style.left = `${xPos + 4}px`;
                 line.style.top = `${yPos + 4}px`;
                 line.style.transform = `rotate(${angle}deg)`;
-                
+
                 container.appendChild(line);
             }
-            
-            // Create point
+
             const point = document.createElement('div');
             point.className = 'graph-point';
             point.style.left = `${xPos}px`;
             point.style.top = `${yPos}px`;
-            
+
             point.addEventListener('mouseover', () => {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'graph-tooltip';
@@ -217,18 +207,17 @@
                 tooltip.style.top = `${yPos - 25}px`;
                 container.appendChild(tooltip);
             });
-            
+
             point.addEventListener('mouseout', () => {
                 const tooltip = container.querySelector('.graph-tooltip');
                 if (tooltip) tooltip.remove();
             });
-            
+
             container.appendChild(point);
         });
     }
 
-    // Initialize the graph when the page loads
     window.addEventListener('load', initializeGraph);
     </script>
 </body>
-</html> 
+</html>

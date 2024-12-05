@@ -65,8 +65,7 @@
     <script>
     const GAMES_PER_PAGE = 40;
     let currentPage = 1;
-    
-    // Your existing games array
+
     const games = [
         {
             title: "Slope",
@@ -92,6 +91,11 @@
             title: "Drift Hunters",
             path: "games/drifthunters/index.html",
             thumbnail: "games/drifthunters/icon.png"
+        },
+        {
+            title: "Burrito Bison",
+            path: "games/burritobison/index.html",
+            thumbnail: "games/burritobison/logo.png"
         },
         {
             title: "Run 3",
@@ -162,6 +166,11 @@
             title: "Poly Track",
             path: "games/polytrack/index.html",
             thumbnail: "games/polytrack/logo.png"
+        },
+        {
+            title: "Cookie Clicker",
+            path: "games/cookieclicker/index.html",
+            thumbnail: "games/cookieclicker/logo.png"
         },
         {
             title: "Basketball Stars",
@@ -271,6 +280,15 @@
 
 
 
+
+
+
+
+
+
+
+
+        
         {
             title: "Bit Life",
             path: "games/bitlife/index.html",
@@ -492,6 +510,10 @@
 
 
 
+
+
+
+
         {
             title: "Subway Surfers NY",
             path: "games/subway-surfers-ny/index.html",
@@ -698,41 +720,86 @@
             path: "games/a-dance-of-fire-and-ice/index.html",
             thumbnail: "games/a-dance-of-fire-and-ice/logo.png"
         },
+        {
+            title: "Merge Round Racers",
+            path: "games/merge-round-racers/index.html",
+            thumbnail: "games/merge-round-racers/logo.png"
+        },
+        {
+            title: "Bloxorz",
+            path: "games/bloxorz/index.html",
+            thumbnail: "games/bloxorz/logo.jpg"
+        },
+        {
+            title: "Boxing Random",
+            path: "games/boxing-random/index.html",
+            thumbnail: "games/boxing-random/logo.png"
+        },
+        {
+            title: "Backrooms",
+            path: "games/backrooms/index.html",
+            thumbnail: "games/backrooms/logo.png"
+        },
+        {
+            title: "Glass City",
+            path: "games/glass-city/index.html",
+            thumbnail: "games/glass-city/logo.png"
+        },
+        {
+            title: "Aqua Park",
+            path: "games/aquapark/index.html",
+            thumbnail: "games/aquapark/splash.png"
+        },
+        {
+            title: "Big Red Button",
+            path: "games/bigredbutton/index.html",
+            thumbnail: "games/bigredbutton/bigredbutton.png"
+        },
+        {
+            title: "Town Scaper",
+            path: "games/townscaper/index.html",
+            thumbnail: "games/townscaper/logo.png"
+        },
+        {
+            title: "Cell Machine",
+            path: "games/cell-machine/index.html",
+            thumbnail: "games/cell-machine/img/icon.png"
+        },
+        {
+            title: "Break Lock",
+            path: "games/breaklock/index.html",
+            thumbnail: "games/breaklock/logo.png"
+        },
     ];
 
-    let filteredGames = [...games]; // Copy of games array for filtering
+    let filteredGames = [...games]; 
 
-    // Modify the initial pinnedGames declaration
     window.pinnedGames = JSON.parse(localStorage.getItem('pinnedGames') || '[]');
 
-    // Modify the togglePinGame function
     function togglePinGame(event, gameTitle) {
-        event.preventDefault(); // Prevent default context menu
-        
-        // Get fresh data from localStorage
+        event.preventDefault(); 
+
         window.pinnedGames = JSON.parse(localStorage.getItem('pinnedGames') || '[]');
         const gameIndex = window.pinnedGames.findIndex(game => game.title === gameTitle);
-        
+
         if (gameIndex === -1) {
-            // Game isn't pinned, so pin it
+
             const gameToPin = games.find(game => game.title === gameTitle);
             if (gameToPin) {
                 window.pinnedGames.push(gameToPin);
                 showToast('Game pinned!');
             }
         } else {
-            // Game is already pinned, so unpin it
+
             window.pinnedGames.splice(gameIndex, 1);
             showToast('Game unpinned!');
         }
-        
-        // Update localStorage
+
         localStorage.setItem('pinnedGames', JSON.stringify(window.pinnedGames));
-        
-        // Force a re-render of both pinned and regular games sections
+
         updateDisplay();
-        
-        return false; // Prevent context menu
+
+        return false; 
     }
 
     function showToast(message) {
@@ -740,7 +807,7 @@
         toast.className = 'toast';
         toast.textContent = message;
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.classList.add('show');
             setTimeout(() => {
@@ -755,19 +822,17 @@
         const searchTerm = searchInput.value.trim().toLowerCase();
 
         if (!searchTerm) {
-            filteredGames = games; // Show all games if search is empty
+            filteredGames = games; 
         } else {
             filteredGames = games.filter(game => 
                 game.title.toLowerCase().includes(searchTerm)
             );
         }
 
-        currentPage = 1; // Reset to first page when searching
+        currentPage = 1; 
         updateDisplay();
     }
 
-
-    // Remove the old debounce listener and add enter key listener
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
             searchGames();
@@ -804,14 +869,13 @@
 
     async function handleGameClick(event, title, path) {
         event.preventDefault();
-        
+
         try {
-            // Update last played game in stats
+
             let stats = JSON.parse(localStorage.getItem('siteStats') || '{}');
             stats.lastGame = title;
             localStorage.setItem('siteStats', JSON.stringify(stats));
 
-            // Just redirect to the game
             window.location.href = `display.php?game=${path}&title=${encodeURIComponent(title)}`;
         } catch (error) {
             console.error('Error:', error);
@@ -820,7 +884,7 @@
     }
 
     function updateDisplay() {
-        // Update pinned games section
+
         const pinnedGamesSection = document.getElementById('pinnedGamesSection');
         if (window.pinnedGames.length > 0) {
             pinnedGamesSection.innerHTML = `
@@ -834,32 +898,28 @@
             pinnedGamesSection.style.display = 'none';
         }
 
-        // Update regular games section
         const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
         const endIndex = startIndex + GAMES_PER_PAGE;
         const gamesSubset = filteredGames.slice(startIndex, endIndex);
-        
+
         const gamesGrid = document.getElementById('gamesGrid');
         gamesGrid.innerHTML = createGameCards(gamesSubset);
-        
+
         updatePagination();
     }
 
     function updatePagination() {
         const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
         const pagination = document.querySelector('.pagination');
-        
-        // Clear existing pagination
+
         pagination.innerHTML = '';
 
-        // Create "Previous" button
         const prevButton = document.createElement('button');
         prevButton.textContent = '←';
         prevButton.disabled = currentPage === 1;
         prevButton.addEventListener('click', () => changePage('prev'));
         pagination.appendChild(prevButton);
 
-        // Create page number buttons
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('button');
             pageButton.textContent = i;
@@ -870,7 +930,6 @@
             pagination.appendChild(pageButton);
         }
 
-        // Create "Next" button
         const nextButton = document.createElement('button');
         nextButton.textContent = '→';
         nextButton.disabled = currentPage === totalPages;
@@ -880,7 +939,7 @@
 
     function changePage(page) {
         const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
-        
+
         if (page === 'prev') {
             currentPage = Math.max(1, currentPage - 1);
         } else if (page === 'next') {
@@ -891,15 +950,12 @@
             console.error('Invalid page number:', page);
             return;
         }
-        
-        // Scroll to top of games grid
+
         document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
-        
-        // Update display with new page
+
         updateDisplay();
     }
 
-    // Initial display
     updateDisplay();
     </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -916,4 +972,4 @@
         </div>
     </footer>
 </body>
-</html> 
+</html>

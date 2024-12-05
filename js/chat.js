@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Connect to WebSocket server through the proxy
+
     const socket = io('https://projectvoid.is-not-a.dev', {
         path: '/socket.io/'
     });
 
-    // Chat elements
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendMessage');
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatUsername = document.getElementById('chatUsername');
     const chatProfileImage = document.getElementById('chatProfileImage');
 
-    // Admin UI elements
     const adminButton = document.getElementById('adminButton');
     const adminModal = document.getElementById('adminModal');
     const adminLoginBtn = document.getElementById('adminLoginBtn');
@@ -23,24 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const lockChatBtn = document.getElementById('lockChatBtn');
     const filterToggleBtn = document.getElementById('filterToggleBtn');
 
-    // State variables
     let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
     let isAnonymous = isAdmin;
     let isIdle = false;
     let lastMessageCount = 0;
     const displayedMessages = new Set();
-    const MAX_MESSAGE_LENGTH = 500; // Adjust this number as needed
+    const MAX_MESSAGE_LENGTH = 500; 
     let userIsScrolling = false;
     let isChatLocked = false;
     let replyingTo = null;
 
-    // Get user data from siteStats
     function getUserData() {
         const stats = JSON.parse(localStorage.getItem('siteStats')) || {
             username: 'Guest',
             profilePicture: 'images/favicon.png'
         };
-        
+
         return {
             username: isAdmin ? 'Owner' : stats.username,
             profileImage: stats.profilePicture,
@@ -51,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let userData = getUserData();
 
-    // Update profile display
     function updateUserDisplay() {
         chatUsername.textContent = userData.username;
         chatProfileImage.src = userData.profileImage;
@@ -59,16 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateUserDisplay();
 
-    // Function to update admin UI
     function updateAdminUI() {
         adminControls.style.display = isAdmin ? 'flex' : 'none';
         adminButton.style.display = isAdmin ? 'none' : 'block';
     }
 
-    // Initialize admin UI
     updateAdminUI();
 
-    // Update chat display without repeating messages
     function updateChat(messages) {
         if (messages.length === 0 && chatMessages.children.length > 0) {
             chatMessages.innerHTML = '';
@@ -98,14 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if ((wasAtBottom || !userIsScrolling) && messages.length > lastMessageCount) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        
+
         lastMessageCount = messages.length;
     }
 
-    // Add a single message
     function addMessage(data) {
         const messageDiv = document.createElement('div');
-        
+
         if (data.deleted) {
             messageDiv.className = 'message deleted';
             messageDiv.dataset.timestamp = data.timestamp;
@@ -117,10 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.appendChild(messageDiv);
             return;
         }
-        
+
         messageDiv.className = `message ${data.userData?.isAdmin ? 'admin-message' : ''} ${data.system ? 'system-message' : ''}`;
         messageDiv.dataset.timestamp = data.timestamp;
-        
+
         if (data.system) {
             messageDiv.innerHTML = `
                 <div class="message-content">
@@ -153,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Add new function to handle reply indicator
     function updateReplyIndicator() {
         let indicator = document.querySelector('.reply-indicator');
         if (!indicator) {
@@ -161,15 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
             indicator.className = 'reply-indicator';
             document.querySelector('.chat-input').prepend(indicator);
         }
-        
+
         if (replyingTo) {
             indicator.innerHTML = `
                 Replying to ${replyingTo.username}
                 <button class="cancel-reply">×</button>
             `;
             indicator.style.display = 'flex';
-            
-            // Add cancel handler
+
             indicator.querySelector('.cancel-reply').addEventListener('click', () => {
                 replyingTo = null;
                 messageInput.placeholder = 'Type your message...';
@@ -180,14 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add message cooldown
     let lastMessageTime = 0;
-    const COOLDOWN_TIME = 2500; // 2.5 seconds in milliseconds
+    const COOLDOWN_TIME = 2500; 
 
-    // Update your send message function
     async function sendMessage() {
         if (isChatLocked && !isAdmin) return;
-        
+
         const now = Date.now();
         if (now - lastMessageTime < COOLDOWN_TIME) {
             const remainingTime = ((COOLDOWN_TIME - (now - lastMessageTime)) / 1000).toFixed(1);
@@ -201,13 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const content = messageInput.value.trim();
         if (!content || content.length > MAX_MESSAGE_LENGTH) return;
-        
+
         socket.emit('send_message', {
             content,
             userData: getUserData(),
             replyTo: replyingTo
         });
-        
+
         messageInput.value = '';
         lastMessageTime = now;
         replyingTo = null;
@@ -215,23 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         messageInput.placeholder = 'Type your message...';
     }
 
-    // Update online users list
     function updateOnlineUsers(users) {
         const usersList = document.getElementById('onlineUsers');
         usersList.innerHTML = '';
-        
-        // Sort users: admins first, then alphabetically by username
+
         const sortedUsers = users.sort((a, b) => {
             if (a.isAdmin !== b.isAdmin) {
                 return b.isAdmin ? 1 : -1;
             }
             return a.username.localeCompare(b.username);
         });
-        
+
         sortedUsers.forEach(user => {
             const userDiv = document.createElement('div');
             userDiv.className = `user-item ${user.isAdmin ? 'admin-user' : ''}`;
-            
+
             userDiv.innerHTML = `
                 <img src="${user.profileImage}" alt="Avatar">
                 <div class="user-info">
@@ -240,12 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
-            
+
             usersList.appendChild(userDiv);
         });
     }
 
-    // Socket event handlers
     socket.on('connect', () => {
         console.log('Connected to chat server');
         socket.emit('user_update', getUserData());
@@ -255,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.innerHTML = '';
         displayedMessages.clear();
         lastMessageCount = 0;
-        
+
         messages.forEach(message => {
             addMessage(message);
             displayedMessages.add(message.timestamp);
@@ -275,10 +259,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    socket.on('chat_cleared', () => {
+    socket.on('chat_cleared', (resetMessage) => {
         chatMessages.innerHTML = '';
         displayedMessages.clear();
         lastMessageCount = 0;
+
+        if (resetMessage) {
+            addSystemMessage(resetMessage.content);
+            displayedMessages.add(resetMessage.timestamp);
+        }
     });
 
     socket.on('message_deleted', ({ oldTimestamp, message }) => {
@@ -298,14 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateChatLockUI();
     });
 
-    // Helper function to generate userId
     function generateUserId() {
         const userId = 'user_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('userId', userId);
         return userId;
     }
 
-    // Helper function to escape HTML
     function escapeHtml(unsafe) {
         return unsafe
             .replace(/&/g, "&amp;")
@@ -315,7 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, "&#039;");
     }
 
-    // Event listeners
     sendButton.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -324,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Admin event listeners
     adminButton.addEventListener('click', () => {
         console.log('Admin button clicked');
         if (!isAdmin) {
@@ -340,10 +325,9 @@ document.addEventListener('DOMContentLoaded', () => {
     adminLoginBtn.addEventListener('click', () => {
         const username = document.getElementById('adminUser').value;
         const password = document.getElementById('adminPass').value;
-        
+
         console.log('Attempting admin login with username:', username);
-        
-        // Send credentials through socket
+
         socket.emit('verify_admin', { username, password });
     });
 
@@ -371,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('toggle_chat_lock', !isChatLocked);
     });
 
-    // Add socket listener for filter status
     socket.on('filter_status', (status) => {
         isFilterEnabled = status;
         if (filterToggleBtn) {
@@ -379,25 +362,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add this to your CSS first:
     function addStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            /* Update chat container and sidebar styles */
+
             .chat-sidebar {
                 display: flex;
                 flex-direction: column;
                 height: 100%;
-                overflow: hidden; /* Add this */
+                overflow: hidden; 
             }
 
-            /* Fix user profile section */
             .user-profile {
                 flex-shrink: 0;
                 margin-bottom: 1rem;
             }
 
-            /* Fix online users container */
             #onlineUsers {
                 flex: 1;
                 overflow-y: auto;
@@ -405,10 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 flex-direction: column;
                 gap: 0.5rem;
                 padding-right: 0.5rem;
-                min-height: 0; /* Critical for flex overflow */
+                min-height: 0; 
             }
 
-            /* Ensure user items don't grow */
             .user-item {
                 flex-shrink: 0;
                 display: flex;
@@ -421,7 +400,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 min-height: 42px;
             }
 
-            /* Message styling */
             .message-content {
                 display: flex;
                 flex-direction: column;
@@ -432,17 +410,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                gap: 12px;  /* Space between username and timestamp */
+                gap: 12px;  
             }
 
             .message-time {
                 color: #00000;
                 font-size: 0.75rem;
-                margin-left: auto;  /* Push timestamp to the right */
+                margin-left: auto;  
             }
 
             .message-text {
-                margin-top: 2px;  /* Space between header and message text */
+                margin-top: 2px;  
             }
 
             ${style.textContent}
@@ -450,10 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.head.appendChild(style);
     }
 
-    // Call this when the page loads
     addStyles();
 
-    // Add this function to update user status periodically
     setInterval(() => {
         socket.emit('user_update', {
             ...getUserData(),
@@ -462,14 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 30000);
 
-    // Add visibility change detection
     document.addEventListener('visibilitychange', () => {
         isIdle = document.hidden;
-        updateUserStatus(); // Update status immediately when changing tabs
-        updateStatusBadge(); // Update the status badge under username
+        updateUserStatus(); 
+        updateStatusBadge(); 
     });
 
-    // Add status badge update function
     function updateStatusBadge() {
         const statusBadge = document.querySelector('.status-badge');
         if (statusBadge) {
@@ -478,46 +452,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update the message input handler
     messageInput.addEventListener('input', () => {
         if (messageInput.value.length > MAX_MESSAGE_LENGTH) {
             messageInput.value = messageInput.value.substring(0, MAX_MESSAGE_LENGTH);
         }
     });
 
-    // Add scroll detection
     chatMessages.addEventListener('scroll', () => {
         userIsScrolling = true;
-        // Reset the flag after user stops scrolling for 2 seconds
+
         clearTimeout(window.scrollTimeout);
         window.scrollTimeout = setTimeout(() => {
             userIsScrolling = false;
         }, 2000);
     });
 
-    // Add this function to update the UI
     function updateChatLockUI() {
         const canChat = isAdmin || !isChatLocked;
         messageInput.disabled = !canChat;
         sendButton.disabled = !canChat;
-        
-        // Update button text
+
         if (lockChatBtn) {
             lockChatBtn.textContent = isChatLocked ? 'Unlock Chat' : 'Lock Chat';
         }
-        
-        // Update input placeholder
+
         messageInput.placeholder = !canChat ? 'Chat is locked by admin' : 'Type your message...';
     }
 
-    // Add cooldown UI elements to the chat input area
     function addCooldownUI() {
         const style = document.createElement('style');
         style.textContent = `
             .chat-input {
                 position: relative;
             }
-            
+
             .cooldown-overlay {
                 position: absolute;
                 bottom: 100%;
@@ -532,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: 0;
                 transition: opacity 0.2s;
             }
-            
+
             .cooldown-overlay.active {
                 opacity: 1;
             }
@@ -545,10 +513,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return cooldownOverlay;
     }
 
-    // Initialize cooldown UI
     const cooldownOverlay = addCooldownUI();
 
-    // Add these event listeners to track user activity
     document.addEventListener('mousemove', updateUserActivity);
     document.addEventListener('keydown', updateUserActivity);
     document.addEventListener('click', updateUserActivity);
@@ -559,24 +525,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Send periodic updates more frequently
     setInterval(() => {
         if (socket) {
             socket.emit('user_update', getUserData());
         }
-    }, 1000); // Update every second
+    }, 1000); 
 
-    // Add socket listener for system messages
     socket.on('system_message', (message) => {
         addSystemMessage(message.content);
     });
 
-    // Add this function near your other utility functions
     function updateUserStatus() {
         socket.emit('user_update', getUserData());
     }
 
-    // Add socket listener for admin verification response
     socket.on('admin_verified', (data) => {
         console.log('Received admin verification response:', data);
         if (data.success) {
@@ -593,7 +555,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add this after your existing event listeners
     document.querySelectorAll('.emoji-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const emoji = btn.textContent;
@@ -601,17 +562,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const start = input.selectionStart;
             const end = input.selectionEnd;
             const text = input.value;
-            
-            // Insert emoji at cursor position
+
             input.value = text.substring(0, start) + emoji + text.substring(end);
-            
-            // Move cursor after emoji
+
             input.selectionStart = input.selectionEnd = start + emoji.length;
             input.focus();
         });
     });
 
-    // Add this helper function
     function updateDeletedMessage(timestamp, content) {
         const messageDiv = document.querySelector(`[data-timestamp="${timestamp}"]`);
         if (messageDiv) {
@@ -624,48 +582,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add socket listener for deleted messages
     socket.on('message_deleted', ({ timestamp, content }) => {
         updateDeletedMessage(timestamp, content);
     });
 
-    // Add socket listener for chat lock status
     socket.on('chat_lock_status', (status) => {
         isChatLocked = status;
         updateChatLockUI();
     });
 
-    // Add this function near your other message-related functions
     function addSystemMessage(content) {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message system-message';
         messageDiv.dataset.timestamp = new Date().toISOString();
-        
+
         messageDiv.innerHTML = `
             <div class="message-content">
                 <span class="message-text">${content}</span>
             </div>
         `;
-        
+
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        
-        // Add to displayed messages set to prevent duplicates
+
         displayedMessages.add(messageDiv.dataset.timestamp);
     }
 
-    // Update the chat_reset socket listener
-    socket.on('chat_reset', (data) => {
-        // Always clear existing messages when receiving a chat reset
+    const timerDisplay = document.getElementById('chatResetTimer');
+
+    socket.on('timer_update', (seconds) => {
+        updateTimerDisplay(seconds);
+    });
+
+    function updateTimerDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        timerDisplay.textContent = `Chat Reset: ${minutes}m ${remainingSeconds}s`;
+    }
+
+    socket.on('chat_cleared', (resetMessage) => {
         chatMessages.innerHTML = '';
         displayedMessages.clear();
         lastMessageCount = 0;
-        
-        // Add the new system message
-        if (data.message) {
-            addMessage(data.message);
-            displayedMessages.add(data.message.timestamp);
-            lastMessageCount = 1;
+
+        if (resetMessage) {
+            addSystemMessage(resetMessage.content);
+            displayedMessages.add(resetMessage.timestamp);
         }
     });
 });

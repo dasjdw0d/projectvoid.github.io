@@ -40,10 +40,10 @@
     <main>
         <div class="update-container">
             <h1 class="update-title">Update Log</h1>
-            
+
             <div class="update-list">
                 <?php
-                // Updates array - newest updates at the top
+
                 $updates = [
                     [
                         'date' => 'December 5, 2024',
@@ -53,6 +53,23 @@
                             'Major Changes' => [
                                 'Added a 7-Day Online Users graph on the home page. All data comes from Google Analytics.',
                                 'Added a Contact Form on the forms page.',
+                                'Added a chat reset timer to the chat room.',
+                            ],
+                            'Game Updates' => [
+                                'Added Merge Round Racers',
+                                'Added Bloxorz',
+                                'Added Backrooms',
+                                'Added Glass City',
+                                'Added Cookie Clicker',
+                                'Added Burrito Bison',
+                                'Added Backrooms',
+                                'Added Aqua Park',
+                                'Added Townscaper',
+                                'Added Boxing Random',
+                                'Added Big Red Button',
+                                'Added Cell machine',
+                                'Added Break Lock',
+
                             ],
                         ]
                     ],
@@ -74,7 +91,7 @@
                             'Removals' => [
                                 'The most played games ranking on the home page has been removed.',
                             ],
-                            'Bug FIxed' => [
+                            'Bug Fixes' => [
                                 'Fixed the online counter on the home page staying in the same place when scrolling.',
                                 'Fixed spelling errros across the site.',
                             ]
@@ -220,7 +237,6 @@
                     ],
                 ];
 
-                // Loop through and display updates
                 foreach ($updates as $update) {
                     echo '<div class="update-entry">
                         <div class="update-header">
@@ -229,18 +245,18 @@
                         </div>
                         <div class="update-content">
                             <h3>' . $update['title'] . '</h3>';
-                    
+
                     foreach ($update['changes'] as $section => $changes) {
                         echo '<h4 class="update-section">' . $section . '</h4>
                               <ul>';
-                        
+
                         foreach ($changes as $change) {
                             echo '<li>' . $change . '</li>';
                         }
-                        
+
                         echo '</ul>';
                     }
-                    
+
                     echo '</div></div>';
                 }
                 ?>
@@ -262,4 +278,4 @@
     <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
 </body>
-</html> 
+</html>

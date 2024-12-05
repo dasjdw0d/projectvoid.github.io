@@ -1,4 +1,3 @@
-// Add this validation function at the top
 function validateUsername(username) {
     const trimmed = username.trim();
     if (trimmed.length === 0) return false;
@@ -8,14 +7,13 @@ function validateUsername(username) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Get stored stats first
+
     let stats = JSON.parse(localStorage.getItem('siteStats'));
-    
-    // If no stats exist, create them and save immediately
+
     if (!stats) {
         const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];  // Gets current date in YYYY-MM-DD format
-        
+        const formattedDate = today.toISOString().split('T')[0];  
+
         stats = {
             VISITS: 1,
             username: 'Guest',
@@ -25,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         localStorage.setItem('siteStats', JSON.stringify(stats));
     } else {
-        // Only increment visits if we're specifically on index.html
+
         const currentPath = window.location.pathname;
         if (currentPath === '/index.php' || currentPath.endsWith('/projectvoid/index.php')) {
             stats.VISITS++;
@@ -33,41 +31,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Only try to update elements if they exist
     const visitCount = document.getElementById('visitCount');
     const lastGameDisplay = document.getElementById('lastGameDisplay');
     const usernameDisplay = document.getElementById('usernameDisplay');
     const profileImage = document.getElementById('profileImage');
     const dateCreated = document.getElementById('dateCreated');
     const totalPlayTime = document.getElementById('totalPlayTime');
-    
-    // Initialize display with "Loading..." only if elements exist
+
     if (visitCount) visitCount.textContent = "Loading...";
     if (lastGameDisplay) lastGameDisplay.textContent = "Loading...";
-    
-    // Update display after a short delay to show loading animation
+
     setTimeout(() => {
         if (visitCount) {
             visitCount.textContent = stats.VISITS > 0 ? stats.VISITS.toLocaleString() : 'N/A';
         }
-        
+
         if (usernameDisplay) {
             usernameDisplay.textContent = stats.username;
         }
-        
+
         if (lastGameDisplay) {
             lastGameDisplay.textContent = stats.lastGame || 'N/A';
         }
-        
+
         if (profileImage) {
             profileImage.src = stats.profilePicture;
-            
-            // Add click handler for profile image
+
             profileImage.addEventListener('click', function() {
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = 'image/*';
-                
+
                 input.onchange = e => {
                     const file = e.target.files[0];
                     if (file) {
@@ -80,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         reader.readAsDataURL(file);
                     }
                 };
-                
+
                 input.click();
             });
         }
-        
+
         if (dateCreated) {
             dateCreated.textContent = stats.dateCreated ? 
                 new Date(stats.dateCreated + 'T12:00:00').toLocaleDateString('en-US', {
@@ -94,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }) : 
                 'N/A';
         }
-        
+
         if (totalPlayTime) {
             if (!stats.totalPlayTime && stats.totalPlayTime !== 0) {
                 totalPlayTime.textContent = 'N/A';
@@ -107,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 500);
 
-    // Only set up event listeners if elements exist
     const clearDataBtn = document.getElementById('clearDataBtn');
     if (clearDataBtn) {
         clearDataBtn.addEventListener('click', function() {
@@ -143,10 +136,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Update the updateLastGame function
 function updateLastGame(gameName) {
     let stats = JSON.parse(localStorage.getItem('siteStats'));
-    
+
     if (!stats) {
         stats = {
             VISITS: 1,
@@ -158,16 +150,15 @@ function updateLastGame(gameName) {
     } else {
         stats.lastGame = gameName;
     }
-    
+
     localStorage.setItem('siteStats', JSON.stringify(stats));
-    
+
     const lastGameDisplay = document.getElementById('lastGameDisplay');
     if (lastGameDisplay) {
         lastGameDisplay.textContent = gameName;
     }
 }
 
-// Add this helper function at the top of your file
 function forceReload() {
     setTimeout(() => {
         window.location.reload();

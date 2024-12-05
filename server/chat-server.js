@@ -22,12 +22,13 @@ app.use(cors({
     methods: ['GET', 'POST'],
     credentials: true
 }));
-app.use(express.json());  // This is important for parsing JSON requests
+app.use(express.json());  
 
-// Add these constants at the top
 const MESSAGES_FILE = path.join(__dirname, 'chat_messages.json');
 
-// Function to load messages from file
+let resetTimer = 1800; 
+let timerInterval;
+
 function loadMessages() {
     try {
         if (fs.existsSync(MESSAGES_FILE)) {
@@ -40,7 +41,6 @@ function loadMessages() {
     return [];
 }
 
-// Function to save messages to file
 function saveMessages() {
     try {
         fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages), 'utf8');
@@ -49,42 +49,35 @@ function saveMessages() {
     }
 }
 
-// Initialize messages from file
-const messages = [];  // Just use an in-memory array
+const messages = [];  
 
-// Store messages and users (change Map key to userId instead of socketId)
-const users = new Map(); // Key: userId, Value: {socketIds: Set, userData, lastSeen}
+const users = new Map(); 
 
-// Add at the top with other state variables
 let isChatLocked = false;
 
-// Add these constants at the top with your other constants
 const MAX_MESSAGE_LENGTH = 500;
 
-// Add this function near the top with your other helper functions
 function validateUserData(userData) {
-    // Return a sanitized copy of the user data
+
     return {
         username: userData.username ? sanitizeHtml(userData.username) : 'Guest',
-        profileImage: userData.profileImage || 'images/favicon.png',  // Changed from profilePicture to profileImage
-        isAdmin: !!userData.isAdmin,  // Convert to boolean
+        profileImage: userData.profileImage || 'images/favicon.png',  
+        isAdmin: !!userData.isAdmin,  
         userId: userData.userId || ''
     };
 }
 
-// Add this function to check for valid characters
 function containsInvalidCharacters(text) {
-    // Only allow: letters, numbers, basic punctuation, and common symbols
+
     const validPattern = /^[a-zA-Z0-9\s.,!?'"()\-_@#$%&*+= ]+$/;
     return !validPattern.test(text);
 }
 
-// Enhanced sensitive info filter
 function containsSensitiveInfo(text) {
-    // First, normalize the text more aggressively
+
     const normalizedText = text
         .toLowerCase()
-        // Replace common number/letter substitutions
+
         .replace(/0/g, 'o')
         .replace(/1/g, 'i')
         .replace(/2/g, 'z')
@@ -101,49 +94,39 @@ function containsSensitiveInfo(text) {
         .replace(/[òóôõö]/g, 'o')
         .replace(/[ùúûü]/g, 'u')
         .replace(/[ýÿ]/g, 'y')
-        // Remove all non-alphanumeric characters
+
         .replace(/[^a-z0-9]/g, '');
-    
-    // Also create a reversed version to catch reversed text
+
     const reversedText = normalizedText.split('').reverse().join('');
-    
-    // Define sensitive patterns (using normalized text)
+
     const sensitivePatterns = [
-        // Simple "joe" variations
-        /j[o0][e3]/i,            // Matches joe, j0e, jo3, j03
-        /[e3][o0]j/i,            // Matches reversed joe
-        
-        // Name variations for Joseph/Joey
-        /j[o0][es][ey]p*h*/i,    // Matches joseph, joesph, etc
-        /j[o0][es3][ey]/i,       // Matches joey, josey, jo3y
-        /dz[o0][es3][ey]/i,      // Matches reversed joey
-        
-        // Lentz variations
-        /l[e3]n[t7]*[sz2]*/i,    // Matches lentz, l3ntz, lentzz
-        /[sz2][t7]n[e3]l/i,      // Matches reversed lentz
-        
-        // Full name combinations
-        /j[o0][es][ey]p*h*\s*l[e3]n[t7]*[sz2]*/i,  // Joseph Lentz variations
-        /j[o0][es3][ey]\s*l[e3]n[t7]*[sz2]*/i,      // Joey Lentz variations
-        
-        // Additional names
-        /g[a4][i1]l/i,           // Matches gail
-        /br[i1][a4]n/i,          // Matches brian
-        
-        // Full name combinations for additional names
-        /g[a4][i1]l\s*l[e3]n[t7]*[sz2]*/i,  // Gail Lentz variations
-        /br[i1][a4]n\s*l[e3]n[t7]*[sz2]*/i,  // Brian Lentz variations
-        
-        // Catch common misspellings and variations
-        /j[o0]s[e3]ph[i1]n[e3]/i,  // Matches josephine
-        /j[o0][e3][ui]/i,          // Matches joeu
-        
-        // Additional patterns for reversed names
-        /l[i1][a4]g/i,            // Reversed gail
-        /n[a4][i1]rb/i            // Reversed brian
+
+        /j[o0][e3]/i,            
+        /[e3][o0]j/i,            
+
+        /j[o0][es][ey]p*h*/i,    
+        /j[o0][es3][ey]/i,       
+        /dz[o0][es3][ey]/i,      
+
+        /l[e3]n[t7]*[sz2]*/i,    
+        /[sz2][t7]n[e3]l/i,      
+
+        /j[o0][es][ey]p*h*\s*l[e3]n[t7]*[sz2]*/i,  
+        /j[o0][es3][ey]\s*l[e3]n[t7]*[sz2]*/i,      
+
+        /g[a4][i1]l/i,           
+        /br[i1][a4]n/i,          
+
+        /g[a4][i1]l\s*l[e3]n[t7]*[sz2]*/i,  
+        /br[i1][a4]n\s*l[e3]n[t7]*[sz2]*/i,  
+
+        /j[o0]s[e3]ph[i1]n[e3]/i,  
+        /j[o0][e3][ui]/i,          
+
+        /l[i1][a4]g/i,            
+        /n[a4][i1]rb/i            
     ];
 
-    // Check both original, normalized, and reversed text
     return sensitivePatterns.some(pattern => 
         pattern.test(normalizedText) || 
         pattern.test(reversedText) ||
@@ -151,17 +134,14 @@ function containsSensitiveInfo(text) {
     );
 }
 
-// Simplified filterMessage function
 async function filterMessage(text) {
-    return text;  // Now just returns the original text without filtering
+    return text;  
 }
 
-// Clear existing messages and add initial system message ONLY when server starts
 function initializeChat() {
-    // Clear all messages when server starts
+
     messages.length = 0;
-    
-    // Add initial system message
+
     const systemMessage = {
         content: 'Chat room has started',
         timestamp: new Date().toISOString(),
@@ -169,8 +149,7 @@ function initializeChat() {
     };
     messages.push(systemMessage);
     saveMessages();
-    
-    // Broadcast to all connected clients
+
     if (io) {
         io.emit('chat_reset', {
             message: systemMessage
@@ -178,23 +157,48 @@ function initializeChat() {
     }
 }
 
-// Call initialization when server starts
 initializeChat();
+
+function startGlobalTimer() {
+    clearInterval(timerInterval);
+    resetTimer = 1800; 
+
+    timerInterval = setInterval(() => {
+        resetTimer--;
+        io.emit('timer_update', resetTimer);
+
+        if (resetTimer <= 0) {
+
+            messages.length = 0;
+
+            const resetMessage = {
+                content: 'Chat has been reset',
+                timestamp: new Date().toISOString(),
+                system: true
+            };
+            messages.push(resetMessage);
+
+            io.emit('chat_cleared', resetMessage);
+            resetTimer = 1800; 
+            io.emit('timer_update', resetTimer); 
+        }
+    }, 1000);
+}
+
+startGlobalTimer();
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Send existing messages to newly connected client
+    socket.emit('timer_update', resetTimer);
     socket.emit('load_messages', messages);
     socket.emit('chat_lock_status', isChatLocked);
 
-    // Handle new messages
     socket.on('send_message', async (data) => {
         if (!data.content || data.content.length > MAX_MESSAGE_LENGTH) {
             return;
         }
-        
-        // Check for invalid characters
+
         if (containsInvalidCharacters(data.content)) {
             const systemMessage = {
                 content: 'Message blocked: Contains invalid characters',
@@ -205,8 +209,7 @@ io.on('connection', (socket) => {
             io.emit('new_message', systemMessage);
             return;
         }
-        
-        // Check for sensitive information
+
         if (containsSensitiveInfo(data.content)) {
             const systemMessage = {
                 content: 'Message blocked: Contains filtered content',
@@ -217,36 +220,33 @@ io.on('connection', (socket) => {
             io.emit('new_message', systemMessage);
             return;
         }
-        
-        // Continue with existing message processing
+
         const sanitizedContent = sanitizeHtml(data.content);
-        
+
         const message = {
             content: sanitizedContent,
             userData: validateUserData(data.userData),
             timestamp: new Date().toISOString()
         };
         messages.push(message);
-        
+
         io.emit('new_message', message);
     });
 
-    // Rest of your socket event handlers...
     socket.on('user_update', (userData) => {
         if (!userData || !userData.userId) return;
 
         const validatedData = validateUserData(userData);
         const userId = validatedData.userId;
 
-        // Get or create user entry
         let userEntry = users.get(userId);
         if (userEntry) {
-            // Update existing user
+
             userEntry.socketIds.add(socket.id);
             userEntry.userData = validatedData;
             userEntry.lastSeen = Date.now();
         } else {
-            // Create new user entry
+
             userEntry = {
                 socketIds: new Set([socket.id]),
                 userData: validatedData,
@@ -255,7 +255,6 @@ io.on('connection', (socket) => {
             users.set(userId, userEntry);
         }
 
-        // Emit unique users list
         const uniqueUsers = Array.from(users.values()).map(user => ({
             userData: user.userData
         }));
@@ -268,10 +267,10 @@ io.on('connection', (socket) => {
             timestamp: new Date().toISOString(),
             system: true
         };
-        
+
         messages.length = 0;
         messages.push(systemMessage);
-        
+
         io.emit('chat_cleared');
         io.emit('new_message', systemMessage);
     });
@@ -285,7 +284,7 @@ io.on('connection', (socket) => {
                 system: true
             };
             messages[messageIndex] = systemMessage;
-            
+
             io.emit('message_deleted', { 
                 oldTimestamp: timestamp,
                 message: systemMessage 
@@ -293,30 +292,28 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle chat lock toggle
     socket.on('toggle_chat_lock', (status) => {
         if (isChatLocked !== status) {
             isChatLocked = status;
-            
+
             const systemMessage = {
                 content: status ? 'Chat has been locked by admin' : 'Chat has been unlocked by admin',
                 timestamp: new Date().toISOString(),
                 system: true
             };
-            
+
             messages.push(systemMessage);
             io.emit('new_message', systemMessage);
             io.emit('chat_lock_status', isChatLocked);
         }
     });
 
-    // Handle disconnection
     socket.on('disconnect', () => {
-        // Find and update the user that owns this socket
+
         for (const [userId, user] of users.entries()) {
             if (user.socketIds.has(socket.id)) {
                 user.socketIds.delete(socket.id);
-                // Remove user only if they have no active connections
+
                 if (user.socketIds.size === 0) {
                     users.delete(userId);
                 }
@@ -324,7 +321,6 @@ io.on('connection', (socket) => {
             }
         }
 
-        // Emit updated users list
         const uniqueUsers = Array.from(users.values()).map(user => ({
             userData: user.userData
         }));
@@ -332,53 +328,54 @@ io.on('connection', (socket) => {
         console.log('User disconnected:', socket.id);
     });
 
-    // Inside your io.on('connection') handler
     socket.on('verify_admin', async (credentials) => {
         try {
             const { username, password } = credentials;
-            console.log('Admin login attempt received'); // Don't log credentials
-            
-            // Check username hash
+            console.log('Admin login attempt received'); 
+
             const usernameMatch = await bcrypt.compare(username, process.env.ADMIN_USERNAME_HASH);
             if (!usernameMatch) {
                 console.log('Username mismatch');
                 socket.emit('admin_verified', { success: false });
                 return;
             }
-            
-            // Verify password hash
+
             const passwordMatch = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
             if (!passwordMatch) {
                 console.log('Password mismatch');
                 socket.emit('admin_verified', { success: false });
                 return;
             }
-            
+
             console.log('Admin verified successfully');
             socket.emit('admin_verified', { success: true });
         } catch (error) {
             console.error('Admin verification error:', error);
-            console.error('Error details:', error.message);
             socket.emit('admin_verified', { success: false });
         }
     });
 
-    // Add this new event listener
     socket.on('chat_reset', () => {
-        // Clear messages on client side
-        socket.emit('chat_cleared');
-        // Send the new initial message
-        socket.emit('new_message', messages[0]);
+
+        messages.length = 0; 
+
+        const resetMessage = {
+            content: 'Chat has been reset',
+            timestamp: new Date().toISOString(),
+            system: true
+        };
+
+        io.emit('chat_cleared');
+        io.emit('new_message', resetMessage);
     });
 });
 
-// Clean up inactive users and update more frequently
 setInterval(() => {
     const now = Date.now();
     let updated = false;
 
     for (const [userId, user] of users.entries()) {
-        if (now - user.lastSeen > 30000) { // 30 seconds
+        if (now - user.lastSeen > 30000) { 
             users.delete(userId);
             updated = true;
         }
@@ -390,7 +387,7 @@ setInterval(() => {
         }));
         io.emit('users_update', uniqueUsers);
     }
-}, 1000); // Check every second
+}, 1000); 
 
 http.listen(3000, () => {
     console.log('Chat server running on port 3000');

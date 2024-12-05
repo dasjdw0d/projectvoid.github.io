@@ -1,10 +1,9 @@
 <?php
-// Load environment variables from /var/www/.env
+
 $env = parse_ini_file('/var/www/.env');
 $admin_username_hash = $env['ADMIN_USERNAME_HASH'];
 $admin_password_hash = $env['ADMIN_PASSWORD_HASH'];
 
-// API endpoint for getting announcement
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_announcement') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -14,12 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     exit;
 }
 
-// API endpoint for updating announcement
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // Handle login request
     if (isset($data['username'])) {
         if (password_verify($data['username'], $admin_username_hash) && 
             password_verify($data['password'], $admin_password_hash)) {
@@ -32,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Handle flash mode toggle
     if (isset($data['action']) && $data['action'] === 'toggle_flash') {
         session_start();
         if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
@@ -40,15 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Toggle flash mode in .env file
         $envContent = parse_ini_file('/var/www/.env');
         $envContent['FLASH_MODE_ACTIVE'] = $data['active'] ? 'true' : 'false';
-        
+
         $envText = '';
         foreach ($envContent as $key => $value) {
             $envText .= "{$key}=\"{$value}\"\n";
         }
-        
+
         if (file_put_contents('/var/www/.env', $envText) !== false) {
             echo json_encode(['success' => true]);
         } else {
@@ -57,23 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Handle announcement update (regular POST without action)
     session_start();
     if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
     }
 
-    // Update announcement in .env file
     $envContent = parse_ini_file('/var/www/.env');
     $envContent['ANNOUNCEMENT_MESSAGE'] = $data['message'] ?? '';
     $envContent['ANNOUNCEMENT_ACTIVE'] = isset($data['active']) && $data['active'] ? 'true' : 'false';
-    
+
     $envText = '';
     foreach ($envContent as $key => $value) {
         $envText .= "{$key}=\"{$value}\"\n";
     }
-    
+
     if (file_put_contents('/var/www/.env', $envText) !== false) {
         echo json_encode(['success' => true]);
     } else {
@@ -82,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// API endpoint for getting flash mode
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_flash') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -126,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                     <div id="loginStatus" class="status-message"></div>
                 </div>
             </div>
-            
+
             <div id="adminPanel" class="admin-panel" style="display: none;">
                 <h1>Admin Panel</h1>
                 <div class="admin-content">
@@ -166,13 +158,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
             const toggleFlashBtn = document.getElementById('toggleFlash');
             let isFlashActive = false;
 
-            // Check if already logged in
             if (sessionStorage.getItem('isAdmin') === 'true') {
                 loginPanel.style.display = 'none';
                 adminPanel.style.display = 'block';
             }
 
-            // Load current announcement settings
             fetch('/admin.php?action=get_announcement')
                 .then(response => response.json())
                 .then(data => {
@@ -192,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                     console.error('Failed to load announcement:', error);
                 });
 
-            // Load current flash state
             fetch('/admin.php?action=get_flash')
                 .then(response => response.json())
                 .then(data => {
@@ -315,4 +304,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
         });
     </script>
 </body>
-</html> 
+</html>
