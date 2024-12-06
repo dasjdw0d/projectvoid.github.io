@@ -207,4 +207,54 @@ input:checked + .slider:before {
 .button-group .admin-button {
     width: 100%;
     text-align: center;
-} 
+}
+
+.simulation-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.simulation-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+#simulationStatus {
+    margin-top: 0.5rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.input-group input[type="number"] {
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-green);
+    border-radius: 6px;
+    color: white !important;
+    width: 150px;
+    outline: none;
+}
+
+.input-group input[type="number"]:focus {
+    color: white !important;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-green);
+}
+
+.danger {
+    border-color: #ff4444 !important;
+    color: #ff4444 !important;
+    background: rgba(255, 68, 68, 0.1) !important;
+}
+
+.danger:hover {
+    background: rgba(255, 68, 68, 0.2) !important;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.3) !important;
+}

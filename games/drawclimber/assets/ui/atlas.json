@@ -1,0 +1,65 @@
+{
+  "frames": [
+    {
+      "filename": "audio_off",
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 128,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "audio_on",
+      "frame": {
+        "x": 131,
+        "y": 1,
+        "w": 125,
+        "h": 125
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 125
+      },
+      "sourceSize": {
+        "w": 125,
+        "h": 125
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  ],
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.6",
+    "image": "atlas.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 257,
+      "h": 130
+    },
+    "scale": 1
+  }
+}

@@ -1,21 +1,33 @@
 .games-header {
     padding: 2rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.games-header .title-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.1rem;
 }
 
 .games-header h1 {
     color: var(--neon-green);
-    font-size: 2.5rem;
+    font-size: 3.25rem;
     text-shadow: 0 0 15px var(--neon-green);
+    margin-bottom: 0.1rem;
 }
 
 .search-bar {
     display: flex;
     gap: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+    justify-content: center;
 }
 
 .search-bar input {
@@ -53,11 +65,29 @@
     background: var(--hover-bg);
 }
 
+.random-game-btn {
+    padding: 0.8rem 2.5rem;
+    background: var(--dark-bg);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    cursor: pointer;
+    font-weight: 600;
+    text-shadow: 0 0 5px var(--neon-green);
+    border-radius: 4px;
+    transition: transform var(--transition-speed) ease,
+                background var(--transition-speed) ease;
+}
+
+.random-game-btn:hover {
+    transform: scale(0.97);
+    background: var(--hover-bg);
+}
+
 .games-grid {
-    padding: 0 2rem;
+    padding: 0 4rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 180px));
+    gap: 0.7rem;
     margin-bottom: 2rem;
     justify-content: center;
 }
@@ -65,23 +95,27 @@
 .game-card {
     aspect-ratio: 1/1;
     position: relative;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
     background: var(--card-bg);
-    border: 2px solid rgb(55, 255, 20);
-    transition: transform var(--transition-speed) ease;
+    border: 2px solid rgba(55, 255, 20, 0.7);
+    transition: transform var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
 }
 
 .game-card:hover {
     transform: scale(0.96);
+    box-shadow: 0 0 20px rgb(55, 255, 20);
+    border-color: rgb(55, 255, 20);
 }
 
 .game-thumbnail {
     position: absolute;
     inset: 0;
     z-index: 1;
-    border-radius: 6px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -90,6 +124,7 @@
     height: 100%;
     object-fit: cover;
     transform: scale(1.01);
+    filter: saturate(1.3);
 }
 
 .game-thumbnail::after {
@@ -101,8 +136,8 @@
         rgba(0,0,0,0.2) 0%, 
         rgba(0,0,0,0.9) 100%
     );
-    backdrop-filter: blur(0.35px);
-    -webkit-backdrop-filter: blur(0.35px);
+    backdrop-filter: blur(0.2px);
+    -webkit-backdrop-filter: blur(0.2px);
     z-index: 2;
 }
 
@@ -170,12 +205,16 @@
 
 @media (max-width: 768px) {
     .games-header {
-        flex-direction: column;
-        align-items: stretch;
+        padding: 1.5rem 1rem;
+    }
+
+    .games-header h1 {
+        font-size: 2.6rem;
     }
 
     .search-bar {
         flex-direction: column;
+        width: 100%;
     }
 
     .search-bar input {
@@ -183,20 +222,20 @@
     }
 
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 130px));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
         padding: 0 1rem;
         justify-content: center;
     }
 
     .pin-instruction {
-        margin: -1rem 0 1rem 0;
+        margin: 0 0 1.5rem 0;
         text-align: left;
     }
 }
 
 @media (max-width: 480px) {
     .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(110px, 110px));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
         justify-content: center;
     }
 
@@ -208,9 +247,10 @@
 
 .section-title {
     color: var(--neon-green);
-    font-size: 2.5rem;
+    font-size: 3.25rem;
     text-shadow: 0 0 15px var(--neon-green);
-    padding: 2rem;
+    margin-bottom: 0.1rem;
+    padding: 0;
 }
 
 .pin-indicator {
@@ -275,5 +315,5 @@
     color: white;
     font-weight: bold;
     font-size: 1rem;
-    margin: -1.5rem 0 0 2rem;
+    margin: 0 0 1.5rem 0;
 }

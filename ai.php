@@ -13,8 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <title>Project Void - AI Chat</title>
-    <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="css/ai.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" type="text/css" href="css/styles.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" type="text/css" href="css/ai.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>

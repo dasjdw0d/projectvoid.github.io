@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Call Python script with the message
     $command = escapeshellcmd("python3 " . __DIR__ . "/handler.py " . escapeshellarg($message));
     $response = shell_exec($command);
 
@@ -19,10 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Log for debugging
     error_log("Python Response: " . $response);
 
     echo json_encode(['response' => $response]);
 } else {
     echo json_encode(['error' => 'Invalid request method']);
-} 
+}

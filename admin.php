@@ -1,4 +1,79 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
+    if (!isset($_GET['action']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" href="images/favicon.png">
+            <title>Project Void - Admin Login</title>
+            <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
+            <link rel="stylesheet" href="css/admin.css?v=<?php echo time(); ?>">
+            <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+        </head>
+        <body>
+            <div id="particles-js"></div>
+            <?php include 'loading-screen.php'; ?>
+
+            <main>
+                <div class="admin-container">
+                    <div id="loginPanel" class="admin-panel">
+                        <h1>Admin Login</h1>
+                        <div class="login-form">
+                            <input type="text" id="adminUsername" placeholder="Username" autocomplete="off">
+                            <input type="password" id="adminPassword" placeholder="Password" autocomplete="off">
+                            <button id="loginButton">Login</button>
+                            <div id="loginStatus" class="status-message"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+            <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const loginButton = document.getElementById('loginButton');
+                    const loginStatus = document.getElementById('loginStatus');
+
+                    loginButton.addEventListener('click', async () => {
+                        const username = document.getElementById('adminUsername').value;
+                        const password = document.getElementById('adminPassword').value;
+
+                        try {
+                            const response = await fetch('admin.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ username, password })
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                window.location.reload();
+                            } else {
+                                loginStatus.textContent = 'Invalid credentials';
+                                loginStatus.style.color = '#ff4444';
+                            }
+                        } catch (error) {
+                            loginStatus.textContent = 'Login failed. Please try again.';
+                            loginStatus.style.color = '#ff4444';
+                        }
+                    });
+                });
+            </script>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
+}
 
 $env = parse_ini_file('/var/www/.env');
 $admin_username_hash = $env['ADMIN_USERNAME_HASH'];
@@ -136,6 +211,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                         <h2>Flash Mode</h2>
                         <div class="flash-controls">
                             <button id="toggleFlash" class="admin-button">Enable Flash Mode</button>
+                        </div>
+                    </div>
+                    <div class="admin-section">
+                        <h2>User Simulation</h2>
+                        <div class="simulation-controls">
+                            <div class="simulation-buttons">
+                                <div class="input-group">
+                                    <input type="number" id="simulationCount" min="1" value="10" placeholder="Number of users">
+                                    <button id="simulateUsers" class="admin-button">Add Simulated Users</button>
+                                </div>
+                                <button id="clearSimulation" class="admin-button danger">Clear Simulated Users</button>
+                            </div>
+                            <div id="simulationStatus" class="status-message"></div>
                         </div>
                     </div>
                 </div>
@@ -301,6 +389,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                 toggleFlashBtn.textContent = isFlashActive ? 'Disable Flash Mode' : 'Enable Flash Mode';
                 toggleFlashBtn.style.backgroundColor = isFlashActive ? 'rgba(255, 0, 0, 0.2)' : '';
             }
+
+            const simulateUsersBtn = document.getElementById('simulateUsers');
+            const clearSimulationBtn = document.getElementById('clearSimulation');
+            const simulationCount = document.getElementById('simulationCount');
+            const simulationStatus = document.getElementById('simulationStatus');
+
+            simulateUsersBtn.addEventListener('click', async () => {
+                const count = parseInt(simulationCount.value);
+                if (isNaN(count) || count < 1) {
+                    alert('Please enter a valid number greater than 0');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('https://projectvoid.is-not-a.dev/api/simulate-users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ count })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        simulationStatus.textContent = `Added ${count} simulated users. Total users: ${data.totalCount}`;
+                        simulationStatus.style.color = '#39ff14';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    simulationStatus.textContent = 'Failed to add simulated users';
+                    simulationStatus.style.color = '#ff4444';
+                }
+            });
+
+            clearSimulationBtn.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('https://projectvoid.is-not-a.dev/api/clear-simulated', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        simulationStatus.textContent = `Cleared all simulated users. Total users: ${data.totalCount}`;
+                        simulationStatus.style.color = '#39ff14';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    simulationStatus.textContent = 'Failed to clear simulated users';
+                    simulationStatus.style.color = '#ff4444';
+                }
+            });
         });
     </script>
 </body>

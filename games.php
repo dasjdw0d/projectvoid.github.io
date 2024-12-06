@@ -47,7 +47,7 @@
             </div>
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search games...">
-                <button onclick="searchGames()">Search</button>
+                <button class="random-game-btn" onclick="playRandomGame()">Random Game</button>
             </div>
         </div>
         <div class="games-grid" id="gamesGrid">
@@ -68,9 +68,24 @@
 
     const games = [
         {
+            title: "Amazing Rope Police",
+            path: "games/amazing-rope-police/index.html",
+            thumbnail: "games/amazing-rope-police/splash.jpeg"
+        },
+        {
             title: "Slope",
             path: "games/slope/index.html",
             thumbnail: "games/slope/slope4.jpeg"
+        },
+        {
+            title: "Slope 2",
+            path: "games/slope2/index.html",
+            thumbnail: "games/slope2/slope-2-logo.png"
+        },
+        {
+            title: "Slope 3",
+            path: "games/slope3/index.html",
+            thumbnail: "games/slope3/cover.png"
         },
         {
             title: "Snow Rider 3D",
@@ -96,6 +111,11 @@
             title: "Burrito Bison",
             path: "games/burritobison/index.html",
             thumbnail: "games/burritobison/logo.png"
+        },
+        {
+            title: "Run 3 Editor",
+            path: "games/editor/index.html",
+            thumbnail: "games/editor/cover.png"
         },
         {
             title: "Run 3",
@@ -551,6 +571,56 @@
             thumbnail: "games/papas-cupcakeria/icon.png"
         },
         {
+            title: "Papas Wingeria",
+            path: "games/papaswingeria/index.html",
+            thumbnail: "games/papaswingeria/papaswingeria.png"
+        },
+        {
+            title: "Papas Tacomia",
+            path: "games/papastacomia/index.html",
+            thumbnail: "games/papastacomia/papastacomia.png"
+        },
+        {
+            title: "Papas Sushiria",
+            path: "games/papassushiria/index.html",
+            thumbnail: "games/papassushiria/papassushiria.png"
+        },
+        {
+            title: "Papas Scooperia",
+            path: "games/papasscooperia/index.html",
+            thumbnail: "games/papasscooperia/papasscooperia.png"
+        },
+        {
+            title: "Papas Pizzeria",
+            path: "games/papaspizzeria/index.html",
+            thumbnail: "games/papaspizzeria/images.jpeg"
+        },
+        {
+            title: "Papas Pastaria",
+            path: "games/papaspastaria/index.html",
+            thumbnail: "games/papaspastaria/papaspastaria.png"
+        },
+        {
+            title: "Papas Pancakeria",
+            path: "games/papaspancakeria/index.html",
+            thumbnail: "games/papaspancakeria/papaspancakeria.png"
+        },
+        {
+            title: "Papas Donuteria",
+            path: "games/papasdonuteria/index.html",
+            thumbnail: "games/papasdonuteria/papasdonuteria.png"
+        },
+        {
+            title: "Papas Cheeseria",
+            path: "games/papascheeseria/index.html",
+            thumbnail: "games/papascheeseria/papascheeseria.png"
+        },
+        {
+            title: "Papas Bakeria",
+            path: "games/papasbakeria/index.html",
+            thumbnail: "games/papasbakeria/papasbakeria.png"
+        },
+        {
             title: "BTD 1",
             path: "games/btd/index.html",
             thumbnail: "games/btd/logo.webp"
@@ -770,6 +840,146 @@
             path: "games/breaklock/index.html",
             thumbnail: "games/breaklock/logo.png"
         },
+        {
+            title: "3 Lines",
+            path: "games/3line/index.html",
+            thumbnail: "games/3line/cover.png"
+        },
+        {
+            title: "13 Days In Hell",
+            path: "games/13/index.html",
+            thumbnail: "games/13/cover.png"
+        },
+        {
+            title: "10 Minutes Till Dawn",
+            path: "games/10minutestilldawn/index.html",
+            thumbnail: "games/10minutestilldawn/splash.png"
+        },
+        {
+            title: "60s Burger Run",
+            path: "games/60sburgerrun/index.html",
+            thumbnail: "games/60sburgerrun/icon.png"
+        },
+        {
+            title: "A Dark Room",
+            path: "games/adarkroom/index.html",
+            thumbnail: "games/adarkroom/favicon.ico"
+        },
+        {
+            title: "Age of War",
+            path: "games/ageofwar/index.html",
+            thumbnail: "games/ageofwar/icon.png"
+        },
+        {
+            title: "Age of War 2",
+            path: "games/aow2/index.html",
+            thumbnail: "games/aow2/cover.png"
+        },
+        {
+            title: "Awesome Tanks",
+            path: "games/awesometanks/index.html",
+            thumbnail: "games/awesometanks/cover.png"
+        },
+        {
+            title: "Bad Piggies",
+            path: "games/badpiggies/index.html",
+            thumbnail: "games/badpiggies/badpiggies.png"
+        },
+        {
+            title: "Baldis Basics",
+            path: "games/baldis-basics/index.html",
+            thumbnail: "games/baldis-basics/splash.png"
+        },
+        {
+            title: "Balloon Run",
+            path: "games/bal/index.html",
+            thumbnail: "games/bal/cover.png"
+        },
+        {
+            title: "Bit Planes",
+            path: "games/bit-planes/index.html",
+            thumbnail: "games/bit-planes/bitplanes.png"
+        },
+        {
+            title: "Boxing Physics 2",
+            path: "games/boxingphysics2/index.html",
+            thumbnail: "games/boxingphysics2/icon.png"
+        },
+        {
+            title: "Bubble Shooter",
+            path: "games/bub/index.html",
+            thumbnail: "games/bub/cover.png"
+        },
+        {
+            title: "Clicker Heroes",
+            path: "games/clickerheroes/index.html",
+            thumbnail: "games/clickerheroes/clicker-heroes.png"
+        },
+        {
+            title: "Deepest Sword",
+            path: "games/deepestsword/index.html",
+            thumbnail: "games/deepestsword/logo.png"
+        },
+        {
+            title: "Doodle Jump",
+            path: "games/doodlejump/index.html",
+            thumbnail: "games/doodlejump/icon.png"
+        },
+        {
+            title: "Draw Climber",
+            path: "games/drawclimber/index.html",
+            thumbnail: "games/drawclimber/logo.png"
+        },
+        {
+            title: "Earn To Die",
+            path: "games/ern/index.html",
+            thumbnail: "games/ern/cover.png"
+        },
+        {
+            title: "Hill Climb Racing 2",
+            path: "games/hillclimbracing2/index.html",
+            thumbnail: "games/hillclimbracing2/cover.png"
+        },
+        {
+            title: "Knife Hit",
+            path: "games/knifehit/index.html",
+            thumbnail: "games/knifehit/icon.png"
+        },
+        {
+            title: "Last Horizon",
+            path: "games/lasthorizon/index.html",
+            thumbnail: "games/lasthorizon/icon.jpg"
+        },
+        {
+            title: "Lazy Jump 3D",
+            path: "games/lazyjump3d/index.html",
+            thumbnail: "games/lazyjump3d/icon.png"
+        },
+        {
+            title: "Madalin Cars",
+            path: "games/madalincars/index.html",
+            thumbnail: "games/madalincars/icon.png"
+        },
+        {
+            title: "Mindustry",
+            path: "games/mind/index.html",
+            thumbnail: "games/mind/cover.png"
+        },
+        {
+            title: "Minesweeper",
+            path: "games/minesweeper/index.html",
+            thumbnail: "games/minesweeper/cover.png"
+        },
+        {
+            title: "Plants VS Zombies",
+            path: "games/pvz/index.html",
+            thumbnail: "games/pvz/cover.png"
+        },
+        {
+            title: "Rocket bot Royale",
+            path: "games/rocket/index.html",
+            thumbnail: "games/rocket/cover.png"
+        },
     ];
 
     let filteredGames = [...games]; 
@@ -833,10 +1043,8 @@
         updateDisplay();
     }
 
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-            searchGames();
-        }
+    document.getElementById('searchInput').addEventListener('keyup', () => {
+        searchGames();
     });
 
     function createGameCards(gamesSubset) {
@@ -954,6 +1162,18 @@
         document.querySelector('.games-header').scrollIntoView({ behavior: 'smooth' });
 
         updateDisplay();
+    }
+
+    function playRandomGame() {
+        const randomIndex = Math.floor(Math.random() * games.length);
+        const randomGame = games[randomIndex];
+        
+        // Use the existing handleGameClick function to launch the game
+        handleGameClick(
+            new Event('click'), 
+            randomGame.title, 
+            randomGame.path
+        );
     }
 
     updateDisplay();
