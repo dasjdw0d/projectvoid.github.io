@@ -190,12 +190,31 @@
 
 .message {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.8rem;
     padding: 0.2rem 0.4rem;
     align-items: flex-start;
     margin-bottom: 0.2rem;
     transition: background 0.2s;
     position: relative;
+}
+
+.message-avatar {
+    display: block !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50%;
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    flex-shrink: 0;
+    object-fit: cover;
+    margin-top: 4px;
+}
+
+.message.system-message {
+    padding-left: 44px;
+}
+
+.message.system-message .message-avatar {
+    display: none !important;
 }
 
 .message:hover {
@@ -228,6 +247,7 @@
 
 .message-content {
     padding-right: 40px;
+    margin-top: -4px;
 }
 
 .message-avatar {
@@ -352,7 +372,7 @@
 
 .message {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.8rem;
     padding: 0.2rem 0.4rem;
     align-items: flex-start;
     margin-bottom: 0.2rem;
@@ -818,4 +838,12 @@
     background: rgb(15, 15, 15);
     position: relative;
     z-index: 2;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: #00ff22;
+    font-weight: bold;
+    font-style: italic;
 }

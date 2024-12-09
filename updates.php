@@ -46,6 +46,31 @@
 
                 $updates = [
                     [
+                        'date' => 'December 9, 2024',
+                        'version' => 'v1.7',
+                        'title' => 'Update',
+                        'changes' => [
+                            'Major Changes' => [
+                                'Huge AI chat improvement. Improved looks of everything and it now looks more like a chat.',
+                                'Added a games per page slider on the games page to customize the amount of games per page.',
+                                'All chatroom message data is now encrypted.'
+                            ],
+                            'UI Improvements' => [
+                                'Made the games library organized in alphebetical order.',
+                                'Added some animations to the chat room.',
+                                'Improved the footer at the bottom of each page.',
+                                'Added the users pfp to the chat room messages.'
+                            ],
+                            'Bug Fixes' => [
+                                'Fixed all of the websites problems with crashing.',
+                                'Found a exploit in the chat room to give yourself admin without the login and fixed it. And also added extra security.'
+                            ],
+                            'Game Updates' => [
+                                'Added 1v1.lol from game reccomendations form.',
+                            ],
+                        ]
+                    ],
+                    [
                         'date' => 'December 6, 2024',
                         'version' => 'v1.6',
                         'title' => 'Big Game Update',
@@ -321,5 +346,22 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>
     <script src="js/site-settings.js?v=<?php echo time(); ?>"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.update-entry').forEach((card) => {
+                observer.observe(card);
+            });
+        });
+    </script>
 </body>
 </html>

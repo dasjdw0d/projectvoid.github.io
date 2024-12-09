@@ -137,13 +137,13 @@
     </footer>
     <script>
     const graphData = [
-    { date: 'Nov 28', users: 10 },
-    { date: 'Nov 29', users: 7 },
-    { date: 'Nov 30', users: 19 },
-    { date: 'Dec 1', users: 11 },
     { date: 'Dec 2', users: 193 },
     { date: 'Dec 3', users: 240 },
-    { date: 'Dec 4', users: 359 }
+    { date: 'Dec 4', users: 359 },
+    { date: 'Dec 5', users: 412 },
+    { date: 'Dec 6', users: 526 },
+    { date: 'Dec 7', users: 31 },
+    { date: 'Dec 8', users: 36 },
 ];
 
     function initializeGraph() {

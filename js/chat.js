@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Get admin token from session storage if it exists
+    const adminToken = sessionStorage.getItem('adminToken');
+    
+    // Initialize socket with auth if admin token exists
     const socket = io('https://projectvoid.is-not-a.dev', {
-        path: '/socket.io/'
+        path: '/socket.io/',
+        auth: adminToken ? { adminSession: adminToken } : undefined
     });
 
     const chatMessages = document.getElementById('chatMessages');
@@ -30,6 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let userIsScrolling = false;
     let isChatLocked = false;
     let replyingTo = null;
+    let isLoadingMessages = false;
+    const MESSAGES_PER_BATCH = 50;
+    let oldestLoadedMessageTimestamp = null;
+    let isLoading = true;
+
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        // Convert to 12-hour format
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        
+        return `${hours}:${minutes} ${ampm}`;
+    }
 
     function getUserData() {
         const stats = JSON.parse(localStorage.getItem('siteStats')) || {
@@ -37,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             profilePicture: 'images/favicon.png'
         };
 
+        const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+        
         return {
             username: isAdmin ? 'Owner' : stats.username,
             profileImage: stats.profilePicture,
@@ -62,86 +86,82 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAdminUI();
 
     function updateChat(messages) {
-        if (messages.length === 0 && chatMessages.children.length > 0) {
+        if (messages.length === 0) {
             chatMessages.innerHTML = '';
             displayedMessages.clear();
             lastMessageCount = 0;
-            addSystemMessage('Chat cleared by admin');
             return;
         }
 
         const wasAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop === chatMessages.clientHeight;
 
-        messages.forEach(message => {
-            const existingMessage = document.querySelector(`[data-timestamp="${message.timestamp}"]`);
-            if (!existingMessage && !displayedMessages.has(message.timestamp)) {
+        const sortedMessages = messages.sort((a, b) => 
+            new Date(a.timestamp) - new Date(b.timestamp)
+        );
+
+        sortedMessages.forEach(message => {
+            if (!displayedMessages.has(message.timestamp)) {
                 addMessage(message);
                 displayedMessages.add(message.timestamp);
-            } else if (existingMessage && message.deleted) {
-                existingMessage.className = 'message deleted';
-                existingMessage.innerHTML = `
-                    <div class="message-content delete-message">
-                        <span class="message-text">${message.content}</span>
-                    </div>
-                `;
             }
         });
 
-        if ((wasAtBottom || !userIsScrolling) && messages.length > lastMessageCount) {
+        if (wasAtBottom) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         lastMessageCount = messages.length;
     }
 
-    function addMessage(data) {
+    function addMessage(message, prepend = false) {
         const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${message.system ? 'system-message' : ''} ${message.userData?.isAdmin ? 'admin-message' : ''}`;
+        messageDiv.dataset.timestamp = message.timestamp;
 
-        if (data.deleted) {
-            messageDiv.className = 'message deleted';
-            messageDiv.dataset.timestamp = data.timestamp;
-            messageDiv.innerHTML = `
-                <div class="message-content delete-message">
-                    <span class="message-text">${data.content}</span>
-                </div>
-            `;
-            chatMessages.appendChild(messageDiv);
-            return;
-        }
+        // Sanitize all text content before displaying
+        const sanitizedContent = escapeHtml(message.content);
+        const sanitizedUsername = message.userData ? escapeHtml(message.userData.username) : 'System';
 
-        messageDiv.className = `message ${data.userData?.isAdmin ? 'admin-message' : ''} ${data.system ? 'system-message' : ''}`;
-        messageDiv.dataset.timestamp = data.timestamp;
-
-        if (data.system) {
+        if (message.system) {
             messageDiv.innerHTML = `
                 <div class="message-content">
-                    <span class="message-text">${data.content}</span>
+                    <span class="message-text">${sanitizedContent}</span>
                 </div>
             `;
         } else {
-            const time = new Date(data.timestamp).toLocaleTimeString();
+            const avatarImg = document.createElement('img');
+            avatarImg.className = 'message-avatar';
+            avatarImg.src = message.userData?.profileImage || 'images/favicon.png';
+            avatarImg.alt = 'Avatar';
+            
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <div class="message-header">
-                        <span class="message-username">${data.userData.username}</span>
-                        <span class="message-time">${time}</span>
+                        <span class="message-username">${sanitizedUsername}</span>
+                        <span class="message-time">${formatTimestamp(message.timestamp)}</span>
                     </div>
-                    <span class="message-text">${escapeHtml(data.content)}</span>
+                    <span class="message-text">${sanitizedContent}</span>
                 </div>
-                ${isAdmin ? '<div class="delete-icon" role="button" tabindex="0">🗑️</div>' : ''}
             `;
-
-            if (isAdmin) {
-                const deleteIcon = messageDiv.querySelector('.delete-icon');
-                deleteIcon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    socket.emit('delete_message', data.timestamp);
-                });
-            }
+            messageDiv.insertBefore(avatarImg, messageDiv.firstChild);
         }
 
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Only add delete button if user is actually admin (server-side verified)
+        if (isAdmin && !message.system) {
+            const deleteIcon = document.createElement('span');
+            deleteIcon.className = 'delete-icon';
+            deleteIcon.textContent = '🗑️';
+            deleteIcon.onclick = () => deleteMessage(message.timestamp);
+            messageDiv.appendChild(deleteIcon);
+        }
+
+        if (prepend) {
+            chatMessages.insertBefore(messageDiv, chatMessages.firstChild);
+        } else {
+            chatMessages.appendChild(messageDiv);
+            // Simple instant scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     }
 
     function updateReplyIndicator() {
@@ -173,10 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const COOLDOWN_TIME = 2500; 
 
     async function sendMessage() {
-        if (isChatLocked && !isAdmin) return;
+        if (isLoading || (isChatLocked && !isAdmin)) {
+            return;
+        }
 
         const now = Date.now();
-        if (now - lastMessageTime < COOLDOWN_TIME) {
+        if (!isAdmin && now - lastMessageTime < COOLDOWN_TIME) {
             const remainingTime = ((COOLDOWN_TIME - (now - lastMessageTime)) / 1000).toFixed(1);
             cooldownOverlay.textContent = `Wait ${remainingTime}s`;
             cooldownOverlay.classList.add('active');
@@ -189,6 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = messageInput.value.trim();
         if (!content || content.length > MAX_MESSAGE_LENGTH) return;
 
+        console.log('Attempting to send message:', {
+            content,
+            userData: getUserData(),
+            isAdmin,
+            socketAuth: socket.auth,
+            adminToken: sessionStorage.getItem('adminToken')
+        });
+
         socket.emit('send_message', {
             content,
             userData: getUserData(),
@@ -200,6 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
         replyingTo = null;
         updateReplyIndicator();
         messageInput.placeholder = 'Type your message...';
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function updateOnlineUsers(users) {
@@ -232,6 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('connect', () => {
         console.log('Connected to chat server');
+        const adminToken = sessionStorage.getItem('adminToken');
+        if (adminToken) {
+            socket.auth = { adminSession: adminToken };
+        }
         socket.emit('user_update', getUserData());
     });
 
@@ -240,11 +276,18 @@ document.addEventListener('DOMContentLoaded', () => {
         displayedMessages.clear();
         lastMessageCount = 0;
 
-        messages.forEach(message => {
-            addMessage(message);
-            displayedMessages.add(message.timestamp);
-        });
-        lastMessageCount = messages.length;
+        if (messages.length > 0) {
+            oldestLoadedMessageTimestamp = messages[messages.length - 1].timestamp;
+            
+            messages.forEach(message => {
+                addMessage(message);
+                displayedMessages.add(message.timestamp);
+            });
+            
+            lastMessageCount = messages.length;
+            // Instant scroll to bottom after loading
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     });
 
     socket.on('new_message', (message) => {
@@ -263,10 +306,17 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.innerHTML = '';
         displayedMessages.clear();
         lastMessageCount = 0;
-
+        
         if (resetMessage) {
-            addSystemMessage(resetMessage.content);
-            displayedMessages.add(resetMessage.timestamp);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="message-text">${resetMessage.content}</span>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     });
 
@@ -294,12 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
         return unsafe
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/'/g, "&#039;")
+            .replace(/`/g, "&#x60;"); // Also escape backticks
     }
 
     sendButton.addEventListener('click', sendMessage);
@@ -365,7 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function addStyles() {
         const style = document.createElement('style');
         style.textContent = `
-
             .chat-sidebar {
                 display: flex;
                 flex-direction: column;
@@ -419,9 +470,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 margin-left: auto;  
             }
 
-            .message-text {
-                margin-top: 2px;  
-            }
 
             ${style.textContent}
         `;
@@ -460,15 +508,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chatMessages.addEventListener('scroll', () => {
         userIsScrolling = true;
-
         clearTimeout(window.scrollTimeout);
+        
+        if (chatMessages.scrollTop < 100 && !isLoadingMessages) {
+            loadMoreMessages();
+        }
+
         window.scrollTimeout = setTimeout(() => {
             userIsScrolling = false;
         }, 2000);
     });
 
+    function loadMoreMessages() {
+        if (isLoadingMessages) return;
+        isLoadingMessages = true;
+
+        socket.emit('load_more_messages', {
+            beforeTimestamp: oldestLoadedMessageTimestamp,
+            limit: MESSAGES_PER_BATCH
+        });
+    }
+
+    socket.on('more_messages', (data) => {
+        isLoadingMessages = false;
+        
+        if (data.messages.length > 0) {
+            oldestLoadedMessageTimestamp = data.messages[data.messages.length - 1].timestamp;
+            
+            data.messages.forEach(message => {
+                if (!displayedMessages.has(message.timestamp)) {
+                    addMessage(message, true);
+                    displayedMessages.add(message.timestamp);
+                }
+            });
+        }
+    });
+
     function updateChatLockUI() {
-        const canChat = isAdmin || !isChatLocked;
+        const canChat = (isAdmin || !isChatLocked) && !isLoading;
         messageInput.disabled = !canChat;
         sendButton.disabled = !canChat;
 
@@ -476,7 +553,9 @@ document.addEventListener('DOMContentLoaded', () => {
             lockChatBtn.textContent = isChatLocked ? 'Unlock Chat' : 'Lock Chat';
         }
 
-        messageInput.placeholder = !canChat ? 'Chat is locked by admin' : 'Type your message...';
+        messageInput.placeholder = isLoading ? 'Loading messages...' : 
+                                 !canChat ? 'Chat is locked by admin' : 
+                                 'Type your message...';
     }
 
     function addCooldownUI() {
@@ -545,6 +624,14 @@ document.addEventListener('DOMContentLoaded', () => {
             isAdmin = true;
             isAnonymous = true;
             sessionStorage.setItem('isAdmin', 'true');
+            sessionStorage.setItem('adminToken', data.token);
+            
+            // Update socket auth immediately
+            socket.auth = { adminSession: data.token };
+            
+            // Reconnect with new auth
+            socket.disconnect().connect();
+            
             adminModal.style.display = 'none';
             updateAdminUI();
             userData = getUserData();
@@ -617,17 +704,67 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateTimerDisplay(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        timerDisplay.textContent = `Chat Reset: ${minutes}m ${remainingSeconds}s`;
+        timerDisplay.textContent = `Automatic Chat Reset: ${minutes}m ${remainingSeconds}s`;
     }
 
     socket.on('chat_cleared', (resetMessage) => {
         chatMessages.innerHTML = '';
         displayedMessages.clear();
         lastMessageCount = 0;
-
+        
         if (resetMessage) {
-            addSystemMessage(resetMessage.content);
-            displayedMessages.add(resetMessage.timestamp);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="message-text">${resetMessage.content}</span>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+
+    socket.on('initial_data', (data) => {
+        isLoading = false;
+        loadingIndicator.remove();
+        updateTimerDisplay(data.timer);
+        isChatLocked = data.chatLockStatus;
+        updateChatLockUI();
+        chatMessages.innerHTML = '';
+        displayedMessages.clear();
+        lastMessageCount = 0;
+        
+        if (data.messages && data.messages.length > 0) {
+            data.messages.forEach(message => {
+                addMessage(message);
+                displayedMessages.add(message.timestamp);
+            });
+            
+            lastMessageCount = data.messages.length;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = 'Loading messages...';
+    chatMessages.appendChild(loadingIndicator);
+
+    function deleteMessage(timestamp) {
+        if (!isAdmin) return;
+        socket.emit('delete_message', timestamp);
+    }
+
+    socket.on('message_deleted', ({ timestamp, content }) => {
+        const messageDiv = document.querySelector(`[data-timestamp="${timestamp}"]`);
+        if (messageDiv) {
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="message-text">${content}</span>
+                </div>
+            `;
         }
     });
 });

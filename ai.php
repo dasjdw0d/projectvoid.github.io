@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" type="text/css" href="css/ai.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -44,7 +45,10 @@
                     <!-- Messages will appear here -->
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="userInput" placeholder="Ask me anything...">
+                    <div class="input-wrapper">
+                        <input type="text" id="userInput" placeholder="Ask me anything..." maxlength="500">
+                        <div class="char-counter">0/500</div>
+                    </div>
                     <button id="sendButton">Send</button>
                 </div>
             </div>

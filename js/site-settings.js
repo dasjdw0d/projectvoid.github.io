@@ -486,6 +486,13 @@ function initializeOnlineTracking() {
     Object.values(window.onlineTrackingIntervals).forEach(clearInterval);
 
     function sendHeartbeat() {
+        // Get current page info
+        const pageInfo = {
+            title: document.title,
+            path: window.location.pathname,
+            timestamp: Date.now()
+        };
+
         fetch('https://projectvoid.is-not-a.dev/api/heartbeat', {
             method: 'POST',
             headers: {
@@ -493,7 +500,8 @@ function initializeOnlineTracking() {
             },
             body: JSON.stringify({
                 sessionId: sessionId,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                pageInfo: pageInfo
             })
         })
         .then(response => {

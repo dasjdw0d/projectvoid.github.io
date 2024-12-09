@@ -12,6 +12,7 @@ app.use(express.json());
 
 const activeSessions = new Map();
 const simulatedSessions = new Map();
+const pageStatistics = new Map();
 let simulationCounter = 0;
 
 const onlineHistory = new Array(40).fill(0);
@@ -80,7 +81,7 @@ if (intervalId) {
 
 app.post('/api/heartbeat', (req, res) => {
     try {
-        const { sessionId, timestamp } = req.body;
+        const { sessionId, timestamp, pageInfo } = req.body;
 
         if (!sessionId) {
             console.error('Missing sessionId in heartbeat request');
@@ -93,14 +94,18 @@ app.post('/api/heartbeat', (req, res) => {
         if (existingSession) {
             existingSession.lastBeat = timestamp;
             existingSession.failures = 0;
+            existingSession.pageInfo = pageInfo;
             activeSessions.set(sessionId, existingSession);
         } else {
             activeSessions.set(sessionId, {
                 lastBeat: timestamp,
                 failures: 0,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                pageInfo: pageInfo
             });
         }
+
+        updatePageStatistics();
 
         res.json({
             onlineUsers: activeSessions.size,
@@ -111,6 +116,33 @@ app.post('/api/heartbeat', (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+function updatePageStatistics() {
+    pageStatistics.clear();
+    
+    for (const [sessionId, session] of activeSessions.entries()) {
+        if (session.pageInfo) {
+            const pageKey = session.pageInfo.path || 'unknown';
+            const pageTitle = session.pageInfo.title || 'Unknown Page';
+            
+            if (!pageStatistics.has(pageKey)) {
+                pageStatistics.set(pageKey, {
+                    count: 0,
+                    title: pageTitle
+                });
+            }
+            
+            const stats = pageStatistics.get(pageKey);
+            stats.count++;
+            
+            if (stats.title === 'Unknown Page' && pageTitle !== 'Unknown Page') {
+                stats.title = pageTitle;
+            }
+            
+            pageStatistics.set(pageKey, stats);
+        }
+    }
+}
 
 app.post('/api/offline', (req, res) => {
     const { sessionId } = req.body;
@@ -138,14 +170,12 @@ app.get('/api/history', (req, res) => {
 
 app.post('/api/simulate-users', (req, res) => {
     try {
-        const { count } = req.body;
-        if (!count) {
-            console.error('No count provided in simulation request');
-            return res.status(400).json({ success: false, error: 'Count required' });
+        const { count, adminToken } = req.body;
+        if (!count || !adminToken) {
+            return res.status(400).json({ success: false, error: 'Missing required parameters' });
         }
         
         const startingTotal = activeSessions.size;
-        console.log(`Adding ${count} simulated users (Current total: ${startingTotal})`);
         
         for (let i = 0; i < count; i++) {
             const simulatedId = `sim_${simulationCounter++}`;
@@ -163,15 +193,11 @@ app.post('/api/simulate-users', (req, res) => {
             });
         }
 
-        console.log(`Simulation complete: Added ${count} users`);
-        console.log(`Real users: ${activeSessions.size - simulatedSessions.size}`);
-        console.log(`Simulated users: ${simulatedSessions.size}`);
-        console.log(`Total users: ${activeSessions.size}`);
-
         res.json({ 
             success: true, 
             simulatedCount: simulatedSessions.size,
-            totalCount: activeSessions.size 
+            totalCount: activeSessions.size,
+            addedUsers: activeSessions.size - startingTotal 
         });
     } catch (error) {
         console.error('Error in simulate-users endpoint:', error);
@@ -180,29 +206,44 @@ app.post('/api/simulate-users', (req, res) => {
 });
 
 app.post('/api/clear-simulated', (req, res) => {
-    const beforeCount = activeSessions.size;
-    const simulatedCount = simulatedSessions.size;
-
-    console.log(`Clearing ${simulatedCount} simulated users (Current total: ${beforeCount})`);
-
-    for (const [sessionId, session] of activeSessions.entries()) {
-        if (session.isSimulated) {
-            activeSessions.delete(sessionId);
+    try {
+        const { adminToken } = req.body;
+        if (!adminToken) {
+            return res.status(400).json({ success: false, error: 'Missing admin token' });
         }
+
+        for (const [sessionId, session] of activeSessions.entries()) {
+            if (session.isSimulated) {
+                activeSessions.delete(sessionId);
+            }
+        }
+        simulatedSessions.clear();
+        simulationCounter = 0;
+
+        res.json({ 
+            success: true, 
+            simulatedCount: 0,
+            totalCount: activeSessions.size 
+        });
+    } catch (error) {
+        console.error('Error in clear-simulated endpoint:', error);
+        res.status(500).json({ success: false, error: error.message });
     }
-    simulatedSessions.clear();
-    simulationCounter = 0;
+});
 
-    console.log(`Simulation cleared`);
-    console.log(`Real users: ${activeSessions.size}`);
-    console.log(`Simulated users: 0`);
-    console.log(`Total users: ${activeSessions.size}`);
-
-    res.json({ 
-        success: true, 
-        simulatedCount: 0,
-        totalCount: activeSessions.size 
-    });
+app.get('/api/page-statistics', (req, res) => {
+    try {
+        const stats = Array.from(pageStatistics.entries()).map(([path, data]) => ({
+            path,
+            title: data.title,
+            count: data.count
+        }));
+        
+        res.json({ success: true, statistics: stats });
+    } catch (error) {
+        console.error('Error in page-statistics endpoint:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
 });
 
 process.on('SIGTERM', () => {

@@ -14,8 +14,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const sanitizeHtml = require('sanitize-html');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
 app.use(cors({
     origin: ['https://projectvoid.is-not-a.dev', 'http://projectvoid.is-not-a.dev'],
@@ -26,8 +26,12 @@ app.use(express.json());
 
 const MESSAGES_FILE = path.join(__dirname, 'chat_messages.json');
 
-let resetTimer = 1800; 
+let resetTimer = 3600; 
 let timerInterval;
+
+const MESSAGES_PER_BATCH = 50;
+const COOLDOWN_TIME = 2500; // 2.5 seconds, matching client-side
+const userLastMessage = new Map();
 
 function loadMessages() {
     try {
@@ -139,12 +143,11 @@ async function filterMessage(text) {
 }
 
 function initializeChat() {
-
     messages.length = 0;
 
     const systemMessage = {
         content: 'Chat room has started',
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(0).toISOString(),
         system: true
     };
     messages.push(systemMessage);
@@ -161,7 +164,7 @@ initializeChat();
 
 function startGlobalTimer() {
     clearInterval(timerInterval);
-    resetTimer = 1800; 
+    resetTimer = 3600; 
 
     timerInterval = setInterval(() => {
         resetTimer--;
@@ -179,7 +182,7 @@ function startGlobalTimer() {
             messages.push(resetMessage);
 
             io.emit('chat_cleared', resetMessage);
-            resetTimer = 1800; 
+            resetTimer = 3600; 
             io.emit('timer_update', resetTimer); 
         }
     }, 1000);
@@ -187,49 +190,95 @@ function startGlobalTimer() {
 
 startGlobalTimer();
 
+// Add message caching
+const messageCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+function cacheMessages(messages) {
+    const cacheKey = 'recent_messages';
+    messageCache.set(cacheKey, {
+        data: messages,
+        timestamp: Date.now()
+    });
+}
+
+function getCachedMessages() {
+    const cacheKey = 'recent_messages';
+    const cached = messageCache.get(cacheKey);
+    
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+        return cached.data;
+    }
+    return null;
+}
+
+function verifyAdminSession(socket) {
+    try {
+        const adminSession = socket.handshake.auth?.adminSession;
+        if (!adminSession) return false;
+
+        const decoded = jwt.verify(adminSession, process.env.JWT_SECRET);
+        return decoded && decoded.isAdmin === true;
+    } catch (error) {
+        return false;
+    }
+}
+
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
+    // Send initial data more efficiently
+    const initialData = {
+        timer: resetTimer,
+        messages: getCachedMessages() || messages.slice(-MESSAGES_PER_BATCH),
+        chatLockStatus: isChatLocked
+    };
+    
+    socket.emit('initial_data', initialData);
+    
+    if (!getCachedMessages()) {
+        cacheMessages(messages.slice(-MESSAGES_PER_BATCH));
+    }
+
     socket.emit('timer_update', resetTimer);
-    socket.emit('load_messages', messages);
+    socket.emit('load_messages', messages.slice(-MESSAGES_PER_BATCH));
     socket.emit('chat_lock_status', isChatLocked);
 
     socket.on('send_message', async (data) => {
+        // Skip cooldown check for admins
+        if (!verifyAdminSession(socket)) {
+            const now = Date.now();
+            const lastMessageTime = userLastMessage.get(socket.id) || 0;
+            
+            // Check if enough time has passed since last message
+            if (now - lastMessageTime < COOLDOWN_TIME) {
+                return;
+            }
+            
+            // Update last message time
+            userLastMessage.set(socket.id, now);
+        }
+
+        const isReallyAdmin = verifyAdminSession(socket);
+        
+        if (data.userData?.isAdmin && !isReallyAdmin) {
+            return;
+        }
+
         if (!data.content || data.content.length > MAX_MESSAGE_LENGTH) {
             return;
         }
 
-        if (containsInvalidCharacters(data.content)) {
-            const systemMessage = {
-                content: 'Message blocked: Contains invalid characters',
-                timestamp: new Date().toISOString(),
-                system: true
-            };
-            messages.push(systemMessage);
-            io.emit('new_message', systemMessage);
-            return;
-        }
-
-        if (containsSensitiveInfo(data.content)) {
-            const systemMessage = {
-                content: 'Message blocked: Contains filtered content',
-                timestamp: new Date().toISOString(),
-                system: true
-            };
-            messages.push(systemMessage);
-            io.emit('new_message', systemMessage);
-            return;
-        }
-
-        const sanitizedContent = sanitizeHtml(data.content);
-
         const message = {
-            content: sanitizedContent,
-            userData: validateUserData(data.userData),
+            content: sanitizeHtml(data.content),
+            userData: {
+                ...validateUserData(data.userData),
+                isAdmin: isReallyAdmin
+            },
             timestamp: new Date().toISOString()
         };
-        messages.push(message);
 
+        messages.push(message);
         io.emit('new_message', message);
     });
 
@@ -309,6 +358,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
+        userLastMessage.delete(socket.id);
 
         for (const [userId, user] of users.entries()) {
             if (user.socketIds.has(socket.id)) {
@@ -347,8 +397,17 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            // Create admin session token
+            const adminToken = jwt.sign({ isAdmin: true }, process.env.JWT_SECRET, { expiresIn: '24h' });
+            
+            // Set the admin session in socket auth
+            socket.handshake.auth.adminSession = adminToken;
+
             console.log('Admin verified successfully');
-            socket.emit('admin_verified', { success: true });
+            socket.emit('admin_verified', { 
+                success: true,
+                token: adminToken // Send token back to client
+            });
         } catch (error) {
             console.error('Admin verification error:', error);
             socket.emit('admin_verified', { success: false });
@@ -367,6 +426,38 @@ io.on('connection', (socket) => {
 
         io.emit('chat_cleared');
         io.emit('new_message', resetMessage);
+    });
+
+    socket.on('load_more_messages', (data) => {
+        const { beforeTimestamp, limit } = data;
+        
+        let moreMessages;
+        if (beforeTimestamp) {
+            const oldestLoadedIndex = messages.findIndex(m => m.timestamp === beforeTimestamp);
+            if (oldestLoadedIndex > 0) {
+                const startIndex = Math.max(1, oldestLoadedIndex - limit);
+                moreMessages = messages.slice(startIndex, oldestLoadedIndex);
+            }
+        }
+
+        socket.emit('more_messages', {
+            messages: moreMessages || []
+        });
+    });
+
+    // Optimize message loading
+    socket.on('load_messages', (data) => {
+        try {
+            // Get the most recent messages first, limited to MESSAGES_PER_BATCH
+            const recentMessages = messages
+                .slice(-MESSAGES_PER_BATCH)
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            socket.emit('load_messages', recentMessages);
+        } catch (error) {
+            console.error('Error loading messages:', error);
+            socket.emit('load_messages', []);
+        }
     });
 });
 
@@ -388,6 +479,16 @@ setInterval(() => {
         io.emit('users_update', uniqueUsers);
     }
 }, 1000); 
+
+// Clean up disconnected users' cooldown data
+setInterval(() => {
+    const now = Date.now();
+    for (const [socketId, lastMessageTime] of userLastMessage.entries()) {
+        if (now - lastMessageTime > 30000) { // Clean up after 30 seconds of inactivity
+            userLastMessage.delete(socketId);
+        }
+    }
+}, 30000);
 
 http.listen(3000, () => {
     console.log('Chat server running on port 3000');

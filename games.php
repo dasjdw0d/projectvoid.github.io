@@ -48,6 +48,16 @@
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search games...">
                 <button class="random-game-btn" onclick="playRandomGame()">Random Game</button>
+                <div class="games-per-page">
+                    <label for="gamesPerPage" data-value="40">Games per page</label>
+                    <input 
+                        type="range" 
+                        id="gamesPerPage" 
+                        min="20" 
+                        max="100" 
+                        step="5"
+                        value="<?php echo isset($_COOKIE['gamesPerPage']) ? $_COOKIE['gamesPerPage'] : '40'; ?>">
+                </div>
             </div>
         </div>
         <div class="games-grid" id="gamesGrid">
@@ -63,10 +73,17 @@
     </main>
 
     <script>
-    const GAMES_PER_PAGE = 40;
-    let currentPage = 1;
+    let GAMES_PER_PAGE = parseInt(localStorage.getItem('gamesPerPage')) || 40;
+    if (!localStorage.getItem('gamesPerPage')) {
+        localStorage.setItem('gamesPerPage', GAMES_PER_PAGE);
+    }
 
     const games = [
+        {
+            title: "1v1.lol",
+            path: "games/1v1lol/index.html",
+            thumbnail: "games/1v1lol/splash.png"
+        },
         {
             title: "Amazing Rope Police",
             path: "games/amazing-rope-police/index.html",
@@ -267,10 +284,39 @@
             path: "games/house-of-hazards/index.html",
             thumbnail: "games/house-of-hazards/icon.png"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {
             title: "Basket Random",
             path: "games/basketrandom/index.html",
             thumbnail: "games/basketrandom/test.png"
+        },
+        {
+            title: "Soccer Random",
+            path: "games/soccerrandom/index.html",
+            thumbnail: "games/soccerrandom/test.png"
+        },
+        {
+            title: "Volley Random",
+            path: "games/volleyrandom/index.html",
+            thumbnail: "games/volleyrandom/icon.png"
+        },
+        {
+            title: "Boxing Random",
+            path: "games/boxing-random/index.html",
+            thumbnail: "games/boxing-random/logo.png"
         },
         {
             title: "Cube Field",
@@ -296,19 +342,7 @@
             title: "Tiny Fishing",
             path: "games/tinyfishing/index.html",
             thumbnail: "games/tinyfishing/thumb.png"
-        },
-
-
-
-
-
-
-
-
-
-
-
-        
+        },        
         {
             title: "Bit Life",
             path: "games/bitlife/index.html",
@@ -464,6 +498,20 @@
             path: "games/superhot/index.html",
             thumbnail: "games/superhot/icon.png"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {
             title: "Tetris",
             path: "games/tetris/index.html",
@@ -500,11 +548,6 @@
             thumbnail: "games/solitaire/cover.svg"
         },
         {
-            title: "Soccer Random",
-            path: "games/soccerrandom/index.html",
-            thumbnail: "games/soccerrandom/test.png"
-        },
-        {
             title: "Stickman Hook",
             path: "games/stickman-hook/index.html",
             thumbnail: "games/stickman-hook/icon.jpg"
@@ -524,16 +567,6 @@
             path: "games/wordle/index.html",
             thumbnail: "games/wordle/icon.png"
         },
-
-
-
-
-
-
-
-
-
-
         {
             title: "Subway Surfers NY",
             path: "games/subway-surfers-ny/index.html",
@@ -680,6 +713,21 @@
             path: "games/pizzatower/index.html",
             thumbnail: "games/pizzatower/logo.png"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {
             title: "Pacman",
             path: "games/pacman/index.html",
@@ -781,11 +829,6 @@
             thumbnail: "games/stickman-golf/splash.png"
         },
         {
-            title: "Volleyrandom",
-            path: "games/volleyrandom/index.html",
-            thumbnail: "games/volleyrandom/icon.png"
-        },
-        {
             title: "A Dance of Fire & Ice",
             path: "games/a-dance-of-fire-and-ice/index.html",
             thumbnail: "games/a-dance-of-fire-and-ice/logo.png"
@@ -799,11 +842,6 @@
             title: "Bloxorz",
             path: "games/bloxorz/index.html",
             thumbnail: "games/bloxorz/logo.jpg"
-        },
-        {
-            title: "Boxing Random",
-            path: "games/boxing-random/index.html",
-            thumbnail: "games/boxing-random/logo.png"
         },
         {
             title: "Backrooms",
@@ -890,6 +928,19 @@
             path: "games/baldis-basics/index.html",
             thumbnail: "games/baldis-basics/splash.png"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+        
         {
             title: "Balloon Run",
             path: "games/bal/index.html",
@@ -982,9 +1033,13 @@
         },
     ];
 
-    let filteredGames = [...games]; 
+    let filteredGames = [...games].sort((a, b) => a.title.localeCompare(b.title)); 
+    let currentPage = 1;
 
     window.pinnedGames = JSON.parse(localStorage.getItem('pinnedGames') || '[]');
+
+    // Call updateDisplay immediately
+    updateDisplay();
 
     function togglePinGame(event, gameTitle) {
         event.preventDefault(); 
@@ -1032,14 +1087,14 @@
         const searchTerm = searchInput.value.trim().toLowerCase();
 
         if (!searchTerm) {
-            filteredGames = games; 
+            filteredGames = [...games].sort((a, b) => a.title.localeCompare(b.title)); 
         } else {
-            filteredGames = games.filter(game => 
-                game.title.toLowerCase().includes(searchTerm)
-            );
+            filteredGames = games
+                .filter(game => game.title.toLowerCase().includes(searchTerm))
+                .sort((a, b) => a.title.localeCompare(b.title));
         }
 
-        currentPage = 1; 
+        currentPage = 1;
         updateDisplay();
     }
 
@@ -1176,7 +1231,28 @@
         );
     }
 
-    updateDisplay();
+    document.getElementById('gamesPerPage').addEventListener('input', function(e) {
+        const value = parseInt(e.target.value);
+        this.previousElementSibling.setAttribute('data-value', value);
+        GAMES_PER_PAGE = value;
+        localStorage.setItem('gamesPerPage', value);
+        currentPage = 1;
+        updateDisplay();
+    });
+
+    // Then also ensure everything is properly set when DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const slider = document.getElementById('gamesPerPage');
+        const savedValue = localStorage.getItem('gamesPerPage');
+        if (savedValue) {
+            GAMES_PER_PAGE = parseInt(savedValue);
+            slider.value = GAMES_PER_PAGE;
+            slider.previousElementSibling.setAttribute('data-value', GAMES_PER_PAGE);
+        }
+        
+        // Update display again to be safe
+        updateDisplay();
+    });
     </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js?v=<?php echo time(); ?>"></script>

@@ -29,12 +29,111 @@
     padding: 1rem;
     border-radius: 8px;
     max-width: 85%;
+    display: flex;
+    gap: 12px;
+    position: relative;
+}
+
+.message-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    color: #fff;
+}
+
+.message-header span:first-child {
+    color: rgb(55, 255, 20);
+    font-weight: 600;
+}
+
+.message-header .message-timestamp {
+    color: #fff;
+    font-weight: normal;
+}
+
+/* Typing animation */
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    animation: typingAnimation 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+/* Character counter */
+.input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.char-counter {
+    position: absolute;
+    right: 1rem;
+    color: #fff;
+    font-size: 0.8em;
+    pointer-events: none;
+}
+
+/* Code block styling */
+pre {
+    position: relative;
+    background: #1a1a1a;
+    padding: 1em;
+    border-radius: 4px;
+    margin: 0.5em 0;
+}
+
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.copy-button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .user-message {
     background: rgb(0, 0, 0);
     border: 1px solid rgba(55, 255, 20, 0.534);
-    color: var(--neon-green);
+    color: rgb(55, 255, 20);
     align-self: flex-end;
     margin-left: 15%;
 }
@@ -51,14 +150,16 @@
     display: flex;
     gap: 1rem;
     padding: 1.5rem;
-    border: 1px solid rgba(55, 255, 20, 0.534);
+    border-top: 1px solid rgba(55, 255, 20, 0.534);
+    position: relative;
 }
 
 #userInput {
-    flex: 1;
+    width: 100%;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(55, 255, 20, 0.534);
     padding: 0.8rem;
+    padding-right: 4rem;
     color: white;
     border-radius: 6px;
     transition: all 0.2s;
@@ -128,5 +229,55 @@
 
 .system-message:not(.thinking-dots) {
     display: none;
+}
+
+#clearButton {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgba(255, 20, 20, 0.534);
+    color: rgb(255, 20, 20);
+    padding: 0 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#clearButton:hover {
+    background: rgba(255, 20, 20, 0.048);
+}
+
+/* Add this to your existing CSS */
+.system-message.thinking {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(55, 255, 20, 0.534);
+    color: rgb(55, 255, 20);
+    align-self: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.thinking-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.thinking-dots span {
+    width: 4px;
+    height: 4px;
+    background: rgb(55, 255, 20);
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+}
+
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.2); opacity: 1; }
 }
  

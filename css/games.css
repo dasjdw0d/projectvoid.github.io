@@ -26,8 +26,10 @@
     display: flex;
     gap: 0.5rem;
     width: 100%;
-    max-width: 500px;
+    max-width: 800px;
     justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .search-bar input {
@@ -86,7 +88,7 @@
 .games-grid {
     padding: 0 4rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 180px));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
     gap: 0.7rem;
     margin-bottom: 2rem;
     justify-content: center;
@@ -107,7 +109,6 @@
 
 .game-card:hover {
     transform: scale(0.96);
-    box-shadow: 0 0 20px rgb(55, 255, 20);
     border-color: rgb(55, 255, 20);
 }
 
@@ -316,4 +317,78 @@
     font-weight: bold;
     font-size: 1rem;
     margin: 0 0 1.5rem 0;
+}
+
+.games-per-page {
+    position: absolute;
+    right: -400px;
+    top: -80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.games-per-page label {
+    color: var(--neon-green);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.games-per-page input[type="range"] {
+    width: 40px;
+    accent-color: var(--neon-green);
+    background: black;
+    border: 1px solid var(--neon-green);
+    border-radius: 10px;
+    height: 2px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.games-per-page input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: black;
+    border: 2px solid var(--neon-green);
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--neon-green);
+}
+
+.games-per-page input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: black;
+    border: 2px solid var(--neon-green);
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--neon-green);
+}
+
+.games-per-page span {
+    color: var(--neon-green);
+    font-weight: bold;
+    display: none;
+}
+
+.games-per-page label::after {
+    content: ' - ' attr(data-value);
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .games-per-page {
+        position: static;
+        right: 0;
+        margin: 1rem 0 0 0;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .search-bar {
+        flex-wrap: wrap;
+    }
 }

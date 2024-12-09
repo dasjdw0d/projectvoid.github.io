@@ -1,14 +1,14 @@
 .admin-container {
     max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
 .admin-panel {
     background: rgba(0, 0, 0, 0.8);
     border: 1.5px solid var(--neon-green);
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1rem;
     box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
     animation: fadeIn 0.3s ease;
 }
@@ -257,4 +257,28 @@ input:checked + .slider:before {
 .danger:hover {
     background: rgba(255, 68, 68, 0.2) !important;
     box-shadow: 0 0 15px rgba(255, 68, 68, 0.3) !important;
+}
+
+.statistics-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.statistics-table th,
+.statistics-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statistics-table th {
+    background: rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+.statistics-table tr:last-child td {
+    border-bottom: none;
 }
