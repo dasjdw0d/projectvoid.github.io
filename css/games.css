@@ -321,8 +321,8 @@
 
 .games-per-page {
     position: absolute;
-    right: -400px;
-    top: -80px;
+    right 200px;
+    top: -73px;
     display: flex;
     flex-direction: column;
     align-items: center;

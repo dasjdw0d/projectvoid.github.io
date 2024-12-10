@@ -13,7 +13,8 @@ if (!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
             if (password_verify($data['username'], $admin_username_hash) && 
                 password_verify($data['password'], $admin_password_hash)) {
                 $_SESSION['isAdmin'] = true;
-                echo json_encode(['success' => true]);
+                //echo json_encode(['success' => true]);
+				header('Location: admin.php');
             } else {
                 echo json_encode(['success' => false]);
             }
@@ -454,9 +455,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                         </div>
                     </div>
                     <div class="admin-section">
-                        <h2>Flash Mode</h2>
+                        <h2>Settings</h2>
                         <div class="flash-controls">
                             <button id="toggleFlash" class="admin-button">Enable Flash Mode</button>
+							<button onclick="window.location.href='admin_users.php';" class="admin-button">User Settings</button>
                         </div>
                     </div>
                     <div class="admin-section">

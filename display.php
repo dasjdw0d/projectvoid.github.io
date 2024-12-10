@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-88VFMZRZHX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-88VFMZRZHX');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <title>Project Void - Playing Game</title>
-    <link rel="stylesheet" href="css/styles.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="css/display.css?v=<?php echo time(); ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-<?php include 'loading-screen.php'; ?>
+<?php
+$page = "Display";
+define('allowed', true);
+include 'header.php';
+?>
     <div class="game-bar">
         <div class="game-bar-left">
             <a href="games.php" class="back-button">
